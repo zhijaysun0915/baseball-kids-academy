@@ -4,7 +4,9 @@
 
 ## 🎮 線上直接玩 (GitHub Pages)
 
-👉 **點此直接開啟網頁遊玩：** *(啟用 GitHub Pages 後即可直接透過瀏覽器遊玩，無須安裝任何程式)*
+👉 **點此直接開啟網頁遊玩：[https://zhijaysun0915.github.io/baseball-kids-academy/](https://zhijaysun0915.github.io/baseball-kids-academy/)**
+
+*(支援電腦、平板與手機瀏覽器直接開啟，無須安裝任何程式)*
 
 ---
 
@@ -49,7 +51,7 @@
 本專案為純前端單頁互動應用（HTML5 Canvas + Tailwind CSS），不需安裝任何後端伺服器：
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/zhijaysun0915/baseball-kids-academy.git
 cd baseball-kids-academy
 # 直接以瀏覽器開啟 index.html 即可遊玩！
 ```
