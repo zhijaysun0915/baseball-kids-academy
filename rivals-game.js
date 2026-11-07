@@ -267,12 +267,12 @@ const RG = {
   cpuBatterIdx: 0,
 
   // Simplified Assist & Automation Settings
-  autoAimAssist: true,    // Bat sweet spot smoothly locks onto incoming pitch!
-  autoFielding: true,     // Authentic MLB Rivals auto-fielding & auto-baserunning!
-  pitchSpeedPreset: 'slow', // 'slow' (輕鬆慢速 1.8秒反應), 'normal' (標準 1.4秒), 'pro' (實戰 1.0秒)
-  pitchSpeedMult: 0.52,   // Slows down pitch flight & windup so kids/players have plenty of time!
-  autoBatter: false,      // AUTO 打者 ON / OFF
-  autoPitcher: false,     // AUTO 投手 ON / OFF
+  autoAimAssist: true,  // Bat sweet spot smoothly tracks incoming pitch!
+  autoFielding: true,   // Authentic MLB Rivals auto-fielding & auto-baserunning!
+  pitchSpeedPreset: 'slow', // 'slow' (輕鬆慢速 ~2.2秒反應), 'normal' (標準 ~1.8秒), 'pro' (實戰 ~1.3秒)
+  pitchSpeedMult: 0.80, // Slower pitch flight so players have plenty of time!
+  autoBatter: false,    // AUTO 打者 ON / OFF
+  autoPitcher: false,   // AUTO 投手 ON / OFF
   autoNextTimer: null,
 
   swingPowerMode: 'power',
@@ -287,9 +287,8 @@ const RG = {
   scoreUser: 1, // LAD 1
   scoreCpu: 3,  // SD 3 (matching reference image!)
 
-  phase: 'pre_pitch', // 'pre_pitch' -> 'windup' -> 'pinpoint_ring' -> 'pitch_flight' -> 'contact_slowmo' -> 'field_play'
+  phase: 'pre_pitch', // 'pre_pitch' -> 'pinpoint_ring' -> 'pitch_flight' -> 'contact_slowmo' -> 'field_play'
   cameraMode: 'duel',
-  windupProgress: 0,
 
   selectedPitch: '4seam',
   aimX: 0.05,
@@ -301,6 +300,7 @@ const RG = {
   pitchPts: [],
   pitchGravityPts: [],
   pitchIdx: 0,
+  pitchIdxProgress: 0,
   currentSpeedKmh: 158, // 98 mph
 
   batX: 0.0,
@@ -314,7 +314,16 @@ const RG = {
   fieldPts: [],
   fieldBounces: [],
   fieldIdx: 0,
+  fieldIdxProgress: 0,
   ballPos: { x: 0, y: 0, z: 0, state: 'air', dist: 0 },
+  camX: 0,
+  camY: 0,
+  camZ: 0,
+  camZoom: 1.0,
+  prePitchSecondsLeft: 0,
+  countdownInterval: null,
+  hitStatcast: null,
+  projectedLanding: null,
   fielders: [],
   ballHolder: null,
   thrownBall: null,
@@ -404,18 +413,54 @@ function handleRivalsPrimaryButton() {
     if (RG.userRole === 'batter') {
       triggerRivalsSwing();
     }
-  } else if (RG.phase === 'windup') {
-    // Allow batter to wait for pitch release; do nothing or show ready cue
   } else if (RG.phase === 'pre_pitch') {
+    // If waiting for countdown, clicking immediately pitches!
+    clearTimeout(RG.autoNextTimer);
+    clearInterval(RG.countdownInterval);
+    RG.prePitchSecondsLeft = 0;
     startRivalsPitchAction();
+  } else if (RG.phase === 'field_play') {
+    // Slide / dive QTE quick trigger
+    if (RG.slideQteAvailable && !RG.didSlide) {
+      triggerRivalsSlide();
+    } else if (RG.diveQteAvailable) {
+      triggerRivalsDive();
+    }
   }
+}
+
+// Toggle Auto Batter ON/OFF
+function toggleAutoBatter() {
+  RG.autoBatter = !RG.autoBatter;
+  showRivalsBanner(RG.autoBatter ? '🤖 打者 AUTO：開啟（AI 自動看準時機揮棒）' : '✋ 打者 手動：開啟（點擊螢幕自由揮棒）', 1500);
+  updateRivalsHUD();
+  renderRivalsCanvas();
+  checkAutoLoop(3800);
+}
+
+// Toggle Auto Pitcher ON/OFF
+function toggleAutoPitcher() {
+  RG.autoPitcher = !RG.autoPitcher;
+  showRivalsBanner(RG.autoPitcher ? '🤖 投手 AUTO：開啟（AI 自動精準配球）' : '✋ 投手 手動：開啟（玩家手動縮圈投球）', 1500);
+  updateRivalsHUD();
+  renderRivalsCanvas();
+  checkAutoLoop(3800);
+}
+
+function toggleAutoAimAssist() {
+  RG.autoAimAssist = !RG.autoAimAssist;
+  showRivalsBanner(RG.autoAimAssist ? '🎯 甜蜜點自動鎖定：開啟（專注時機揮棒）' : '✋ 自由拖曳瞄準：開啟', 1500);
+  const chk = document.getElementById('chk-auto-aim');
+  if (chk) chk.checked = RG.autoAimAssist;
+  updateRivalsHUD();
+  renderRivalsCanvas();
 }
 
 function setRivalsPitchSpeed(preset) {
   const presets = {
-    slow:   { mult: 0.48, label: '🐢 輕鬆慢速 (約1.8秒反應・最推薦)' },
-    normal: { mult: 0.68, label: '⚾ 舒適標準 (約1.3秒反應)' },
-    pro:    { mult: 0.92, label: '🔥 大聯盟實戰 (快速挑戰)' }
+    slow:   { mult: 0.80, label: '🐢 輕鬆慢速 (約2.2秒反應・最推薦)' },
+    normal: { mult: 1.00, label: '⚾ 舒適標準 (約1.8秒反應)' },
+    pro:    { mult: 1.30, label: '🔥 大聯盟實戰 (約1.3秒挑戰)' }
   };
   const cfg = presets[preset] || presets.slow;
   RG.pitchSpeedPreset = preset;
@@ -435,33 +480,6 @@ function cycleRivalsPitchSpeed() {
   setRivalsPitchSpeed(next);
 }
 
-// Toggle Auto Batter ON/OFF
-function toggleAutoBatter() {
-  RG.autoBatter = !RG.autoBatter;
-  showRivalsBanner(RG.autoBatter ? '🤖 打者 AUTO：開啟（AI 自動看準時機揮棒）' : '✋ 打者 手動：開啟（點擊螢幕一鍵揮棒）', 1500);
-  updateRivalsHUD();
-  renderRivalsCanvas();
-  checkAutoLoop();
-}
-
-// Toggle Auto Pitcher ON/OFF
-function toggleAutoPitcher() {
-  RG.autoPitcher = !RG.autoPitcher;
-  showRivalsBanner(RG.autoPitcher ? '🤖 投手 AUTO：開啟（AI 自動精準配球）' : '✋ 投手 手動：開啟（玩家手動一鍵投球）', 1500);
-  updateRivalsHUD();
-  renderRivalsCanvas();
-  checkAutoLoop();
-}
-
-function toggleAutoAimAssist() {
-  RG.autoAimAssist = !RG.autoAimAssist;
-  const chk = document.getElementById('chk-auto-aim');
-  if (chk) chk.checked = RG.autoAimAssist;
-  showRivalsBanner(RG.autoAimAssist ? '🎯 智慧自動瞄準：開啟（只需抓時機點一下揮棒！）' : '✋ 手動游標瞄準：開啟（滑動好球帶瞄準）', 1600);
-  updateRivalsHUD();
-  renderRivalsCanvas();
-}
-
 function toggleAutoFielding(checked) {
   RG.autoFielding = (typeof checked === 'boolean') ? checked : !RG.autoFielding;
   const chk = document.getElementById('chk-auto-fielding');
@@ -471,16 +489,36 @@ function toggleAutoFielding(checked) {
   renderRivalsCanvas();
 }
 
-function checkAutoLoop() {
-  if (RG.phase === 'pre_pitch') {
-    if (RG.userRole === 'batter' || RG.autoPitcher) {
-      clearTimeout(RG.autoNextTimer);
-      RG.autoNextTimer = setTimeout(() => {
-        if (RG.phase === 'pre_pitch') {
-          startRivalsPitchAction();
-        }
-      }, 2200);
-    }
+// Relaxed MLB TV Broadcast Tempo between pitches (Default: 3.8s, or tap anytime to pitch)
+function checkAutoLoop(delayMs = 3800) {
+  clearTimeout(RG.autoNextTimer);
+  clearInterval(RG.countdownInterval);
+  if (RG.phase !== 'pre_pitch') return;
+
+  if (RG.userRole === 'batter' || RG.autoPitcher) {
+    let remainMs = delayMs;
+    RG.prePitchSecondsLeft = (remainMs / 1000).toFixed(1);
+
+    RG.countdownInterval = setInterval(() => {
+      remainMs -= 200;
+      if (remainMs <= 0) {
+        clearInterval(RG.countdownInterval);
+        RG.prePitchSecondsLeft = 0;
+      } else {
+        RG.prePitchSecondsLeft = (remainMs / 1000).toFixed(1);
+      }
+      if (RG.phase === 'pre_pitch' && RG.cameraMode === 'duel') {
+        renderRivalsCanvas();
+      }
+    }, 200);
+
+    RG.autoNextTimer = setTimeout(() => {
+      clearInterval(RG.countdownInterval);
+      RG.prePitchSecondsLeft = 0;
+      if (RG.phase === 'pre_pitch') {
+        startRivalsPitchAction();
+      }
+    }, delayMs);
   }
 }
 
@@ -670,12 +708,12 @@ function updateRivalsHUD() {
       if (hudPitchCards) hudPitchCards.classList.remove('hidden');
       if (hudBatModes) hudBatModes.classList.add('hidden');
       if (mainIcon) mainIcon.textContent = RG.phase === 'pinpoint_ring' ? '🎯' : '⚾';
-      if (mainLabel) mainLabel.textContent = RG.phase === 'pinpoint_ring' ? '放球！' : '一鍵投球';
+      if (mainLabel) mainLabel.textContent = RG.phase === 'pinpoint_ring' ? '放球！' : '啟動投球';
     } else {
       if (hudPitchCards) hudPitchCards.classList.add('hidden');
       if (hudBatModes) hudBatModes.classList.remove('hidden');
-      if (mainIcon) mainIcon.textContent = RG.phase === 'pitch_flight' ? '🏏' : (RG.phase === 'windup' ? '👀' : '⚾');
-      if (mainLabel) mainLabel.textContent = RG.phase === 'pitch_flight' ? '揮棒 SWING' : (RG.phase === 'windup' ? '看球準備...' : '點擊開打');
+      if (mainIcon) mainIcon.textContent = RG.phase === 'pitch_flight' ? '🏏' : '⚾';
+      if (mainLabel) mainLabel.textContent = RG.phase === 'pitch_flight' ? '揮棒 SWING' : '點擊開打';
     }
   } else {
     if (hudPitchCards) hudPitchCards.classList.add('hidden');
@@ -703,7 +741,7 @@ function updateRivalsHUD() {
 
   const fieldRunningBar = document.getElementById('rivals-running-actions');
   const fieldDefenseBar = document.getElementById('rivals-defense-actions');
-  if (RG.cameraMode === 'field' && RG.phase === 'field_play' && !RG.autoFielding) {
+  if (RG.cameraMode === 'field' && RG.phase === 'field_play') {
     fieldRunningBar.classList.toggle('hidden', RG.userRole !== 'batter');
     fieldDefenseBar.classList.toggle('hidden', RG.userRole !== 'pitcher');
   } else {
@@ -762,6 +800,9 @@ function startRivalsPitchAction() {
   }
 
   clearTimeout(RG.autoNextTimer);
+  clearInterval(RG.countdownInterval);
+  RG.prePitchSecondsLeft = 0;
+
   initRivalsFielders();
   RG.cameraMode = 'duel';
   RG.swingTriggered = false;
@@ -784,12 +825,19 @@ function startRivalsPitchAction() {
     updateRivalsHUD();
 
     if (RG.animId) cancelAnimationFrame(RG.animId);
-    function ringLoop() {
-      // Slower, super-forgiving pinpoint ring shrink speed
-      RG.ringRadius -= 0.015;
+    let lastRingTime = performance.now();
+    function ringLoop(now) {
+      if (RG.phase !== 'pinpoint_ring') return;
+      const curTime = now || performance.now();
+      const dtMs = curTime - lastRingTime;
+      lastRingTime = curTime;
+      const timeScale = Math.min(2.0, Math.max(0.4, dtMs / 16.67));
+
+      // Slower pinpoint ring shrink: takes ~1.8 seconds on 60Hz and 120Hz
+      RG.ringRadius -= 0.0095 * timeScale;
       renderRivalsCanvas();
       if (RG.phase === 'pinpoint_ring') {
-        if (RG.ringRadius <= 0.04) {
+        if (RG.ringRadius <= 0.02) {
           lockPinpointRelease();
         } else {
           RG.animId = requestAnimationFrame(ringLoop);
@@ -798,40 +846,15 @@ function startRivalsPitchAction() {
     }
     RG.animId = requestAnimationFrame(ringLoop);
   } else {
-    // AI Pitcher (or Auto-Pitcher): Play authentic MLB Rivals Windup & Pre-Pitch Preview first!
+    // AI Pitcher (or Auto-Pitcher) pitches
     const keys = ['4seam', 'sweeper', 'splitter', '2seam', 'curve'];
     RG.selectedPitch = keys[Math.floor(Math.random() * keys.length)];
-    // Aim near strike zone
-    RG.aimX = (Math.random() * 0.44) - 0.22;
-    RG.aimZ = 0.52 + Math.random() * 0.40;
+    // Aim near middle of strike zone
+    RG.aimX = (Math.random() * 0.50) - 0.25;
+    RG.aimZ = 0.50 + Math.random() * 0.45;
     RG.releaseQuality = 'GOOD';
     RG.releaseMultiplier = 1.0;
-
-    RG.phase = 'windup';
-    RG.windupProgress = 0;
-    updateRivalsHUD();
-
-    const pInfo = RIVALS_PITCHES[RG.selectedPitch] || RIVALS_PITCHES['4seam'];
-    showRivalsBanner(`👀 投手抬腿蓄力中... 準備迎擊【${pInfo.name}】！`, 1100);
-
-    if (RG.animId) cancelAnimationFrame(RG.animId);
-    function windupLoop() {
-      // ~0.75 second windup before release so batter never gets caught off-guard
-      RG.windupProgress += 0.022;
-      if (RG.autoAimAssist && RG.userRole === 'batter' && !RG.touchDragging) {
-        // Gently pre-align bat reticle toward the center-target area during windup
-        RG.batX += (RG.aimX * 0.65 - RG.batX) * 0.12;
-        RG.batZ += (RG.aimZ * 0.65 + 0.25 - RG.batZ) * 0.12;
-      }
-      renderRivalsCanvas();
-      if (RG.phase !== 'windup') return;
-      if (RG.windupProgress < 1.0) {
-        RG.animId = requestAnimationFrame(windupLoop);
-      } else {
-        launchRivals3DPitch();
-      }
-    }
-    RG.animId = requestAnimationFrame(windupLoop);
+    launchRivals3DPitch();
   }
 }
 
@@ -841,20 +864,20 @@ function lockPinpointRelease() {
   if (btn) btn.textContent = '⚾ 啟動縮圈投球 (再按一次鎖定完美放球！)';
 
   const diff = Math.abs(RG.ringRadius - 0.28);
-  if (diff <= 0.16 || RG.isClutchActive) {
+  if (diff <= 0.12 || RG.isClutchActive) {
     RG.releaseQuality = 'PERFECT';
     RG.releaseMultiplier = 1.25;
     addClutchEnergy(20);
     showRivalsBanner('✨ PERFECT 完美放球！球威與尾勁 +25%！', 1500);
-  } else if (diff <= 0.32) {
+  } else if (diff <= 0.25) {
     RG.releaseQuality = 'GOOD';
     RG.releaseMultiplier = 1.0;
     showRivalsBanner('👍 GOOD 良好放球！', 1100);
   } else {
     RG.releaseQuality = 'WILD';
-    RG.releaseMultiplier = 0.82;
-    RG.aimZ += (Math.random() < 0.5 ? -0.18 : 0.14);
-    showRivalsBanner('⚠️ 放球稍偏！', 1300);
+    RG.releaseMultiplier = 0.75;
+    RG.aimZ += (Math.random() < 0.5 ? -0.28 : 0.18);
+    showRivalsBanner('⚠️ 失投偏離好球帶！', 1300);
   }
   launchRivals3DPitch();
 }
@@ -887,7 +910,9 @@ function launchRivals3DPitch() {
   const vz0 = (startSightZ + gravComp - z0) / tEst;
   const vy0 = Math.sqrt(Math.max(10, v0 * v0 - vx0 * vx0 - vz0 * vz0));
 
-  const dt = 0.0085;
+  // Generates 140 smooth trajectory sample points along the flight
+  const totalSteps = 140;
+  const dt = (14.8 / vy0) / totalSteps;
   RG.pitchPts = [];
   RG.pitchGravityPts = [];
 
@@ -900,7 +925,7 @@ function launchRivals3DPitch() {
   const azBreak = (2 * pInfo.breakZ * breakMult) / (tEst * tEst);
 
   let bounced = false;
-  for (let i = 0; i < 240; i++) {
+  for (let i = 0; i <= totalSteps + 20; i++) {
     RG.pitchPts.push({ x, y, z, vx, vy, vz, bounced });
     RG.pitchGravityPts.push({ x: gx, y: gy, z: Math.max(0, gz) });
     if (y >= 14.8) break;
@@ -927,40 +952,51 @@ function launchRivals3DPitch() {
   }
 
   RG.pitchIdx = 0;
+  RG.pitchIdxProgress = 0;
   document.getElementById('rivals-tele-pitch').textContent = `${displayKmh} km/h (${displayMph} mph ${pInfo.short})`;
   document.getElementById('rivals-tele-hit').textContent = '--';
   document.getElementById('rivals-tele-dist').textContent = '--';
 
   if (RG.animId) cancelAnimationFrame(RG.animId);
-  function flightLoop() {
-    // MLB Rivals Pacing: Advance pitch frame index smoothly using pitchSpeedMult (default 0.48 -> ~1.7s flight time!)
-    RG.pitchIdx += (1.15 * RG.pitchSpeedMult);
-    if (RG.swingTriggered && RG.swingAnimProgress < 1) {
-      RG.swingAnimProgress = Math.min(1, RG.swingAnimProgress + 0.16);
-    }
-    const idx = Math.min(Math.floor(RG.pitchIdx), RG.pitchPts.length - 1);
-    const curP = RG.pitchPts[idx];
-    const platePt = RG.pitchPts.find(p => p.y >= 13.85) || RG.pitchPts[RG.pitchPts.length - 1];
+  let lastFlightTime = performance.now();
 
-    // Auto-Aim Assist: Lock sweet spot onto plate arrival coordinates so user ONLY needs to tap on time!
+  function flightLoop(now) {
+    if (RG.phase !== 'pitch_flight') return;
+    const curTime = now || performance.now();
+    const dtMs = curTime - lastFlightTime;
+    lastFlightTime = curTime;
+    const timeScale = Math.min(2.0, Math.max(0.4, dtMs / 16.67));
+
+    // Pitch flight takes ~2.2 seconds on slow preset at 60/120Hz (140 points / 1.04 = ~134 frames @ 60fps)
+    RG.pitchIdxProgress += 1.30 * (RG.pitchSpeedMult || 0.80) * timeScale;
+    RG.pitchIdx = Math.min(Math.floor(RG.pitchIdxProgress), RG.pitchPts.length - 1);
+
+    if (RG.swingTriggered && RG.swingAnimProgress < 1) {
+      RG.swingAnimProgress = Math.min(1, RG.swingAnimProgress + 0.16 * timeScale);
+    }
+    const idx = RG.pitchIdx;
+    const curP = RG.pitchPts[idx];
+
+    // Auto-Aim Assist: smooth tracking of sweet spot cursor to ball landing spot
     if (RG.autoAimAssist && RG.userRole === 'batter' && !RG.touchDragging && !RG.swingTriggered) {
-      RG.batX += (platePt.x - RG.batX) * 0.25;
-      RG.batZ += (platePt.z - RG.batZ) * 0.25;
+      const targetP = RG.pitchPts[RG.pitchPts.length - 1];
+      RG.batX += (targetP.x - RG.batX) * (0.12 * timeScale);
+      RG.batZ += (targetP.z - RG.batZ) * (0.12 * timeScale);
     }
 
     // Auto Batter Trigger (If Auto Batter is enabled)
-    if (RG.autoBatter && RG.userRole === 'batter' && !RG.swingTriggered && curP.y >= 13.4 && curP.y <= 14.1) {
-      const inStrikeZone = !curP.bounced && Math.abs(curP.x) <= 0.36 && curP.z >= 0.40 && curP.z <= 1.06;
+    if (RG.autoBatter && RG.userRole === 'batter' && !RG.swingTriggered && curP.y >= 13.5 && curP.y <= 14.2) {
+      const inStrikeZone = !curP.bounced && Math.abs(curP.x) <= 0.35 && curP.z >= 0.42 && curP.z <= 1.05;
       if (inStrikeZone || Math.random() < 0.25) {
-        RG.batX = curP.x + (Math.random() * 0.06 - 0.03);
-        RG.batZ = curP.z + (Math.random() * 0.06 - 0.03);
+        RG.batX = curP.x + (Math.random() * 0.08 - 0.04);
+        RG.batZ = curP.z + (Math.random() * 0.08 - 0.04);
         triggerRivalsSwing();
         return;
       }
     }
 
     // AI Batter Trigger (When player is pitcher)
-    if (RG.userRole === 'pitcher' && !RG.swingTriggered && curP.y >= 13.4 && curP.y <= 14.1) {
+    if (RG.userRole === 'pitcher' && !RG.swingTriggered && curP.y >= 13.5 && curP.y <= 14.2) {
       const oppSkill = getActiveOppTeam().aiSkill;
       const inStrikeZone = !curP.bounced && Math.abs(curP.x) <= 0.34 && curP.z >= 0.42 && curP.z <= 1.04;
       const swingProb = inStrikeZone ? 0.74 : 0.28;
@@ -986,63 +1022,54 @@ function launchRivals3DPitch() {
   RG.animId = requestAnimationFrame(flightLoop);
 }
 
-// ==================== BATTING & SWEET SPOT (MLB RIVALS 1-TAP TIMING) ====================
+// ==================== BATTING & SWEET SPOT ====================
 function triggerRivalsSwing() {
   if (RG.phase !== 'pitch_flight' || RG.swingTriggered) return;
   RG.swingTriggered = true;
   RG.swingAnimProgress = 0.25;
 
-  const idx = Math.min(Math.floor(RG.pitchIdx), RG.pitchPts.length - 1);
+  const idx = Math.min(RG.pitchIdx, RG.pitchPts.length - 1);
   const curP = RG.pitchPts[idx];
-  const platePt = RG.pitchPts.find(p => p.y >= 13.85) || RG.pitchPts[RG.pitchPts.length - 1];
   const batter = getCurrentBatterInfo();
 
-  // If Smart Auto-Aim Assist is active and user wasn't manually dragging away, snap directly to ball trajectory!
-  if (RG.autoAimAssist && RG.userRole === 'batter' && !RG.touchDragging) {
-    RG.batX = curP.x * 0.3 + platePt.x * 0.7;
-    RG.batZ = curP.z * 0.3 + platePt.z * 0.7;
-  }
-
-  // Generous timing window centered at y = 13.65m (right over home plate)
-  const yDiff = curP.y - 13.65;
+  const yDiff = curP.y - 13.85;
   const distXZ = Math.hypot(curP.x - RG.batX, curP.z - RG.batZ);
-  const maxContactRadius = (RG.swingPowerMode === 'contact' ? 0.44 : 0.38) + (batter.num === '17' ? 0.06 : 0.03);
-  const maxTimingWindow = 3.25; // Very forgiving timing window so kids/players hit easily!
+  const maxContactRadius = (RG.swingPowerMode === 'contact' ? 0.35 : 0.28) + (batter.num === '17' ? 0.04 : 0.02);
 
-  if (Math.abs(yDiff) <= maxTimingWindow && distXZ <= maxContactRadius) {
-    const isSweetSpot = distXZ <= 0.18 && Math.abs(yDiff) <= 1.15;
+  if (Math.abs(yDiff) <= 1.95 && distXZ <= maxContactRadius) {
+    const isSweetSpot = distXZ <= 0.13 && Math.abs(yDiff) <= 0.65;
     const isCrit = isSweetSpot || (RG.isClutchActive && RG.userRole === 'batter');
     RG.isClutchActive = false;
     RG.swingAnimProgress = 1.0;
     RivalsSFX.playBatHit(isCrit);
 
     const dz = curP.z - RG.batZ;
-    let launchDeg = 18 - dz * 145;
-    if (isCrit) launchDeg = Math.max(17, Math.min(30, launchDeg));
-    launchDeg = Math.max(-15, Math.min(58, launchDeg));
+    let launchDeg = 16 - dz * 185;
+    if (isCrit) launchDeg = Math.max(16, Math.min(29, launchDeg));
+    launchDeg = Math.max(-20, Math.min(62, launchDeg));
 
-    const timingQuality = Math.max(0.2, 1 - Math.abs(yDiff) / maxTimingWindow);
-    const centerQuality = Math.max(0.25, 1 - distXZ / maxContactRadius);
+    const timingQuality = Math.max(0, 1 - Math.abs(yDiff) / 1.95);
+    const centerQuality = Math.max(0, 1 - distXZ / maxContactRadius);
     const pwrBonus = batter.pwrBonus || 8;
 
-    const simExitVelo = Math.round(82 + (timingQuality * 0.45 + centerQuality * 0.55) * 42 + (RG.swingPowerMode === 'power' ? 11 : 3) + (isCrit ? 13 : 0) + pwrBonus * 0.45);
+    const simExitVelo = Math.round(78 + (timingQuality * 0.4 + centerQuality * 0.6) * 42 + (RG.swingPowerMode === 'power' ? 10 : 2) + (isCrit ? 12 : 0) + pwrBonus * 0.4);
     const statcastKmh = Math.round(simExitVelo * 1.48);
 
     const pullSign = batter.hand === 'L' ? -1 : 1;
-    const sprayDeg = Math.max(-38, Math.min(38, yDiff * 16 * pullSign + (curP.x - RG.batX) * 55));
+    const sprayDeg = Math.max(-41, Math.min(41, yDiff * 24 * pullSign + (curP.x - RG.batX) * 70));
 
-    RG.swingTimingText = Math.abs(yDiff) <= 1.15 ? '⚡ PERFECT 完美時機！' : (yDiff < 0 ? '◀ 拉打 GOOD (EARLY)' : '推打 GOOD (LATE) ▶');
+    RG.swingTimingText = Math.abs(yDiff) < 0.50 ? '⚡ PERFECT TIMING!' : (yDiff < 0 ? '◀ 拉打 (EARLY)' : '推打 (LATE) ▶');
     RG.lastContactInfo = { isCrit, exitVelo: simExitVelo, statcastKmh, launchDeg: Math.round(launchDeg), x: curP.x, z: curP.z };
 
-    if (RG.userRole === 'batter') addClutchEnergy(isCrit ? 35 : 20);
+    if (RG.userRole === 'batter') addClutchEnergy(isCrit ? 35 : 18);
 
     RG.phase = 'contact_slowmo';
-    RG.contactFlashTimer = isCrit ? 22 : 12;
+    RG.contactFlashTimer = isCrit ? 22 : 10;
     showRivalsBanner(
       isCrit
         ? `💥 #${batter.num} ${batter.short} 完美擊中甜蜜點！初速 ${statcastKmh} km/h・仰角 ${Math.round(launchDeg)}°`
-        : `🏏 強勁擊球 (${RG.swingTimingText})！初速 ${statcastKmh} km/h・仰角 ${Math.round(launchDeg)}°`,
-      2200
+        : `🏏 擊出安打！初速 ${statcastKmh} km/h・仰角 ${Math.round(launchDeg)}°`,
+      2000
     );
 
     if (RG.animId) cancelAnimationFrame(RG.animId);
@@ -1058,8 +1085,8 @@ function triggerRivalsSwing() {
     RG.animId = requestAnimationFrame(slowMoLoop);
   } else {
     RG.isClutchActive = false;
-    RG.swingTimingText = Math.abs(yDiff) > maxTimingWindow ? (yDiff < 0 ? '💨 太早揮棒了！等球飛近本壘紅框再按' : '💨 太晚揮棒了！') : '💨 揮棒落空 (SWING & MISS)';
-    showRivalsBanner(RG.swingTimingText, 1800);
+    RG.swingTimingText = Math.abs(yDiff) > 1.95 ? (yDiff < 0 ? '💨 太早揮棒 (TOO EARLY)' : '💨 太晚揮棒 (TOO LATE)') : '💨 揮棒落空 (SWING & MISS)';
+    showRivalsBanner(RG.swingTimingText, 1500);
   }
 }
 
@@ -1071,7 +1098,7 @@ function resolveRivalsPitchTaken() {
   if (RG.swingTriggered || inZone) {
     RG.strikes++;
     if (!RG.swingTriggered) {
-      showRivalsBanner('🟡 好球！(STRIKE)', 1400);
+      showRivalsBanner('🟡 好球！(STRIKE)', 2000);
       setRivalsLog(`⚾ <strong>好球進壘！</strong> ${RIVALS_PITCHES[RG.selectedPitch].name} 壓在好球帶邊角！`);
     }
     if (RG.strikes >= 3) {
@@ -1079,22 +1106,27 @@ function resolveRivalsPitchTaken() {
       RG.balls = 0;
       if (RG.userRole === 'pitcher') addClutchEnergy(28);
       recordRivalsOut('🔥 三振出局 (STRIKEOUT)！');
+      return;
     }
   } else {
     RG.balls++;
     if (RG.userRole === 'batter') addClutchEnergy(12);
-    showRivalsBanner('🟢 壞球！(BALL)', 1400);
+    showRivalsBanner('🟢 壞球！(BALL)', 2000);
     setRivalsLog(plateP.bounced ? '👀 <strong>選球漂亮！</strong> 挖地瓜壞球！' : '👀 <strong>選球精準！</strong> 壞球偏出九宮格！');
     if (RG.balls >= 4) {
       RG.balls = 0;
       RG.strikes = 0;
-      showRivalsBanner('🚶 四壞球保送！(WALK)', 1800);
+      showRivalsBanner('🚶 四壞球保送！(WALK)', 2200);
       advanceRivalsWalk();
+      updateRivalsHUD();
+      renderRivalsCanvas();
+      checkAutoLoop(4000);
+      return;
     }
   }
   updateRivalsHUD();
   renderRivalsCanvas();
-  checkAutoLoop();
+  checkAutoLoop(3800);
 }
 
 // ==================== 3D FIELD PLAY & BASERUNNING ====================
@@ -1107,9 +1139,33 @@ function startRivalsFieldPlay(launchDeg, simExitVelo, sprayDeg, statcastKmh) {
   RG.fieldPts = sim.pts;
   RG.fieldBounces = sim.bounces;
   RG.fieldIdx = 0;
+  RG.fieldIdxProgress = 0;
   RG.particles = [];
 
   const mlbDistFt = Math.round(sim.totalDist * 5.3);
+  const exitMph = Math.round((statcastKmh || simExitVelo * 1.48) / 1.609);
+  RG.hitStatcast = {
+    exitVeloKmh: statcastKmh || Math.round(simExitVelo * 1.48),
+    exitVeloMph: exitMph,
+    launchDeg: Math.round(launchDeg),
+    totalDistM: sim.totalDist,
+    totalDistFt: mlbDistFt,
+    carryDistM: sim.carryDist,
+    carryDistFt: Math.round(sim.carryDist * 5.3),
+    isHomeRun: sim.carryDist >= 74
+  };
+
+  const firstBounce = sim.bounces[0] || sim.pts[Math.min(sim.pts.length - 1, 48)];
+  RG.projectedLanding = {
+    x: firstBounce ? firstBounce.x : 0,
+    y: firstBounce ? firstBounce.y : 60,
+    dist: firstBounce ? firstBounce.dist : sim.carryDist
+  };
+
+  RG.camX = 0;
+  RG.camY = 0;
+  RG.camZ = 0;
+
   document.getElementById('rivals-tele-hit').textContent = `${statcastKmh || simExitVelo} km/h / ${Math.round(launchDeg)}°`;
   document.getElementById('rivals-tele-dist').textContent = `${sim.totalDist}m (${mlbDistFt} ft)`;
 
@@ -1140,33 +1196,47 @@ function startRivalsFieldPlay(launchDeg, simExitVelo, sprayDeg, statcastKmh) {
     num: batter.num,
     startBase: 0,
     pos: 0.0,
-    targetBase: sim.carryDist >= 75 ? 4 : (sim.totalDist >= 54 && launchDeg < 26 ? 2 : 1),
+    targetBase: sim.carryDist >= 74 ? 4 : (sim.totalDist >= 54 && launchDeg < 26 ? 2 : 1),
     safe: false,
     out: false
   });
 
   updateRivalsHUD();
-  setRivalsLog('🏟️ <strong>球打進場內！</strong> 全景追蹤空中飛行拋物線、連續彈跳與草地滾動！');
+  setRivalsLog('🏟️ <strong>球打進場內！</strong> 電視轉播廣角追球鏡頭、連續彈跳與草地滾動！');
 
   if (RG.animId) cancelAnimationFrame(RG.animId);
+  let lastStadiumTime = performance.now();
   let lastBounceCount = 0;
 
-  function stadiumLoop() {
+  function stadiumLoop(now) {
     if (RG.phase !== 'field_play') return;
+    const curTime = now || performance.now();
+    const dtMs = curTime - lastStadiumTime;
+    lastStadiumTime = curTime;
+    const timeScale = Math.min(2.0, Math.max(0.4, dtMs / 16.67));
 
     if (!RG.ballHolder && !RG.thrownBall) {
-      RG.fieldIdx = Math.min(RG.fieldIdx + 1, RG.fieldPts.length - 1);
-      const pt = RG.fieldPts[RG.fieldIdx];
-      RG.ballPos = { x: pt.x, y: pt.y, z: pt.z, state: pt.state, dist: pt.dist };
+      // Elegant, broadcast-speed ball flight progression (approx 2.8 - 3.5s total flight time)
+      RG.fieldIdxProgress += 0.54 * timeScale;
+      RG.fieldIdx = Math.min(Math.floor(RG.fieldIdxProgress), RG.fieldPts.length - 1);
 
-      const curBounces = RG.fieldBounces.filter(b => pt.dist >= b.dist).length;
+      const frac = RG.fieldIdxProgress - Math.floor(RG.fieldIdxProgress);
+      const pt0 = RG.fieldPts[RG.fieldIdx];
+      const pt1 = RG.fieldPts[Math.min(RG.fieldIdx + 1, RG.fieldPts.length - 1)];
+      const bx = pt0.x + (pt1.x - pt0.x) * frac;
+      const by = pt0.y + (pt1.y - pt0.y) * frac;
+      const bz = pt0.z + (pt1.z - pt0.z) * frac;
+      const bDist = pt0.dist + (pt1.dist - pt0.dist) * frac;
+      RG.ballPos = { x: bx, y: by, z: bz, state: pt0.state, dist: bDist };
+
+      const curBounces = RG.fieldBounces.filter(b => bDist >= b.dist).length;
       if (curBounces > lastBounceCount) {
         lastBounceCount = curBounces;
         RivalsSFX.playBounce();
-        spawnBounceParticles(pt.x, pt.y, pt.dist < 26);
+        spawnBounceParticles(bx, by, bDist < 26);
       }
 
-      if (pt.dist >= 75 && pt.state === 'air') {
+      if (bDist >= 74 && pt0.state === 'air') {
         finishHomeRun(sim.carryDist);
         return;
       }
@@ -1175,7 +1245,7 @@ function startRivalsFieldPlay(launchDeg, simExitVelo, sprayDeg, statcastKmh) {
     updateFieldersAndCheckCatch(launchDeg, sim.carryDist);
 
     if (RG.thrownBall) {
-      RG.thrownBall.progress += 0.055;
+      RG.thrownBall.progress += 0.034 * timeScale;
       if (RG.thrownBall.progress >= 1.0) {
         RivalsSFX.playMittPop();
         handleThrowArrival(RG.thrownBall.targetBase);
@@ -1188,7 +1258,7 @@ function startRivalsFieldPlay(launchDeg, simExitVelo, sprayDeg, statcastKmh) {
       if (Math.abs(r.pos - r.targetBase) > 0.015) {
         anyRunnerMoving = true;
         const dir = r.targetBase > r.pos ? 1 : -1;
-        const speedStep = (RG.didSlide && r.targetBase - r.pos < 0.35) ? 0.023 : 0.015;
+        const speedStep = ((RG.didSlide && r.targetBase - r.pos < 0.35) ? 0.018 : 0.010) * timeScale;
         r.pos += dir * speedStep;
         if ((dir > 0 && r.pos >= r.targetBase) || (dir < 0 && r.pos <= r.targetBase)) {
           r.pos = r.targetBase;
@@ -1292,14 +1362,14 @@ function updateFieldersAndCheckCatch(launchDeg, carryDist) {
       }
     }
 
-    if (RG.userRole === 'batter' || RG.autoFielding) {
+    if (RG.userRole === 'batter') {
       const movingRunner = RG.activeRunners.find(r => !r.out && Math.abs(r.pos - r.targetBase) > 0.04);
       const targetB = movingRunner ? movingRunner.targetBase : 1;
       setTimeout(() => {
         if (RG.phase === 'field_play' && RG.ballHolder) {
           rivalsThrowToBase(targetB);
         }
-      }, 160);
+      }, 180);
     } else {
       setRivalsLog(`🧤 <strong>${closestF.pos} 接到球了！</strong> 請點擊按鈕傳球殺跑者！`);
     }
@@ -1389,8 +1459,12 @@ function finishHomeRun(carryDist) {
   RivalsSFX.playCheer();
   let runs = 1;
   RG.occupiedBases.forEach(occ => { if (occ) runs++; });
-  if (RG.userRole === 'batter') RG.scoreUser += runs;
-  else RG.scoreCpu += runs;
+  if (RG.userRole === 'batter') {
+    RG.scoreUser += runs;
+    addClutchEnergy(40);
+  } else {
+    RG.scoreCpu += runs;
+  }
 
   const batter = getCurrentBatterInfo();
   const mlbDistFt = Math.round(carryDist * 5.3);
@@ -1404,22 +1478,28 @@ function finishHomeRun(carryDist) {
   }
 
   RG.fireworks = [];
-  for (let i = 0; i < 36; i++) {
+  for (let i = 0; i < 48; i++) {
     RG.fireworks.push({
       x: 180 + Math.random() * 600,
-      y: 40 + Math.random() * 140,
-      vx: (Math.random() - 0.5) * 6,
-      vy: (Math.random() - 0.5) * 6,
-      color: ['#facc15', '#38bdf8', '#f43f5e', '#4ade80', '#c084fc'][i % 5]
+      y: 40 + Math.random() * 160,
+      vx: (Math.random() - 0.5) * 7,
+      vy: (Math.random() - 0.5) * 7,
+      color: ['#facc15', '#38bdf8', '#f43f5e', '#4ade80', '#c084fc', '#ffffff'][i % 6]
     });
   }
 
-  showRivalsBanner(`🎆 BIG FLY! #${batter.num} 轟出 ${mlbDistFt} 英尺 (${carryDist}m) 特大號全壘打！+${runs} 分！`, 3200);
+  showRivalsBanner(`🎆 BIG FLY! #${batter.num} 轟出 ${mlbDistFt} 英尺 (${carryDist}m) 特大號全壘打！+${runs} 分！`, 3800);
   setRivalsLog(`🎆 <strong>HOME RUN 全壘打！</strong> #${batter.num} ${batter.short} 轟上看台（${mlbDistFt} ft），進帳 <strong>${runs} 分</strong>！`);
 
-  let fwFrames = 42;
-  function fwLoop() {
-    fwFrames--;
+  let fwFrames = 180; // ~3.0s celebration at 60fps
+  let lastFwTime = performance.now();
+  function fwLoop(now) {
+    const curTime = now || performance.now();
+    const dtMs = curTime - lastFwTime;
+    lastFwTime = curTime;
+    const timeScale = Math.min(2.0, Math.max(0.4, dtMs / 16.67));
+
+    fwFrames -= timeScale;
     renderRivalsCanvas();
     if (fwFrames > 0) {
       RG.animId = requestAnimationFrame(fwLoop);
@@ -1428,7 +1508,7 @@ function finishHomeRun(carryDist) {
       RG.cameraMode = 'duel';
       updateRivalsHUD();
       renderRivalsCanvas();
-      checkAutoLoop();
+      checkAutoLoop(3800);
     }
   }
   RG.animId = requestAnimationFrame(fwLoop);
@@ -1451,7 +1531,7 @@ function concludeFieldPlay() {
     RivalsSFX.playCheer();
     if (RG.userRole === 'batter') RG.scoreUser += runsScored;
     else RG.scoreCpu += runsScored;
-    showRivalsBanner(`🎉 跑者回本壘得 ${runsScored} 分！`, 2000);
+    showRivalsBanner(`🎉 跑者回本壘得 ${runsScored} 分！`, 2400);
   }
 
   if (!RG.lockOhtani) {
@@ -1463,12 +1543,13 @@ function concludeFieldPlay() {
   RG.balls = 0;
   RG.strikes = 0;
   RG.phase = 'pre_pitch';
+  // Allow players 3.0s to enjoy the field play outcome before returning camera
   setTimeout(() => {
     RG.cameraMode = 'duel';
     updateRivalsHUD();
     renderRivalsCanvas();
-    checkAutoLoop();
-  }, 850);
+    checkAutoLoop(3800);
+  }, 3000);
 }
 
 function advanceRivalsWalk() {
@@ -1489,7 +1570,7 @@ function advanceRivalsWalk() {
 
 function recordRivalsOut(msg) {
   RG.outs++;
-  showRivalsBanner(msg, 1800);
+  showRivalsBanner(msg, 2400);
   setRivalsLog(`📣 <strong>裁判判決：</strong> ${msg}`);
   if (RG.outs >= 3) {
     RG.outs = 0;
@@ -1510,11 +1591,15 @@ function recordRivalsOut(msg) {
       const roleMsg = RG.roleMode === 'twoway'
         ? (RG.userRole === 'pitcher' ? '🦄 攻守交換！大谷翔平 #17 登板投球！' : '🦄 攻守交換！大谷翔平 #17 上場打擊！')
         : '🔄 三人出局！攻守交換！';
-      showRivalsBanner(roleMsg, 2200);
+      showRivalsBanner(roleMsg, 2800);
       updateRivalsHUD();
       renderRivalsCanvas();
-      checkAutoLoop();
-    }, 900);
+      checkAutoLoop(4000);
+    }, 2200);
+  } else {
+    setTimeout(() => {
+      checkAutoLoop(3800);
+    }, 1800);
   }
   updateRivalsHUD();
 }
@@ -1533,6 +1618,7 @@ function renderRivalsCanvas() {
     drawRivalsOfficialHUD(ctx, W, H);
   } else {
     drawRivalsStadiumCamera3D(ctx, W, H);
+    drawRivalsStadiumHUD(ctx, W, H);
   }
 }
 
@@ -2045,9 +2131,7 @@ function drawRivalsDuelCameraDay(ctx, W, H) {
   ctx.stroke();
 
   // 6. Draw 3D Pitcher on Mound
-  const pitchAnim = RG.phase === 'pitch_flight'
-    ? 0.45 + Math.min(0.55, (RG.pitchIdx / 18) * 0.55)
-    : (RG.phase === 'windup' ? RG.windupProgress * 0.45 : (RG.phase === 'pinpoint_ring' ? (1 - RG.ringRadius) * 0.45 : 0));
+  const pitchAnim = RG.phase === 'pitch_flight' ? Math.min(1, RG.pitchIdx / 22) : (RG.phase === 'pinpoint_ring' ? (1 - RG.ringRadius) * 0.45 : 0);
   draw3DBaseballPlayer(ctx, {
     x: moundP.px,
     y: moundP.py,
@@ -2103,7 +2187,7 @@ function drawRivalsDuelCameraDay(ctx, W, H) {
     ctx.stroke();
   }
 
-  // 8. Pitcher Pinpoint Release Ring (Pitcher Mode) or Windup Target Preview (Batter Mode)
+  // 8. Pitcher Pinpoint Release Ring (Pitcher Mode)
   const pInfo = RIVALS_PITCHES[RG.selectedPitch] || RIVALS_PITCHES['4seam'];
   if (RG.userRole === 'pitcher' && (RG.phase === 'pre_pitch' || RG.phase === 'pinpoint_ring')) {
     const finalAim = proj(RG.aimX, 14.0, RG.aimZ);
@@ -2115,29 +2199,18 @@ function drawRivalsDuelCameraDay(ctx, W, H) {
 
     if (RG.phase === 'pinpoint_ring') {
       const shrinkPx = Math.max(4, RG.ringRadius * 88);
-      const isSweet = Math.abs(RG.ringRadius - 0.28) <= 0.16;
+      const isSweet = Math.abs(RG.ringRadius - 0.28) <= 0.12;
       ctx.strokeStyle = isSweet ? '#4ade80' : '#38bdf8';
       ctx.lineWidth = 4.5;
       ctx.beginPath();
       ctx.arc(finalAim.px, finalAim.py, shrinkPx, 0, Math.PI * 2);
       ctx.stroke();
     }
-  } else if (RG.phase === 'windup') {
-    // MLB Rivals Pre-Pitch Windup Ring: Show batter that pitch is about to be released!
-    const previewPr = proj(RG.aimX, 14.0, RG.aimZ);
-    const windupR = Math.max(22, (1 - RG.windupProgress) * 60 + 24);
-    ctx.strokeStyle = 'rgba(56, 189, 248, 0.75)';
-    ctx.lineWidth = 2.5;
-    ctx.setLineDash([6, 4]);
-    ctx.beginPath();
-    ctx.arc(previewPr.px, previewPr.py, windupR, 0, Math.PI * 2);
-    ctx.stroke();
-    ctx.setLineDash([]);
   }
 
-  // 9. Ball Flight, Ground Shadow & MLB Rivals Timing Ring
-  if (RG.pitchPts.length > 0 && (RG.phase === 'pitch_flight' || RG.phase === 'contact_slowmo')) {
-    const maxI = Math.min(Math.floor(RG.pitchIdx), RG.pitchPts.length - 1);
+  // 9. Ball Flight, Ground Shadow & Spinning Seam
+  if (RG.pitchPts.length > 0) {
+    const maxI = Math.min(RG.pitchIdx, RG.pitchPts.length - 1);
 
     for (let i = 1; i <= maxI; i++) {
       const p0 = RG.pitchPts[i - 1];
@@ -2162,41 +2235,21 @@ function drawRivalsDuelCameraDay(ctx, W, H) {
       ctx.stroke();
     }
 
-    // MLB Rivals Signature Shrinking Timing Ring at Arrival Spot!
-    const platePt = RG.pitchPts.find(p => p.y >= 13.85) || RG.pitchPts[RG.pitchPts.length - 1];
+    // Ball Arrival Indicator Ring
+    const platePt = RG.pitchPts[RG.pitchPts.length - 1];
     const predPr = proj(platePt.x, 14.0, platePt.z);
-    const curP = RG.pitchPts[maxI];
-    const flightRatio = Math.min(1, curP.y / 13.65);
-
+    const flightRatio = maxI / RG.pitchPts.length;
     if (RG.phase === 'pitch_flight') {
-      const targetRingR = 22;
-      const shrinkingR = Math.max(10, (1 - flightRatio) * 68 + targetRingR);
-      const isSwingNowWindow = Math.abs(curP.y - 13.65) <= 2.3;
-
-      // Target inner circle
-      ctx.strokeStyle = isSwingNowWindow ? '#4ade80' : 'rgba(255, 255, 255, 0.75)';
-      ctx.lineWidth = isSwingNowWindow ? 3.5 : 2;
+      ctx.strokeStyle = 'rgba(250, 204, 21, 0.9)';
+      ctx.lineWidth = 2.5;
       ctx.beginPath();
-      ctx.arc(predPr.px, predPr.py, targetRingR, 0, Math.PI * 2);
+      ctx.arc(predPr.px, predPr.py, Math.max(12, (1 - flightRatio) * 52 + 12), 0, Math.PI * 2);
       ctx.stroke();
-
-      // Shrinking outer timing ring
-      ctx.strokeStyle = isSwingNowWindow ? '#4ade80' : 'rgba(250, 204, 21, 0.92)';
-      ctx.lineWidth = isSwingNowWindow ? 4.5 : 3;
-      ctx.beginPath();
-      ctx.arc(predPr.px, predPr.py, shrinkingR, 0, Math.PI * 2);
-      ctx.stroke();
-
-      if (isSwingNowWindow && RG.userRole === 'batter' && !RG.swingTriggered) {
-        ctx.fillStyle = '#4ade80';
-        ctx.font = '900 13px sans-serif';
-        ctx.textAlign = 'center';
-        ctx.fillText('⚡ 點擊揮棒 HIT!', predPr.px, predPr.py - targetRingR - 10);
-      }
     }
 
+    const curP = RG.pitchPts[maxI];
     const curPr = proj(curP.x, curP.y, curP.z);
-    const ballR = Math.max(5.5, (curPr.scale / 145) * 15.5);
+    const ballR = Math.max(4.5, (curPr.scale / 150) * 14.5);
     drawSpinningBaseball(ctx, curPr.px, curPr.py, ballR, maxI * 0.7, pInfo.color);
   }
 
@@ -2410,108 +2463,108 @@ function drawRivalsOfficialHUD(ctx, W, H) {
     ctx.fillText(sk, panelX + 14, panelY + 73 + idx * 18);
   });
 
-  // 3. TOP-RIGHT BROADCAST BUTTONS (Speed/Tempo, 打者ON, 投手ON, Cam)
-  const trX = W - 265, trY = 14;
+  // 3. TOP-RIGHT BROADCAST BUTTONS (Exact match to reference image: Speed 98, Cam, 打者ON, 投手ON)
+  const trX = W - 220, trY = 14;
 
-  // Pitch Tempo / Speed Preset Button (Clickable!)
-  const spdLabel = RG.pitchSpeedPreset === 'slow' ? '🐢慢速' : (RG.pitchSpeedPreset === 'normal' ? '⚾標準' : '🔥快速');
-  ctx.fillStyle = RG.pitchSpeedPreset === 'slow' ? '#0284c7' : (RG.pitchSpeedPreset === 'normal' ? '#d97706' : '#e11d48');
-  ctx.strokeStyle = '#bae6fd';
-  ctx.lineWidth = 1.2;
+  // Speed Badge: 98 mph
+  ctx.fillStyle = 'rgba(15, 23, 42, 0.88)';
   ctx.beginPath();
-  ctx.roundRect(trX, trY, 84, 28, 6);
+  ctx.roundRect(trX, trY, 44, 28, 6);
   ctx.fill();
-  ctx.stroke();
   ctx.fillStyle = '#ffffff';
-  ctx.font = '900 10.5px sans-serif';
+  ctx.font = '900 13px sans-serif';
   ctx.textAlign = 'center';
-  ctx.fillText(`節奏:${spdLabel}`, trX + 42, trY + 18);
+  ctx.fillText('98', trX + 22, trY + 19);
 
   // Auto Batter Toggle Button (打者 ON / OFF)
   ctx.fillStyle = RG.autoBatter ? '#10b981' : 'rgba(30, 41, 59, 0.85)';
   ctx.strokeStyle = '#475569';
   ctx.lineWidth = 1;
   ctx.beginPath();
-  ctx.roundRect(trX + 90, trY, 52, 28, 6);
+  ctx.roundRect(trX + 50, trY, 52, 28, 6);
   ctx.fill();
   ctx.stroke();
   ctx.fillStyle = '#ffffff';
   ctx.font = 'bold 10px sans-serif';
-  ctx.fillText('打者', trX + 116, trY + 12);
-  ctx.fillText(RG.autoBatter ? 'ON' : 'OFF', trX + 116, trY + 24);
+  ctx.fillText('打者', trX + 76, trY + 12);
+  ctx.fillText(RG.autoBatter ? 'ON' : 'OFF', trX + 76, trY + 24);
 
   // Auto Pitcher Toggle Button (投手 ON / OFF)
   ctx.fillStyle = RG.autoPitcher ? '#10b981' : 'rgba(30, 41, 59, 0.85)';
   ctx.beginPath();
-  ctx.roundRect(trX + 148, trY, 52, 28, 6);
+  ctx.roundRect(trX + 108, trY, 52, 28, 6);
   ctx.fill();
   ctx.stroke();
   ctx.fillStyle = '#ffffff';
   ctx.font = 'bold 10px sans-serif';
-  ctx.fillText('投手', trX + 174, trY + 12);
-  ctx.fillText(RG.autoPitcher ? 'ON' : 'OFF', trX + 174, trY + 24);
+  ctx.fillText('投手', trX + 134, trY + 12);
+  ctx.fillText(RG.autoPitcher ? 'ON' : 'OFF', trX + 134, trY + 24);
 
   // Camera / Fullscreen icon
   ctx.fillStyle = 'rgba(30, 41, 59, 0.85)';
   ctx.beginPath();
-  ctx.roundRect(trX + 206, trY, 38, 28, 6);
+  ctx.roundRect(trX + 166, trY, 38, 28, 6);
   ctx.fill();
   ctx.stroke();
   ctx.fillStyle = '#38bdf8';
   ctx.font = '14px sans-serif';
-  ctx.fillText('🎥', trX + 225, trY + 19);
+  ctx.fillText('🎥', trX + 185, trY + 19);
 
-  // 4. BOTTOM-CENTER "PLAY BALL" SEAM PILL OR "ONE-TAP SWING" GUIDE!
-  if (RG.phase === 'pre_pitch' || RG.phase === 'windup') {
-    const pillW = 240, pillH = 36;
+  // 4. BOTTOM-CENTER "PLAY BALL" SEAM PILL (Or Broadcast Tempo Countdown)
+  if (RG.phase === 'pre_pitch' || RG.phase === 'pinpoint_ring') {
+    const isWaiting = (RG.phase === 'pre_pitch' && Number(RG.prePitchSecondsLeft) > 0);
+    const pillW = isWaiting ? 300 : 210, pillH = 36;
     const pillX = W / 2 - pillW / 2, pillY = H - 56;
 
-    // Glossy pill body
-    const pGrad = ctx.createLinearGradient(pillX, pillY, pillX, pillY + pillH);
-    pGrad.addColorStop(0, '#ffffff');
-    pGrad.addColorStop(1, '#e2e8f0');
-    ctx.fillStyle = pGrad;
-    ctx.strokeStyle = '#c084fc';
-    ctx.lineWidth = 2.5;
-    ctx.beginPath();
-    ctx.roundRect(pillX, pillY, pillW, pillH, 18);
-    ctx.fill();
-    ctx.stroke();
-
-    // Red baseball seam stitching at ends
-    ctx.strokeStyle = '#ef4444';
-    ctx.lineWidth = 2;
-    for (let s = 0; s < 5; s++) {
+    if (isWaiting) {
+      // Sleek Glass Tempo Countdown Pill
+      ctx.fillStyle = 'rgba(15, 23, 42, 0.88)';
+      ctx.strokeStyle = '#38bdf8';
+      ctx.lineWidth = 2.5;
       ctx.beginPath();
-      ctx.moveTo(pillX + 12 + s * 4, pillY + 10 + (s % 2) * 14);
-      ctx.lineTo(pillX + 16 + s * 4, pillY + 16 + (s % 2) * 14);
+      ctx.roundRect(pillX, pillY, pillW, pillH, 18);
+      ctx.fill();
       ctx.stroke();
-    }
-    for (let s = 0; s < 5; s++) {
-      ctx.beginPath();
-      ctx.moveTo(pillX + pillW - 32 + s * 4, pillY + 10 + (s % 2) * 14);
-      ctx.lineTo(pillX + pillW - 28 + s * 4, pillY + 16 + (s % 2) * 14);
-      ctx.stroke();
-    }
 
-    ctx.fillStyle = '#7e22ce';
-    ctx.font = '900 14px sans-serif';
-    ctx.textAlign = 'center';
-    ctx.fillText(RG.phase === 'windup' ? '👀 看準縮圈重合時點擊！' : 'PLAY BALL・點擊開球', W / 2, pillY + 23);
-  } else if (RG.phase === 'pitch_flight' && RG.userRole === 'batter' && !RG.swingTriggered) {
-    const pillW = 280, pillH = 34;
-    const pillX = W / 2 - pillW / 2, pillY = H - 54;
-    ctx.fillStyle = 'rgba(15, 23, 42, 0.9)';
-    ctx.strokeStyle = '#facc15';
-    ctx.lineWidth = 2;
-    ctx.beginPath();
-    ctx.roundRect(pillX, pillY, pillW, pillH, 17);
-    ctx.fill();
-    ctx.stroke();
-    ctx.fillStyle = '#fde047';
-    ctx.font = '900 13px sans-serif';
-    ctx.textAlign = 'center';
-    ctx.fillText('🎯 甜蜜點已自動鎖定！圈圈縮小重合時點一下揮棒', W / 2, pillY + 22);
+      ctx.fillStyle = '#38bdf8';
+      ctx.font = 'bold 12.5px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText(`⏱️ 投手準備就位中 (${RG.prePitchSecondsLeft}s) • 點擊立即投球`, W / 2, pillY + 23);
+    } else {
+      // Glossy pill body
+      const pGrad = ctx.createLinearGradient(pillX, pillY, pillX, pillY + pillH);
+      pGrad.addColorStop(0, '#ffffff');
+      pGrad.addColorStop(1, '#e2e8f0');
+      ctx.fillStyle = pGrad;
+      ctx.strokeStyle = '#c084fc';
+      ctx.lineWidth = 2.5;
+      ctx.beginPath();
+      ctx.roundRect(pillX, pillY, pillW, pillH, 18);
+      ctx.fill();
+      ctx.stroke();
+
+      // Red baseball seam stitching at ends
+      ctx.strokeStyle = '#ef4444';
+      ctx.lineWidth = 2;
+      for (let s = 0; s < 5; s++) {
+        ctx.beginPath();
+        ctx.moveTo(pillX + 12 + s * 4, pillY + 10 + (s % 2) * 14);
+        ctx.lineTo(pillX + 16 + s * 4, pillY + 16 + (s % 2) * 14);
+        ctx.stroke();
+      }
+      for (let s = 0; s < 5; s++) {
+        ctx.beginPath();
+        ctx.moveTo(pillX + pillW - 32 + s * 4, pillY + 10 + (s % 2) * 14);
+        ctx.lineTo(pillX + pillW - 28 + s * 4, pillY + 16 + (s % 2) * 14);
+        ctx.stroke();
+      }
+
+      // "PLAY BALL" / "鎖定放球" text
+      ctx.fillStyle = '#7e22ce';
+      ctx.font = '900 16px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText(RG.phase === 'pinpoint_ring' ? '🎯 鎖定放球點' : 'PLAY BALL', W / 2, pillY + 23);
+    }
   }
 
   // 5. BOTTOM-RIGHT MLB WATERMARK (Matching reference image with version)
@@ -2549,51 +2602,282 @@ function drawRivalsTimingBar(ctx, x, y, w, h) {
   ctx.fillText('時機', x + w / 2, y - 8);
 }
 
-// 3D Stadium Play View (Ball in play)
+// 3D Stadium Play View (Ball in play - Dynamic TV Broadcast Camera)
 function drawRivalsStadiumCamera3D(ctx, W, H) {
   const uTeam = getActiveUserTeam();
   const oTeam = getActiveOppTeam();
   const offenseTeam = RG.userRole === 'batter' ? uTeam : oTeam;
   const defenseTeam = RG.userRole === 'pitcher' ? uTeam : oTeam;
 
-  const skyGrad = ctx.createLinearGradient(0, 0, 0, 115);
-  skyGrad.addColorStop(0, '#2563eb');
-  skyGrad.addColorStop(1, '#93c5fd');
-  ctx.fillStyle = skyGrad;
-  ctx.fillRect(0, 0, W, 115);
+  // 1. DYNAMIC BROADCAST CAMERA TRACKING (Smoothly pans, tilts and follows the ball)
+  const ball = RG.ballPos || { x: 0, y: 0, z: 0 };
+  const targetCamX = Math.max(-28, Math.min(28, ball.x * 0.45));
+  const targetCamY = Math.max(0, Math.min(52, ball.y * 0.32));
+  const targetCamZ = Math.max(0, Math.min(22, ball.z * 0.40));
+  if (RG.camX === undefined) { RG.camX = 0; RG.camY = 0; RG.camZ = 0; }
+  RG.camX += (targetCamX - RG.camX) * 0.08;
+  RG.camY += (targetCamY - RG.camY) * 0.08;
+  RG.camZ += (targetCamZ - RG.camZ) * 0.08;
 
-  ctx.fillStyle = '#1e293b';
-  ctx.beginPath();
-  ctx.moveTo(0, 115);
-  ctx.quadraticCurveTo(W / 2, 42, W, 115);
-  ctx.lineTo(W, 145);
-  ctx.lineTo(0, 145);
-  ctx.closePath();
-  ctx.fill();
+  const hx = W / 2 - RG.camX * 6.5;
+  const hy = H * 0.88 + RG.camY * 2.8 + RG.camZ * 2.2;
+  const zoom = 1.0 + Math.min(0.28, ball.y / 130);
 
-  const hx = W / 2;
-  const hy = 485;
   const toScreen3D = (x, y, z = 0) => {
-    const depthScale = 1 - (y / 195);
-    const scX = 6.2 * Math.max(0.58, depthScale);
-    const scY = 4.65 * Math.max(0.62, depthScale);
+    const depthScale = 1 - (y / 185);
+    const scX = 6.8 * Math.max(0.48, depthScale) * zoom;
+    const scY = 4.75 * Math.max(0.50, depthScale) * zoom;
     const groundX = hx + x * scX;
     const groundY = hy - y * scY;
     return {
       px: groundX,
-      py: groundY - z * (5.2 * Math.max(0.65, depthScale)),
+      py: groundY - z * (5.5 * Math.max(0.50, depthScale) * zoom),
       groundY,
-      scale: Math.max(0.55, depthScale)
+      scale: Math.max(0.50, depthScale) * zoom
     };
   };
 
-  const grassGrad = ctx.createLinearGradient(0, 95, 0, H);
-  grassGrad.addColorStop(0, '#16a34a');
-  grassGrad.addColorStop(1, '#15803d');
-  ctx.fillStyle = grassGrad;
-  ctx.fillRect(0, 95, W, H - 95);
+  // 2. DAYTIME SUNNY CALIFORNIA BLUE SKY
+  const skyH = Math.max(140, toScreen3D(0, 78, 18).py);
+  const skyGrad = ctx.createLinearGradient(0, 0, 0, skyH);
+  skyGrad.addColorStop(0, '#1d4ed8');
+  skyGrad.addColorStop(0.55, '#60a5fa');
+  skyGrad.addColorStop(1, '#bae6fd');
+  ctx.fillStyle = skyGrad;
+  ctx.fillRect(0, 0, W, H);
 
-  // Infield Clay
+  // Sunlight flare top-left
+  const sunFlare = ctx.createRadialGradient(100, 45, 10, 100, 45, 160);
+  sunFlare.addColorStop(0, 'rgba(254, 240, 138, 0.8)');
+  sunFlare.addColorStop(0.4, 'rgba(253, 224, 71, 0.25)');
+  sunFlare.addColorStop(1, 'rgba(255, 255, 255, 0)');
+  ctx.fillStyle = sunFlare;
+  ctx.beginPath();
+  ctx.arc(100, 45, 160, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Drifting Cumulus Clouds
+  ctx.fillStyle = 'rgba(255, 255, 255, 0.42)';
+  [
+    { cx: W * 0.18, cy: 38, r: 28 },
+    { cx: W * 0.22, cy: 30, r: 38 },
+    { cx: W * 0.27, cy: 36, r: 26 },
+    { cx: W * 0.72, cy: 45, r: 32 },
+    { cx: W * 0.77, cy: 36, r: 42 },
+    { cx: W * 0.82, cy: 44, r: 28 }
+  ].forEach(c => {
+    ctx.beginPath();
+    ctx.arc(c.cx, c.cy, c.r, 0, Math.PI * 2);
+    ctx.fill();
+  });
+
+  // 3. DODGER STADIUM OUTFIELD PAVILIONS & ARCHITECTURE
+  // Left Field Pavilion (Wavy white canopy & blue seats)
+  const lfPavP0 = toScreen3D(-58, 76, 0);
+  const lfPavP1 = toScreen3D(-16, 76, 0);
+  ctx.fillStyle = '#1e3a8a';
+  ctx.beginPath();
+  ctx.moveTo(lfPavP0.px - 30, lfPavP0.groundY);
+  ctx.lineTo(lfPavP0.px - 30, lfPavP0.groundY - 38);
+  ctx.lineTo(lfPavP1.px, lfPavP1.groundY - 32);
+  ctx.lineTo(lfPavP1.px, lfPavP1.groundY);
+  ctx.closePath();
+  ctx.fill();
+
+  // Wavy Canopy Roof
+  ctx.fillStyle = '#f8fafc';
+  ctx.strokeStyle = '#94a3b8';
+  ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  ctx.moveTo(lfPavP0.px - 34, lfPavP0.groundY - 38);
+  for (let wX = lfPavP0.px - 34; wX <= lfPavP1.px; wX += 16) {
+    ctx.quadraticCurveTo(wX + 8, lfPavP0.groundY - 44, wX + 16, lfPavP0.groundY - 38);
+  }
+  ctx.lineTo(lfPavP1.px, lfPavP1.groundY - 30);
+  ctx.lineTo(lfPavP0.px - 34, lfPavP0.groundY - 30);
+  ctx.closePath();
+  ctx.fill();
+  ctx.stroke();
+
+  // Right Field Pavilion
+  const rfPavP0 = toScreen3D(16, 76, 0);
+  const rfPavP1 = toScreen3D(58, 76, 0);
+  ctx.fillStyle = '#1e3a8a';
+  ctx.beginPath();
+  ctx.moveTo(rfPavP0.px, rfPavP0.groundY);
+  ctx.lineTo(rfPavP0.px, rfPavP0.groundY - 32);
+  ctx.lineTo(rfPavP1.px + 30, rfPavP1.groundY - 38);
+  ctx.lineTo(rfPavP1.px + 30, rfPavP1.groundY);
+  ctx.closePath();
+  ctx.fill();
+
+  // Wavy Canopy Roof RF
+  ctx.fillStyle = '#f8fafc';
+  ctx.beginPath();
+  ctx.moveTo(rfPavP0.px, rfPavP0.groundY - 32);
+  for (let wX = rfPavP0.px; wX <= rfPavP1.px + 30; wX += 16) {
+    ctx.quadraticCurveTo(wX + 8, rfPavP0.groundY - 44, wX + 16, rfPavP0.groundY - 38);
+  }
+  ctx.lineTo(rfPavP1.px + 30, rfPavP1.groundY - 30);
+  ctx.lineTo(rfPavP0.px, rfPavP0.groundY - 30);
+  ctx.closePath();
+  ctx.fill();
+  ctx.stroke();
+
+  // Center Field Plaza: Giant Scoreboard & Hexagonal Lineup Board
+  const cfP0 = toScreen3D(-16, 78, 0);
+  const cfP1 = toScreen3D(16, 78, 0);
+  ctx.fillStyle = '#0f172a';
+  ctx.fillRect(cfP0.px - 4, cfP0.groundY - 55, (cfP1.px - cfP0.px) + 8, 55);
+
+  // Scoreboard Screen: "DODGERS" & live text
+  ctx.fillStyle = '#0284c7';
+  ctx.fillRect(cfP0.px + 4, cfP0.groundY - 50, (cfP1.px - cfP0.px) - 8, 32);
+  ctx.fillStyle = '#ffffff';
+  ctx.font = '900 13px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('⚾ DODGER STADIUM • STATCAST 3D', (cfP0.px + cfP1.px) / 2, cfP0.groundY - 32);
+  ctx.fillStyle = '#facc15';
+  ctx.font = 'bold 9px sans-serif';
+  ctx.fillText('OFFICIAL BROADCAST TRACKER', (cfP0.px + cfP1.px) / 2, cfP0.groundY - 20);
+
+  // California Palm Trees behind Pavilion Walls
+  [-62, -50, -38, -25, 25, 38, 50, 62].forEach(pX => {
+    const ptSp = toScreen3D(pX, 80, 0);
+    // Trunk
+    ctx.strokeStyle = '#78350f';
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.moveTo(ptSp.px, ptSp.groundY - 30);
+    ctx.quadraticCurveTo(ptSp.px + (pX < 0 ? -4 : 4), ptSp.groundY - 60, ptSp.px, ptSp.groundY - 78);
+    ctx.stroke();
+    // Palm Fronds
+    ctx.fillStyle = '#15803d';
+    const topY = ptSp.groundY - 78;
+    for (let f = 0; f < 6; f++) {
+      const fAng = (f * Math.PI) / 3;
+      ctx.beginPath();
+      ctx.ellipse(ptSp.px + Math.cos(fAng) * 12, topY + Math.sin(fAng) * 6, 12, 4.5, fAng, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  });
+
+  // Dual Flagpoles (USA & CA Flags)
+  const flagP = toScreen3D(0, 80, 0);
+  ctx.strokeStyle = '#e2e8f0';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(flagP.px - 14, flagP.groundY - 55);
+  ctx.lineTo(flagP.px - 14, flagP.groundY - 95);
+  ctx.moveTo(flagP.px + 14, flagP.groundY - 55);
+  ctx.lineTo(flagP.px + 14, flagP.groundY - 95);
+  ctx.stroke();
+  // USA flag
+  ctx.fillStyle = '#ef4444';
+  ctx.fillRect(flagP.px - 14, flagP.groundY - 95, 14, 9);
+  ctx.fillStyle = '#1e3a8a';
+  ctx.fillRect(flagP.px - 14, flagP.groundY - 95, 6, 5);
+  // CA flag
+  ctx.fillStyle = '#ffffff';
+  ctx.fillRect(flagP.px + 14, flagP.groundY - 95, 14, 9);
+  ctx.fillStyle = '#b91c1c';
+  ctx.fillRect(flagP.px + 14, flagP.groundY - 88, 14, 2);
+
+  // 4. EMERALD OUTFIELD TURF WITH ALTERNATING MOWING STRIPES
+  const outWallRad = 74.0;
+  // Draw base green field
+  ctx.fillStyle = '#15803d';
+  ctx.fillRect(0, lfPavP0.groundY, W, H - lfPavP0.groundY);
+
+  // Fan-shaped alternating lawn mowing stripes radiating from behind home
+  for (let sDeg = -45; sDeg < 45; sDeg += 6) {
+    const isLight = Math.floor((sDeg + 45) / 6) % 2 === 0;
+    ctx.fillStyle = isLight ? '#22c55e' : '#16a34a';
+    ctx.beginPath();
+    const hPt = toScreen3D(0, 0, 0);
+    ctx.moveTo(hPt.px, hPt.groundY);
+    const r0 = (sDeg * Math.PI) / 180;
+    const r1 = ((sDeg + 6) * Math.PI) / 180;
+    const sp0 = toScreen3D(outWallRad * Math.sin(r0), outWallRad * Math.cos(r0), 0);
+    const sp1 = toScreen3D(outWallRad * Math.sin(r1), outWallRad * Math.cos(r1), 0);
+    ctx.lineTo(sp0.px, sp0.groundY);
+    ctx.lineTo(sp1.px, sp1.groundY);
+    ctx.closePath();
+    ctx.fill();
+  }
+
+  // 5. TERRA-COTTA WARNING TRACK (Clay strip along the outfield fence)
+  ctx.fillStyle = '#9a3412';
+  ctx.beginPath();
+  for (let deg = -45; deg <= 45; deg += 2) {
+    const rad = (deg * Math.PI) / 180;
+    const sp = toScreen3D(outWallRad * Math.sin(rad), outWallRad * Math.cos(rad), 0);
+    if (deg === -45) ctx.moveTo(sp.px, sp.groundY);
+    else ctx.lineTo(sp.px, sp.groundY);
+  }
+  for (let deg = 45; deg >= -45; deg -= 2) {
+    const rad = (deg * Math.PI) / 180;
+    const sp = toScreen3D((outWallRad - 4.8) * Math.sin(rad), (outWallRad - 4.8) * Math.cos(rad), 0);
+    ctx.lineTo(sp.px, sp.groundY);
+  }
+  ctx.closePath();
+  ctx.fill();
+
+  // 6. ROYAL BLUE PADDED OUTFIELD WALL (Curved arc with distance markers)
+  ctx.strokeStyle = '#005a9c';
+  ctx.lineWidth = 9;
+  ctx.lineCap = 'round';
+  ctx.beginPath();
+  for (let deg = -45; deg <= 45; deg += 2) {
+    const rad = (deg * Math.PI) / 180;
+    const sp = toScreen3D(outWallRad * Math.sin(rad), outWallRad * Math.cos(rad), 0);
+    if (deg === -45) ctx.moveTo(sp.px, sp.groundY - 3);
+    else ctx.lineTo(sp.px, sp.groundY - 3);
+  }
+  ctx.stroke();
+
+  // Yellow Top Rail on Outfield Wall
+  ctx.strokeStyle = '#facc15';
+  ctx.lineWidth = 2.5;
+  ctx.beginPath();
+  for (let deg = -45; deg <= 45; deg += 2) {
+    const rad = (deg * Math.PI) / 180;
+    const sp = toScreen3D(outWallRad * Math.sin(rad), outWallRad * Math.cos(rad), 0);
+    if (deg === -45) ctx.moveTo(sp.px, sp.groundY - 8);
+    else ctx.lineTo(sp.px, sp.groundY - 8);
+  }
+  ctx.stroke();
+
+  // Yellow Distance Markers on Wall (330, 385, 395, 385, 330)
+  const distSigns = [
+    { deg: -42, text: '330' },
+    { deg: -22, text: '385' },
+    { deg: 0, text: '395' },
+    { deg: 22, text: '385' },
+    { deg: 42, text: '330' }
+  ];
+  ctx.fillStyle = '#fef08a';
+  ctx.font = 'bold 9px sans-serif';
+  ctx.textAlign = 'center';
+  distSigns.forEach(ds => {
+    const rad = (ds.deg * Math.PI) / 180;
+    const sp = toScreen3D(outWallRad * Math.sin(rad), outWallRad * Math.cos(rad), 0);
+    ctx.fillText(ds.text, sp.px, sp.groundY - 2);
+  });
+
+  // Yellow Foul Poles on LF & RF Lines
+  const lfPole = toScreen3D(outWallRad * Math.sin((-45 * Math.PI) / 180), outWallRad * Math.cos((-45 * Math.PI) / 180), 0);
+  const rfPole = toScreen3D(outWallRad * Math.sin((45 * Math.PI) / 180), outWallRad * Math.cos((45 * Math.PI) / 180), 0);
+  ctx.strokeStyle = '#facc15';
+  ctx.lineWidth = 3.5;
+  ctx.beginPath();
+  ctx.moveTo(lfPole.px, lfPole.groundY);
+  ctx.lineTo(lfPole.px, lfPole.groundY - 58);
+  ctx.moveTo(rfPole.px, rfPole.groundY);
+  ctx.lineTo(rfPole.px, rfPole.groundY - 58);
+  ctx.stroke();
+
+  // 7. INFIELD CLAY DIAMOND & WHITE FOUL LINES
   ctx.fillStyle = '#c2410c';
   ctx.beginPath();
   const homeSp = toScreen3D(0, -2, 0);
@@ -2606,12 +2890,11 @@ function drawRivalsStadiumCamera3D(ctx, W, H) {
   ctx.closePath();
   ctx.fill();
 
-  // Diamond
+  // Diamond Grass Infield Island
   const b1 = toScreen3D(13.5, 13.5, 0);
   const b2 = toScreen3D(0, 27.0, 0);
   const b3 = toScreen3D(-13.5, 13.5, 0);
   const bHome = toScreen3D(0, 0, 0);
-
   ctx.fillStyle = '#16a34a';
   ctx.beginPath();
   ctx.moveTo(bHome.px, bHome.groundY - 12);
@@ -2621,21 +2904,40 @@ function drawRivalsStadiumCamera3D(ctx, W, H) {
   ctx.closePath();
   ctx.fill();
 
-  // Bases
-  [b1, b2, b3, bHome].forEach(b => {
+  // Pitcher's Mound Dirt Circle & Rubber
+  const moundSp = toScreen3D(0, 18.4, 0);
+  ctx.fillStyle = '#b45309';
+  ctx.beginPath();
+  ctx.ellipse(moundSp.px, moundSp.groundY, 14, 7, 0, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.fillStyle = '#ffffff';
+  ctx.fillRect(moundSp.px - 4, moundSp.groundY - 2, 8, 3);
+
+  // White Baselines Extending from Home to Foul Poles
+  ctx.strokeStyle = '#ffffff';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(bHome.px, bHome.groundY);
+  ctx.lineTo(lfPole.px, lfPole.groundY);
+  ctx.moveTo(bHome.px, bHome.groundY);
+  ctx.lineTo(rfPole.px, rfPole.groundY);
+  ctx.stroke();
+
+  // White Base Bags
+  [b1, b2, b3, bHome].forEach((b, idx) => {
     ctx.fillStyle = '#ffffff';
-    ctx.strokeStyle = '#94a3b8';
+    ctx.strokeStyle = '#64748b';
     ctx.lineWidth = 1.5;
     ctx.fillRect(b.px - 7, b.groundY - 5, 14, 10);
     ctx.strokeRect(b.px - 7, b.groundY - 5, 14, 10);
   });
 
-  // Trajectory Segments
+  // 8. STATCAST 3D TRAJECTORY RIBBON, SHADOW & LANDING BULLSEYE
   if (RG.fieldPts.length > 0) {
     const maxI = Math.min(RG.fieldIdx, RG.fieldPts.length - 1);
 
-    // Ground Shadow
-    ctx.strokeStyle = 'rgba(0, 0, 0, 0.45)';
+    // Ground Drop Shadow directly under ball path
+    ctx.strokeStyle = 'rgba(0, 0, 0, 0.40)';
     ctx.lineWidth = 3;
     ctx.beginPath();
     for (let i = 0; i <= maxI; i++) {
@@ -2646,6 +2948,7 @@ function drawRivalsStadiumCamera3D(ctx, W, H) {
     }
     ctx.stroke();
 
+    // 3D Statcast Glowing Ribbon Trajectory
     for (let i = 1; i <= maxI; i++) {
       const p0 = RG.fieldPts[i - 1];
       const p1 = RG.fieldPts[i];
@@ -2653,33 +2956,83 @@ function drawRivalsStadiumCamera3D(ctx, W, H) {
       const s1 = toScreen3D(p1.x, p1.y, p1.z);
 
       if (p1.state === 'air') {
-        ctx.strokeStyle = '#facc15';
-        ctx.lineWidth = 4.2;
-        ctx.setLineDash([]);
+        // Outer Glow
+        ctx.strokeStyle = 'rgba(250, 204, 21, 0.45)';
+        ctx.lineWidth = 8;
+        ctx.lineCap = 'round';
+        ctx.beginPath();
+        ctx.moveTo(s0.px, s0.py);
+        ctx.lineTo(s1.px, s1.py);
+        ctx.stroke();
+
+        // Inner Sharp Golden-White Core
+        ctx.strokeStyle = '#ffffff';
+        ctx.lineWidth = 3.2;
+        ctx.beginPath();
+        ctx.moveTo(s0.px, s0.py);
+        ctx.lineTo(s1.px, s1.py);
+        ctx.stroke();
       } else if (p1.state === 'bouncing') {
         ctx.strokeStyle = '#34d399';
-        ctx.lineWidth = 3.4;
-        ctx.setLineDash([]);
+        ctx.lineWidth = 3.5;
+        ctx.beginPath();
+        ctx.moveTo(s0.px, s0.py);
+        ctx.lineTo(s1.px, s1.py);
+        ctx.stroke();
       } else {
         ctx.strokeStyle = '#38bdf8';
-        ctx.lineWidth = 3.4;
-        ctx.setLineDash([4, 4]);
+        ctx.lineWidth = 3.2;
+        ctx.setLineDash([5, 4]);
+        ctx.beginPath();
+        ctx.moveTo(s0.px, s0.py);
+        ctx.lineTo(s1.px, s1.py);
+        ctx.stroke();
+        ctx.setLineDash([]);
       }
-      ctx.beginPath();
-      ctx.moveTo(s0.px, s0.py);
-      ctx.lineTo(s1.px, s1.py);
-      ctx.stroke();
     }
-    ctx.setLineDash([]);
+
+    // PROJECTED STATCAST LANDING BULLSEYE TARGET (Pulsing concentric circles)
+    if (RG.projectedLanding && RG.ballPos && RG.ballPos.state === 'air') {
+      const landSp = toScreen3D(RG.projectedLanding.x, RG.projectedLanding.y, 0);
+      const pulse = (Math.sin(Date.now() / 140) + 1) * 0.5;
+
+      // Outer ring
+      ctx.strokeStyle = 'rgba(250, 204, 21, 0.75)';
+      ctx.lineWidth = 2.5;
+      ctx.beginPath();
+      ctx.ellipse(landSp.px, landSp.groundY, 18 + pulse * 6, 8 + pulse * 3, 0, 0, Math.PI * 2);
+      ctx.stroke();
+
+      // Inner ring
+      ctx.fillStyle = 'rgba(239, 68, 68, 0.55)';
+      ctx.beginPath();
+      ctx.ellipse(landSp.px, landSp.groundY, 7, 3.5, 0, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Crosshair lines
+      ctx.strokeStyle = '#ffffff';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.moveTo(landSp.px - 22, landSp.groundY);
+      ctx.lineTo(landSp.px + 22, landSp.groundY);
+      ctx.moveTo(landSp.px, landSp.groundY - 10);
+      ctx.lineTo(landSp.px, landSp.groundY + 10);
+      ctx.stroke();
+
+      ctx.fillStyle = '#fef08a';
+      ctx.font = 'bold 10px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('落點預測', landSp.px, landSp.groundY - 14);
+    }
   }
 
-  // Draw Fielders & Runners
+  // 9. DRAW DEFENSIVE FIELDERS & OFFENSIVE RUNNERS
   RG.fielders.forEach(f => {
     const fp = toScreen3D(f.x, f.y, 0);
     draw3DBaseballPlayer(ctx, {
       x: fp.px,
       y: fp.groundY,
-      scale: fp.scale * 0.92,
+      scale: fp.scale * 0.95,
       jerseyColor: defenseTeam.jerseyHome,
       accentColor: defenseTeam.primary,
       numberColor: defenseTeam.secondary,
@@ -2696,7 +3049,7 @@ function drawRivalsStadiumCamera3D(ctx, W, H) {
     draw3DBaseballPlayer(ctx, {
       x: sp.px,
       y: sp.groundY,
-      scale: sp.scale * 0.98,
+      scale: sp.scale * 1.0,
       jerseyColor: offenseTeam.jerseyHome,
       accentColor: offenseTeam.primary,
       numberColor: offenseTeam.secondary,
@@ -2706,34 +3059,223 @@ function drawRivalsStadiumCamera3D(ctx, W, H) {
     });
   });
 
-  // Active Ball
+  // 10. ACTIVE BALL (Spinning 3D Baseball & Drop Shadow)
   if (RG.thrownBall) {
     const tb = RG.thrownBall;
     const bx = tb.fromX + (tb.toX - tb.fromX) * tb.progress;
     const by = tb.fromY + (tb.toY - tb.fromY) * tb.progress;
-    const bz = 1.2 + Math.sin(tb.progress * Math.PI) * 2.2;
+    const bz = 1.2 + Math.sin(tb.progress * Math.PI) * 2.4;
     const spCur = toScreen3D(bx, by, bz);
-    drawSpinningBaseball(ctx, spCur.px, spCur.py, 7.5, tb.progress * 22, '#f43f5e');
-  } else {
-    const bSp = toScreen3D(RG.ballPos.x, RG.ballPos.y, RG.ballPos.z);
-    ctx.fillStyle = 'rgba(0,0,0,0.55)';
+
+    // Laser Throw Line
+    const spFrom = toScreen3D(tb.fromX, tb.fromY, 1.2);
+    const spTo = toScreen3D(tb.toX, tb.toY, 1.0);
+    ctx.strokeStyle = 'rgba(244, 63, 94, 0.45)';
+    ctx.lineWidth = 3;
+    ctx.setLineDash([4, 4]);
     ctx.beginPath();
-    ctx.ellipse(bSp.px, bSp.groundY, 6, 3.5, 0, 0, Math.PI * 2);
+    ctx.moveTo(spFrom.px, spFrom.py);
+    ctx.lineTo(spTo.px, spTo.py);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    drawSpinningBaseball(ctx, spCur.px, spCur.py, 8.5, tb.progress * 28, '#f43f5e');
+  } else if (RG.ballPos) {
+    const bSp = toScreen3D(RG.ballPos.x, RG.ballPos.y, RG.ballPos.z);
+    // Dynamic ground shadow directly under ball
+    const shadowScale = Math.max(0.35, 1 - RG.ballPos.z / 18);
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.55)';
+    ctx.beginPath();
+    ctx.ellipse(bSp.px, bSp.groundY, 8 * shadowScale, 4.5 * shadowScale, 0, 0, Math.PI * 2);
     ctx.fill();
-    drawSpinningBaseball(ctx, bSp.px, bSp.py, 7.5, RG.fieldIdx * 0.65, '#ef4444');
+
+    // 3D Spinning Baseball with red seams
+    const ballR = Math.max(5.5, 8.5 * bSp.scale);
+    drawSpinningBaseball(ctx, bSp.px, bSp.py, ballR, (RG.fieldIdxProgress || 0) * 0.75, '#ef4444');
   }
 
-  // Fireworks
+  // 11. BOUNCE & SLIDE DUST PARTICLES
+  if (RG.particles && RG.particles.length > 0) {
+    RG.particles.forEach(p => {
+      p.x += p.vx * 0.35;
+      p.y += p.vy * 0.35;
+      p.life--;
+      const pSp = toScreen3D(p.x, p.y, 0);
+      ctx.fillStyle = p.color || '#d97706';
+      ctx.beginPath();
+      ctx.arc(pSp.px, pSp.groundY, Math.max(1, (p.life / 20) * 4), 0, Math.PI * 2);
+      ctx.fill();
+    });
+    RG.particles = RG.particles.filter(p => p.life > 0);
+  }
+
+  // 12. FIREWORKS (Home Run Celebration)
   if (RG.fireworks && RG.fireworks.length > 0) {
     RG.fireworks.forEach(fw => {
-      fw.x += fw.vx * 0.4;
-      fw.y += fw.vy * 0.4;
+      fw.x += fw.vx * 0.5;
+      fw.y += fw.vy * 0.5;
       ctx.fillStyle = fw.color;
       ctx.beginPath();
-      ctx.arc(fw.x, fw.y, 3.5, 0, Math.PI * 2);
+      ctx.arc(fw.x, fw.y, 4.5, 0, Math.PI * 2);
       ctx.fill();
     });
   }
+}
+
+// Dedicated TV Broadcast Statcast HUD Overlay during Field Play
+function drawRivalsStadiumHUD(ctx, W, H) {
+  const uTeam = getActiveUserTeam();
+  const oTeam = getActiveOppTeam();
+  const batter = getCurrentBatterInfo();
+
+  // 1. TOP-LEFT COMPACT SCOREBUG
+  const sbX = 14, sbY = 14, sbW = 205, sbH = 46;
+  ctx.fillStyle = 'rgba(15, 23, 42, 0.90)';
+  ctx.strokeStyle = '#334155';
+  ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  ctx.roundRect(sbX, sbY, sbW, sbH, 8);
+  ctx.fill();
+  ctx.stroke();
+
+  // Team Scores
+  ctx.fillStyle = '#ffffff';
+  ctx.font = '900 13px sans-serif';
+  ctx.textAlign = 'left';
+  ctx.fillText(`${oTeam.shortName} ${RG.scoreCpu} - ${RG.scoreUser} ${uTeam.shortName}`, sbX + 10, sbY + 20);
+
+  // Inning & Count
+  ctx.fillStyle = '#94a3b8';
+  ctx.font = 'bold 11px sans-serif';
+  ctx.fillText(`${RG.isTop ? '▲' : '▼'} ${RG.inning}局  ${RG.balls}-${RG.strikes}  ${RG.outs} OUT`, sbX + 10, sbY + 38);
+
+  // Base Diamond
+  const bRadX = sbX + sbW - 32, bRadY = sbY + 23;
+  const drawBase = (bx, by, filled) => {
+    ctx.fillStyle = filled ? '#facc15' : 'rgba(255,255,255,0.2)';
+    ctx.beginPath();
+    ctx.moveTo(bx, by - 4);
+    ctx.lineTo(bx + 4, by);
+    ctx.lineTo(bx, by + 4);
+    ctx.lineTo(bx - 4, by);
+    ctx.closePath();
+    ctx.fill();
+  };
+  drawBase(bRadX + 7, bRadY, RG.occupiedBases[0]);
+  drawBase(bRadX, bRadY - 7, RG.occupiedBases[1]);
+  drawBase(bRadX - 7, bRadY, RG.occupiedBases[2]);
+
+  // 2. TOP-CENTER STATCAST™ REAL-TIME TELEMETRY PILL
+  const scW = 340, scH = 46;
+  const scX = W / 2 - scW / 2, scY = 14;
+
+  ctx.fillStyle = 'rgba(15, 23, 42, 0.92)';
+  ctx.strokeStyle = '#facc15';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.roundRect(scX, scY, scW, scH, 10);
+  ctx.fill();
+  ctx.stroke();
+
+  // Statcast Header
+  ctx.fillStyle = '#facc15';
+  ctx.font = '900 11px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('⚾ STATCAST™ 實戰物理即時追蹤', W / 2, scY + 16);
+
+  // Dynamic Metrics
+  const sc = RG.hitStatcast || { exitVeloMph: 104, exitVeloKmh: 167, launchDeg: 28, totalDistFt: 412 };
+  const curDistFt = Math.round((RG.ballPos ? RG.ballPos.dist : 0) * 5.3);
+
+  ctx.fillStyle = '#ffffff';
+  ctx.font = 'bold 12px sans-serif';
+  ctx.fillText(
+    `初速 ${sc.exitVeloMph} MPH  •  仰角 ${sc.launchDeg}°  •  飛行 ${curDistFt} FT`,
+    W / 2,
+    scY + 36
+  );
+
+  // 3. HOME RUN FULL-SCREEN BROADCAST SPLASH (When hit clears the wall!)
+  if (sc.isHomeRun && RG.ballPos && RG.ballPos.dist >= 72) {
+    const hrW = Math.min(520, W - 30);
+    const hrH = 92;
+    const hrX = W / 2 - hrW / 2;
+    const hrY = H * 0.32;
+
+    // Glowing Gold Banner
+    const hrGrad = ctx.createLinearGradient(hrX, hrY, hrX + hrW, hrY);
+    hrGrad.addColorStop(0, '#1e3a8a');
+    hrGrad.addColorStop(0.5, '#0284c7');
+    hrGrad.addColorStop(1, '#1e3a8a');
+    ctx.fillStyle = hrGrad;
+    ctx.strokeStyle = '#facc15';
+    ctx.lineWidth = 3.5;
+    ctx.beginPath();
+    ctx.roundRect(hrX, hrY, hrW, hrH, 16);
+    ctx.fill();
+    ctx.stroke();
+
+    ctx.fillStyle = '#fef08a';
+    ctx.font = '900 32px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('🎆 HOME RUN! 全壘打！ 🎆', W / 2, hrY + 42);
+
+    ctx.fillStyle = '#ffffff';
+    ctx.font = 'bold 14px sans-serif';
+    ctx.fillText(
+      `#${batter.num} ${batter.short} 轟上看台！ 飛行距離 ${sc.totalDistFt} FT (${sc.totalDistM}m) • 初速 ${sc.exitVeloMph} MPH`,
+      W / 2,
+      hrY + 74
+    );
+  }
+
+  // 4. TOP-RIGHT CAMERA & AUTO CONTROLS
+  const trX = W - 220, trY = 14;
+  ctx.fillStyle = 'rgba(15, 23, 42, 0.88)';
+  ctx.beginPath();
+  ctx.roundRect(trX, trY, 44, 28, 6);
+  ctx.fill();
+  ctx.fillStyle = '#ffffff';
+  ctx.font = '900 13px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('98', trX + 22, trY + 19);
+
+  ctx.fillStyle = RG.autoBatter ? '#10b981' : 'rgba(30, 41, 59, 0.85)';
+  ctx.strokeStyle = '#475569';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.roundRect(trX + 50, trY, 52, 28, 6);
+  ctx.fill();
+  ctx.stroke();
+  ctx.fillStyle = '#ffffff';
+  ctx.font = 'bold 10px sans-serif';
+  ctx.fillText('打者', trX + 76, trY + 12);
+  ctx.fillText(RG.autoBatter ? 'ON' : 'OFF', trX + 76, trY + 24);
+
+  ctx.fillStyle = RG.autoPitcher ? '#10b981' : 'rgba(30, 41, 59, 0.85)';
+  ctx.beginPath();
+  ctx.roundRect(trX + 108, trY, 52, 28, 6);
+  ctx.fill();
+  ctx.stroke();
+  ctx.fillStyle = '#ffffff';
+  ctx.font = 'bold 10px sans-serif';
+  ctx.fillText('投手', trX + 134, trY + 12);
+  ctx.fillText(RG.autoPitcher ? 'ON' : 'OFF', trX + 134, trY + 24);
+
+  ctx.fillStyle = 'rgba(30, 41, 59, 0.85)';
+  ctx.beginPath();
+  ctx.roundRect(trX + 166, trY, 38, 28, 6);
+  ctx.fill();
+  ctx.stroke();
+  ctx.fillStyle = '#38bdf8';
+  ctx.font = '14px sans-serif';
+  ctx.fillText('🎥', trX + 185, trY + 19);
+
+  // 5. BOTTOM-RIGHT WATERMARK (v2.6.0)
+  ctx.fillStyle = 'rgba(255, 255, 255, 0.75)';
+  ctx.font = 'bold 11px sans-serif';
+  ctx.textAlign = 'right';
+  ctx.fillText('iPLAYERS ⚾ MLB Rivals 3D v2.6.0', W - 18, H - 16);
 }
 
 // Setup Mouse, Touch & Simplified Single-Tap Controls
@@ -2742,32 +3284,26 @@ window.addEventListener('DOMContentLoaded', () => {
   const canvas = document.getElementById('rivalsBroadcastCanvas');
   if (!canvas) return;
 
-  const mapPointerToZone = (clientX, clientY, isTouch, isClick = false) => {
-    if (RG.cameraMode !== 'duel') return false;
+  const mapPointerToZone = (clientX, clientY, isTouch) => {
+    if (RG.cameraMode !== 'duel') return;
     const rect = canvas.getBoundingClientRect();
     const cx = ((clientX - rect.left) / rect.width) * canvas.width;
     const cy = ((clientY - rect.top) / rect.height) * canvas.height;
 
     // Check click on top-right quick action buttons
-    if (isClick) {
-      const trX = canvas.width - 265, trY = 14;
-      if (cy >= trY && cy <= trY + 32) {
-        if (cx >= trX && cx <= trX + 84) {
-          cycleRivalsPitchSpeed();
-          return true;
-        }
-        if (cx >= trX + 90 && cx <= trX + 142) {
-          toggleAutoBatter();
-          return true;
-        }
-        if (cx >= trX + 148 && cx <= trX + 200) {
-          toggleAutoPitcher();
-          return true;
-        }
-        if (cx >= trX + 206 && cx <= trX + 244) {
-          toggleRivalsFullscreen();
-          return true;
-        }
+    const trX = canvas.width - 220, trY = 14;
+    if (cy >= trY && cy <= trY + 32) {
+      if (cx >= trX + 50 && cx <= trX + 102) {
+        toggleAutoBatter();
+        return;
+      }
+      if (cx >= trX + 108 && cx <= trX + 160) {
+        toggleAutoPitcher();
+        return;
+      }
+      if (cx >= trX + 166 && cx <= trX + 204) {
+        toggleRivalsFullscreen();
+        return;
       }
     }
 
@@ -2777,46 +3313,37 @@ window.addEventListener('DOMContentLoaded', () => {
     const zM = Math.max(0.24, Math.min(1.22, (412 - cy) / scale + 0.55 + touchOffsetZ));
 
     if (RG.userRole === 'batter') {
-      // In Auto-Aim Assist mode, tapping anywhere on screen to swing should NOT pull the bat reticle off the ball!
-      if (!RG.autoAimAssist || (!isClick && RG.touchDragging)) {
-        RG.batX = xM;
-        RG.batZ = zM;
-      }
+      RG.batX = xM;
+      RG.batZ = zM;
     } else if (RG.phase === 'pre_pitch') {
       RG.aimX = xM;
       RG.aimZ = zM;
     }
     if (RG.phase === 'pre_pitch') renderRivalsCanvas();
-    return false;
   };
 
   canvas.addEventListener('mousemove', (e) => {
-    if (!RG.autoAimAssist || RG.userRole === 'pitcher') {
-      mapPointerToZone(e.clientX, e.clientY, false, false);
-    }
+    mapPointerToZone(e.clientX, e.clientY, false);
   });
 
   // Tapping ANYWHERE on canvas = trigger swing or release!
   canvas.addEventListener('mousedown', (e) => {
-    const handledTopBtn = mapPointerToZone(e.clientX, e.clientY, false, true);
-    if (!handledTopBtn) handleRivalsPrimaryButton();
+    mapPointerToZone(e.clientX, e.clientY, false);
+    handleRivalsPrimaryButton();
   });
 
   canvas.addEventListener('touchstart', (e) => {
     if (!e.touches || e.touches.length === 0) return;
     const t = e.touches[0];
-    RG.touchDragging = false;
-    const handledTopBtn = mapPointerToZone(t.clientX, t.clientY, true, true);
-    if (!handledTopBtn) handleRivalsPrimaryButton();
+    RG.touchDragging = true;
+    mapPointerToZone(t.clientX, t.clientY, true);
+    handleRivalsPrimaryButton();
   }, { passive: true });
 
   canvas.addEventListener('touchmove', (e) => {
     if (!e.touches || e.touches.length === 0) return;
     const t = e.touches[0];
-    if (!RG.autoAimAssist || RG.userRole === 'pitcher') {
-      RG.touchDragging = true;
-      mapPointerToZone(t.clientX, t.clientY, true, false);
-    }
+    mapPointerToZone(t.clientX, t.clientY, true);
   }, { passive: true });
 
   canvas.addEventListener('touchend', () => {
