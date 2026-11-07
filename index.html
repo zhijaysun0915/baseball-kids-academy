@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>小小職棒王：四年級棒球互動教學樂園（真實物理軌跡＆實戰對決版）</title>
+  <title>小小職棒王：四年級棒球互動教學樂園 ＆《MLB 勁旅對決 3D》大谷翔平旗艦版 v2.5.0</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     :root {
@@ -37,10 +37,12 @@
     <!-- Header Banner -->
     <header class="bg-[var(--card)] border border-[var(--border)] rounded-2xl p-4 md:p-5 mb-4 shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
       <div>
-        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/15 text-amber-400 text-xs font-bold mb-1.5">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/15 text-amber-400 text-xs font-bold mb-1.5 flex-wrap">
           <span>⚾ 國小四年級專屬互動教材</span>
           <span>•</span>
           <span>真實物理軌跡 ＆ 投打實戰對決</span>
+          <span>•</span>
+          <span class="px-2 py-0.5 rounded-full bg-blue-500/25 text-blue-300 border border-blue-400/50 font-mono text-[11px] font-black">v2.5.0 MLB Rivals 旗艦版</span>
         </div>
         <h1 class="text-2xl md:text-3xl font-extrabold tracking-tight flex items-center gap-2">
           🏟️ 小小職棒王：棒球技能與真實物理特訓營
@@ -61,260 +63,327 @@
     </header>
 
     <!-- Main Navigation Tabs -->
-    <nav class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 mb-5">
-      <button id="tab-game" onclick="switchMainTab('game')" class="tab-btn flex items-center justify-center gap-1.5 py-3 px-3 rounded-xl border border-rose-500/50 bg-[var(--card)] text-xs md:text-sm transition cursor-pointer">
-        <span>🎮 實戰對決比賽</span>
+    <nav class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 mb-4">
+      <button id="tab-game" onclick="switchMainTab('game')" class="tab-btn active flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl border border-blue-500/60 bg-[var(--card)] text-xs md:text-sm transition cursor-pointer">
+        <span>🏟️ MLB 勁旅對決 3D</span>
       </button>
-      <button id="tab-pitching" onclick="switchMainTab('pitching')" class="tab-btn active flex items-center justify-center gap-1.5 py-3 px-3 rounded-xl border border-[var(--border)] bg-[var(--card)] text-xs md:text-sm transition cursor-pointer">
+      <button id="tab-pitching" onclick="switchMainTab('pitching')" class="tab-btn flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl border border-[var(--border)] bg-[var(--card)] text-xs md:text-sm transition cursor-pointer">
         <span>⚾ 1. 投球物理與握法</span>
       </button>
-      <button id="tab-fielding" onclick="switchMainTab('fielding')" class="tab-btn flex items-center justify-center gap-1.5 py-3 px-3 rounded-xl border border-[var(--border)] bg-[var(--card)] text-xs md:text-sm transition cursor-pointer">
+      <button id="tab-fielding" onclick="switchMainTab('fielding')" class="tab-btn flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl border border-[var(--border)] bg-[var(--card)] text-xs md:text-sm transition cursor-pointer">
         <span>🧤 2. 守備與守壘</span>
       </button>
-      <button id="tab-batting" onclick="switchMainTab('batting')" class="tab-btn flex items-center justify-center gap-1.5 py-3 px-3 rounded-xl border border-[var(--border)] bg-[var(--card)] text-xs md:text-sm transition cursor-pointer">
+      <button id="tab-batting" onclick="switchMainTab('batting')" class="tab-btn flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl border border-[var(--border)] bg-[var(--card)] text-xs md:text-sm transition cursor-pointer">
         <span>🏏 3. 打擊與滾動物理</span>
       </button>
-      <button id="tab-baserunning" onclick="switchMainTab('baserunning')" class="tab-btn flex items-center justify-center gap-1.5 py-3 px-3 rounded-xl border border-[var(--border)] bg-[var(--card)] text-xs md:text-sm transition cursor-pointer">
+      <button id="tab-baserunning" onclick="switchMainTab('baserunning')" class="tab-btn flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl border border-[var(--border)] bg-[var(--card)] text-xs md:text-sm transition cursor-pointer">
         <span>🏃‍♂️ 4. 壘上跑壘戰術</span>
       </button>
-      <button id="tab-quiz" onclick="switchMainTab('quiz')" class="tab-btn flex items-center justify-center gap-1.5 py-3 px-3 rounded-xl border border-[var(--border)] bg-[var(--card)] text-xs md:text-sm transition cursor-pointer">
+      <button id="tab-quiz" onclick="switchMainTab('quiz')" class="tab-btn flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl border border-[var(--border)] bg-[var(--card)] text-xs md:text-sm transition cursor-pointer">
         <span>🏆 5. 小國手挑戰賽</span>
       </button>
     </nav>
 
-    <!-- ==================== SECTION 0: 勁旅對決 (RIVALS SHOWDOWN) 互動比賽模式 ==================== -->
-    <section id="sec-game" class="hidden space-y-4">
-      <!-- Top Broadcast Scoreboard & Clutch Energy Header -->
-      <div class="bg-[var(--card)] border border-[var(--border)] rounded-2xl p-4 shadow-sm space-y-3">
-        <div class="flex flex-wrap items-center justify-between gap-3">
-          <!-- Scorebug & BSO -->
-          <div class="flex flex-wrap items-center gap-3">
-            <div class="bg-[var(--background)] border border-[var(--border)] rounded-xl px-4 py-2 flex items-center gap-4">
+    <!-- ==================== SECTION 0: MLB 勁旅對決 (MLB RIVALS 3D SHOWDOWN) ==================== -->
+    <section id="sec-game" class="space-y-3.5">
+      <!-- Top MLB Rivals Team & Ohtani Two-Way Command Bar -->
+      <div class="bg-[var(--card)] border border-[var(--border)] rounded-2xl p-3 md:p-4 shadow-sm space-y-3">
+        <div class="flex flex-wrap items-center justify-between gap-2.5">
+          <!-- Left: Broadcast Scorebug & BSO -->
+          <div class="flex flex-wrap items-center gap-2.5">
+            <div class="bg-[var(--background)] border border-blue-500/40 rounded-xl px-3.5 py-1.5 flex items-center gap-3 shadow-inner">
               <div>
-                <div class="text-xs text-[var(--muted-foreground)]">局數</div>
-                <div id="rivals-inning" class="text-base font-extrabold text-amber-400">1局上</div>
+                <div class="text-[10px] uppercase tracking-wider text-amber-400 font-extrabold flex items-center gap-1.5">
+                  <span>MLB RIVALS 3D</span>
+                  <span class="px-1.5 py-0.2 rounded bg-sky-500/25 border border-sky-400/50 text-sky-200 text-[9px] font-mono font-black">v2.5.0</span>
+                </div>
+                <div id="rivals-inning" class="text-sm md:text-base font-black text-white">1局上</div>
               </div>
-              <div class="h-8 w-px bg-[var(--border)]"></div>
-              <div class="text-center">
-                <div class="text-xs text-blue-400 font-bold">🌟 台灣小國手</div>
-                <div id="rivals-score-user" class="text-2xl font-black">0</div>
+              <div class="h-7 w-px bg-[var(--border)]"></div>
+              <div class="text-center min-w-[68px]">
+                <div id="rivals-user-team-label" class="text-xs text-sky-400 font-extrabold truncate">🔵 道奇 LAD</div>
+                <div id="rivals-score-user" class="text-xl md:text-2xl font-black leading-tight">0</div>
               </div>
-              <div class="text-xs font-extrabold text-[var(--muted-foreground)]">VS</div>
-              <div class="text-center">
-                <div id="rivals-opp-name" class="text-xs text-rose-400 font-bold">🐯 猛虎少棒隊 (入門)</div>
-                <div id="rivals-score-cpu" class="text-2xl font-black">0</div>
+              <div class="text-[11px] font-black text-slate-400">VS</div>
+              <div class="text-center min-w-[68px]">
+                <div id="rivals-opp-name" class="text-xs text-rose-400 font-extrabold truncate">🗽 洋基 NYY</div>
+                <div id="rivals-score-cpu" class="text-xl md:text-2xl font-black leading-tight">0</div>
               </div>
             </div>
 
-            <div class="bg-[var(--background)] border border-[var(--border)] rounded-xl px-3.5 py-2 text-xs space-y-1 font-mono">
-              <div class="flex items-center gap-2">
-                <span class="w-4 font-bold text-emerald-400">B</span>
+            <div class="bg-[var(--background)] border border-[var(--border)] rounded-xl px-3 py-1.5 text-xs space-y-0.5 font-mono">
+              <div class="flex items-center gap-1.5">
+                <span class="w-3.5 font-bold text-emerald-400">B</span>
                 <span id="rivals-b" class="tracking-widest text-emerald-400">○○○○</span>
               </div>
-              <div class="flex items-center gap-2">
-                <span class="w-4 font-bold text-amber-400">S</span>
+              <div class="flex items-center gap-1.5">
+                <span class="w-3.5 font-bold text-amber-400">S</span>
                 <span id="rivals-s" class="tracking-widest text-amber-400">○○○</span>
               </div>
-              <div class="flex items-center gap-2">
-                <span class="w-4 font-bold text-rose-400">O</span>
+              <div class="flex items-center gap-1.5">
+                <span class="w-3.5 font-bold text-rose-400">O</span>
                 <span id="rivals-o" class="tracking-widest text-rose-400">○○○</span>
               </div>
             </div>
 
-            <!-- Clutch Energy Meter -->
-            <div class="bg-[var(--background)] border border-[var(--border)] rounded-xl px-3.5 py-2 flex items-center gap-3">
-              <div class="w-28">
-                <div class="text-xs font-bold text-amber-400 mb-1">🔥 勁旅鬥志能量</div>
+            <!-- Ohtani Showtime / Clutch Energy Meter -->
+            <div class="bg-[var(--background)] border border-[var(--border)] rounded-xl px-3 py-1.5 flex items-center gap-2.5">
+              <div class="w-24 sm:w-28">
+                <div class="text-[11px] font-bold text-amber-400 mb-1 flex items-center justify-between">
+                  <span>🔥 SHOWTIME 鬥志</span>
+                </div>
                 <div class="w-full h-2.5 bg-slate-800 rounded-full overflow-hidden border border-slate-700">
-                  <div id="rivals-clutch-bar" class="h-full bg-gradient-to-r from-amber-500 to-rose-500 transition-all duration-300" style="width: 40%"></div>
+                  <div id="rivals-clutch-bar" class="h-full bg-gradient-to-r from-sky-400 via-amber-400 to-rose-500 transition-all duration-300" style="width: 50%"></div>
                 </div>
               </div>
-              <button id="rivals-clutch-btn" onclick="activateClutchSpecial()" disabled class="px-3 py-1 rounded-lg bg-slate-700 text-slate-400 font-bold text-xs cursor-not-allowed">
-                ⚡ 鬥志能量 40%
+              <button id="rivals-clutch-btn" onclick="activateClutchSpecial()" disabled class="px-2.5 py-1.5 rounded-lg bg-slate-700 text-slate-400 font-bold text-xs cursor-not-allowed whitespace-nowrap">
+                ⚡ 能量 50%
               </button>
             </div>
           </div>
 
-          <!-- Role Switch, Opponent Select & SFX -->
-          <div class="flex flex-wrap items-center gap-2">
-            <button id="rivals-role-bat" onclick="setRivalsRole('batter')" class="sub-btn active px-3 py-2 rounded-xl border border-[var(--border)] text-xs font-bold cursor-pointer">
-              🏏 進攻打擊＋跑壘模式
+          <!-- Right: Ohtani Two-Way Role Switch + Fullscreen + SFX -->
+          <div class="flex flex-wrap items-center gap-1.5">
+            <button id="rivals-role-twoway" onclick="setRivalsRole('twoway')" class="sub-btn active px-2.5 py-1.5 rounded-xl border border-[var(--border)] text-xs font-extrabold cursor-pointer text-amber-300">
+              🦄 大谷二刀流 (投打攻守)
             </button>
-            <button id="rivals-role-pitch" onclick="setRivalsRole('pitcher')" class="sub-btn px-3 py-2 rounded-xl border border-[var(--border)] text-xs font-bold cursor-pointer">
-              ⚾ 王牌投球＋守備模式
+            <button id="rivals-role-bat" onclick="setRivalsRole('batter')" class="sub-btn px-2.5 py-1.5 rounded-xl border border-[var(--border)] text-xs font-bold cursor-pointer">
+              🏏 專注打擊 (#17 大谷左打)
             </button>
-            <button id="rivals-sfx-btn" onclick="RivalsSFX.toggle()" class="px-3 py-2 rounded-xl border border-[var(--border)] hover:bg-[var(--background)] text-xs font-bold cursor-pointer">
-              🔊 實戰音效：開
+            <button id="rivals-role-pitch" onclick="setRivalsRole('pitcher')" class="sub-btn px-2.5 py-1.5 rounded-xl border border-[var(--border)] text-xs font-bold cursor-pointer">
+              ⚾ 專注投球 (#17 大谷右投)
             </button>
-            <button onclick="resetRivalsMatch()" class="px-3 py-2 rounded-xl border border-[var(--border)] hover:bg-[var(--background)] text-xs font-bold cursor-pointer">
-              🔄 重開新局
+            <button onclick="toggleRivalsFullscreen()" class="px-2.5 py-1.5 rounded-xl border border-sky-500/50 bg-sky-500/15 hover:bg-sky-500/25 text-sky-300 text-xs font-bold cursor-pointer">
+              📱 全螢幕
+            </button>
+            <button id="rivals-sfx-btn" onclick="RivalsSFX.toggle()" class="px-2.5 py-1.5 rounded-xl border border-[var(--border)] hover:bg-[var(--background)] text-xs font-bold cursor-pointer">
+              🔊 音效
+            </button>
+            <button onclick="resetRivalsMatch()" class="px-2.5 py-1.5 rounded-xl border border-[var(--border)] hover:bg-[var(--background)] text-xs font-bold cursor-pointer">
+              🔄 新局
             </button>
           </div>
         </div>
 
-        <!-- Opponent Difficulty Selector Bar -->
-        <div class="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-[var(--border)] text-xs">
-          <div class="flex items-center gap-2">
-            <span class="font-bold text-[var(--muted-foreground)]">🏆 選擇勁旅對手難度：</span>
-            <button id="opp-btn-0" onclick="setRivalsOpponent(0)" class="sub-btn active px-2.5 py-1 rounded-lg border border-[var(--border)] cursor-pointer">🐯 猛虎少棒隊 (入門)</button>
-            <button id="opp-btn-1" onclick="setRivalsOpponent(1)" class="sub-btn px-2.5 py-1 rounded-lg border border-[var(--border)] cursor-pointer">🦅 蒼鷹菁英隊 (進階)</button>
-            <button id="opp-btn-2" onclick="setRivalsOpponent(2)" class="sub-btn px-2.5 py-1 rounded-lg border border-[var(--border)] cursor-pointer">🐉 霸龍全明星 (魔王)</button>
+        <!-- MLB Teams & Ohtani Lineup Bar -->
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-2 pt-2 border-t border-[var(--border)] text-xs items-center">
+          <div class="md:col-span-5 flex flex-wrap items-center gap-1.5">
+            <span class="font-bold text-sky-400">⚾ 我方 MLB 球隊：</span>
+            <select id="rivals-user-team-select" onchange="setRivalsUserTeam(this.value)" class="bg-[var(--background)] border border-sky-500/50 text-white font-bold rounded-lg px-2.5 py-1 text-xs cursor-pointer">
+              <option value="LAD" selected>🔵 洛杉磯道奇 (LA Dodgers) ★大谷翔平 #17</option>
+              <option value="NYY">🗽 紐約洋基 (NY Yankees) ★Judge #99</option>
+              <option value="SD">🟡 聖地牙哥教士 (SD Padres) ★Darvish / Tatis</option>
+              <option value="ATL">🪓 亞特蘭大勇士 (Atlanta Braves) ★Acuña #13</option>
+              <option value="PHI">🔔 費城費城人 (Phillies) ★Harper #3</option>
+              <option value="HOU">🟠 休士頓太空人 (Astros) ★Alvarez #44</option>
+            </select>
+            <label class="inline-flex items-center gap-1 ml-1 px-2 py-1 rounded-lg bg-blue-500/15 border border-blue-500/30 text-blue-300 font-bold cursor-pointer">
+              <input type="checkbox" id="chk-ohtani-lock" checked onchange="toggleOhtaniLock(this.checked)" class="accent-blue-500">
+              <span>鎖定 #17 大谷翔平二刀流</span>
+            </label>
           </div>
-          <div class="flex items-center gap-4 text-xs">
-            <span>投球球速：<strong id="rivals-tele-pitch" class="text-blue-400">--</strong></span>
-            <span>擊球初速/仰角：<strong id="rivals-tele-hit" class="text-amber-400">--</strong></span>
-            <span>飛行/含滾動距離：<strong id="rivals-tele-dist" class="text-emerald-400">--</strong></span>
+
+          <div class="md:col-span-4 flex flex-wrap items-center gap-1.5">
+            <span class="font-bold text-rose-400">🆚 對手 MLB 勁旅：</span>
+            <select id="rivals-opp-team-select" onchange="setRivalsOpponentTeam(this.value)" class="bg-[var(--background)] border border-rose-500/50 text-white font-bold rounded-lg px-2.5 py-1 text-xs cursor-pointer">
+              <option value="NYY" selected>🗽 紐約洋基 (NY Yankees - 進階)</option>
+              <option value="SD">🟡 聖地牙哥教士 (SD Padres - 入門)</option>
+              <option value="ATL">🪓 亞特蘭大勇士 (Atlanta Braves - 進階)</option>
+              <option value="PHI">🔔 費城費城人 (Phillies - 強敵)</option>
+              <option value="HOU">🟠 休士頓太空人 (Astros - 魔王)</option>
+              <option value="LAD">🔵 洛杉磯道奇鏡像戰 (LA Dodgers - 魔王)</option>
+            </select>
+          </div>
+
+          <div class="md:col-span-3 flex flex-wrap items-center justify-end gap-3 text-[11px]">
+            <span>球速：<strong id="rivals-tele-pitch" class="text-sky-400">--</strong></span>
+            <span>擊球：<strong id="rivals-tele-hit" class="text-amber-400">--</strong></span>
+            <span>距離：<strong id="rivals-tele-dist" class="text-emerald-400">--</strong></span>
           </div>
         </div>
       </div>
 
-      <!-- Main Broadcast Viewport + Interactive Control Deck -->
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
-        <!-- Broadcast Canvas (8 cols) -->
-        <div class="lg:col-span-8 bg-[var(--card)] border border-[var(--border)] rounded-2xl p-3 shadow-sm flex flex-col justify-between">
-          <div class="relative bg-[var(--background)] border border-[var(--border)] rounded-xl overflow-hidden">
-            <canvas id="rivalsBroadcastCanvas" width="880" height="470" class="w-full h-auto block cursor-crosshair"></canvas>
+      <!-- Main 3D Broadcast Viewport + Control Deck -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-3.5">
+        <!-- 3D Broadcast Viewport (8 cols on desktop, full width with on-screen touch HUD on mobile/tablet) -->
+        <div id="rivals-viewport-wrap" class="lg:col-span-8 bg-[var(--card)] border border-[var(--border)] rounded-2xl p-2 sm:p-3 shadow-sm flex flex-col justify-between">
+          <div class="relative bg-[#050811] border border-slate-700/80 rounded-xl overflow-hidden select-none">
+            <canvas id="rivalsBroadcastCanvas" width="960" height="540" class="w-full h-auto block cursor-crosshair touch-none"></canvas>
 
             <!-- Center Broadcast Banner -->
-            <div id="rivals-center-banner" class="pointer-events-none absolute top-4 left-1/2 -translate-x-1/2 px-5 py-2 rounded-full bg-slate-950/90 border-2 border-amber-400 text-amber-300 font-extrabold text-sm md:text-base shadow-2xl hidden">
+            <div id="rivals-center-banner" class="pointer-events-none absolute top-3 left-1/2 -translate-x-1/2 px-4 py-1.5 rounded-full bg-slate-950/90 border-2 border-amber-400 text-amber-300 font-extrabold text-xs sm:text-sm md:text-base shadow-2xl hidden z-20 whitespace-nowrap">
               PLAY BALL!
             </div>
 
+            <!-- Mobile & Tablet On-Screen Quick Pitch Selector Bar (Shown in Pitcher Mode) -->
+            <div id="rivals-hud-pitch-cards" class="hidden absolute bottom-2.5 left-2.5 right-28 sm:right-36 flex items-center gap-1 overflow-x-auto bg-slate-950/85 backdrop-blur border border-blue-500/40 p-1.5 rounded-xl z-10">
+              <button onclick="selectRivalsPitchCard('4seam')" id="hud-card-4seam" class="hud-pcard active px-2 py-1 rounded-lg bg-rose-500/20 border border-rose-400 text-[11px] font-extrabold text-rose-300 whitespace-nowrap cursor-pointer">🔥四縫 101mph</button>
+              <button onclick="selectRivalsPitchCard('sweeper')" id="hud-card-sweeper" class="hud-pcard px-2 py-1 rounded-lg bg-slate-800/90 border border-slate-600 text-[11px] font-bold text-sky-300 whitespace-nowrap cursor-pointer">🌪️橫掃滑球</button>
+              <button onclick="selectRivalsPitchCard('splitter')" id="hud-card-splitter" class="hud-pcard px-2 py-1 rounded-lg bg-slate-800/90 border border-slate-600 text-[11px] font-bold text-emerald-300 whitespace-nowrap cursor-pointer">🔱高速指叉</button>
+              <button onclick="selectRivalsPitchCard('2seam')" id="hud-card-2seam" class="hud-pcard px-2 py-1 rounded-lg bg-slate-800/90 border border-slate-600 text-[11px] font-bold text-amber-300 whitespace-nowrap cursor-pointer">⚡二縫伸卡</button>
+              <button onclick="selectRivalsPitchCard('curve')" id="hud-card-curve" class="hud-pcard px-2 py-1 rounded-lg bg-slate-800/90 border border-slate-600 text-[11px] font-bold text-purple-300 whitespace-nowrap cursor-pointer">🌈大曲球</button>
+            </div>
+
+            <!-- Mobile & Tablet On-Screen Batter Quick Mode Toggle (Shown in Batter Mode) -->
+            <div id="rivals-hud-bat-modes" class="absolute bottom-2.5 left-2.5 flex items-center gap-1.5 bg-slate-950/85 backdrop-blur border border-slate-700 p-1.5 rounded-xl z-10">
+              <button id="hud-swing-contact" onclick="setRivalsSwingMode('contact')" class="px-2.5 py-1 rounded-lg bg-sky-500/25 border border-sky-400 text-sky-300 font-extrabold text-[11px] cursor-pointer">
+                🎯 巧打
+              </button>
+              <button id="hud-swing-power" onclick="setRivalsSwingMode('power')" class="px-2.5 py-1 rounded-lg bg-slate-800 border border-slate-600 text-slate-300 font-extrabold text-[11px] cursor-pointer">
+                💥 強振 (Ohtani HR)
+              </button>
+              <button id="hud-clutch-quick" onclick="activateClutchSpecial()" class="hidden px-2.5 py-1 rounded-lg bg-gradient-to-r from-amber-500 to-rose-500 text-white font-black text-[11px] animate-pulse cursor-pointer">
+                🔥 必殺
+              </button>
+            </div>
+
+            <!-- Giant Right-Thumb MLB Rivals Primary Action Button (Works on Phone, Tablet & Desktop!) -->
+            <div id="rivals-hud-action-wrap" class="absolute bottom-2.5 right-2.5 flex items-center gap-2 z-10">
+              <button id="rivals-hud-main-btn" onclick="handleRivalsPrimaryButton()" class="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-gradient-to-br from-amber-400 via-orange-500 to-rose-600 hover:from-amber-300 hover:to-rose-500 active:scale-95 text-slate-950 font-black text-xs sm:text-sm shadow-[0_0_25px_rgba(245,158,11,0.65)] border-4 border-white/90 flex flex-col items-center justify-center leading-tight cursor-pointer select-none transition">
+                <span id="rivals-hud-main-icon" class="text-xl sm:text-2xl">⚾</span>
+                <span id="rivals-hud-main-label">投球開戰</span>
+              </button>
+            </div>
+
             <!-- Contextual In-Play Baserunning & Slide QTE Overlay (Batter Mode) -->
-            <div id="rivals-running-actions" class="hidden absolute bottom-3 left-1/2 -translate-x-1/2 flex flex-wrap items-center gap-2 bg-slate-950/90 border border-blue-500/60 p-2 rounded-xl shadow-xl">
-              <span class="text-xs font-bold text-blue-300 px-1">🏃‍♂️ 跑壘即時指令：</span>
-              <button onclick="commandRivalsRunnersAdvance()" class="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs cursor-pointer">
-                ⚡ 全員加速衝下一壘！
+            <div id="rivals-running-actions" class="hidden absolute bottom-3 left-1/2 -translate-x-1/2 flex flex-wrap items-center justify-center gap-1.5 bg-slate-950/95 border-2 border-blue-400 p-2 rounded-2xl shadow-2xl z-20 w-[94%] sm:w-auto">
+              <span class="text-xs font-extrabold text-blue-300 px-1">🏃‍♂️ 跑壘戰術：</span>
+              <button onclick="commandRivalsRunnersAdvance()" class="px-3 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 active:scale-95 text-white font-extrabold text-xs cursor-pointer">
+                ⚡ 全員衝下一壘！
               </button>
-              <button onclick="commandRivalsRunnersHold()" class="px-3 py-1.5 rounded-lg bg-slate-700 hover:bg-slate-600 text-white font-bold text-xs cursor-pointer">
-                🛑 踩住壘包等待 (Tag Up)
+              <button onclick="commandRivalsRunnersHold()" class="px-3 py-2 rounded-xl bg-slate-700 hover:bg-slate-600 active:scale-95 text-white font-bold text-xs cursor-pointer">
+                🛑 踩壘等待 (Tag Up)
               </button>
-              <button id="btn-rivals-slide" onclick="triggerRivalsSlideQTE()" class="px-3 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold text-xs cursor-pointer">
-                🦶 曲腿滑壘 QTE！(閃避觸殺)
+              <button id="btn-rivals-slide" onclick="triggerRivalsSlideQTE()" class="px-3 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 active:scale-95 text-slate-950 font-black text-xs cursor-pointer">
+                🦶 曲腿滑壘 QTE！
               </button>
             </div>
 
             <!-- Contextual In-Play Defense Diving & Base Throw Overlay (Pitcher Mode) -->
-            <div id="rivals-defense-actions" class="hidden absolute bottom-3 left-1/2 -translate-x-1/2 flex flex-wrap items-center gap-1.5 bg-slate-950/90 border border-emerald-500/60 p-2 rounded-xl shadow-xl">
-              <button id="btn-rivals-dive" onclick="triggerRivalsDiveQTE()" class="px-3 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold text-xs cursor-pointer">
-                🦸‍♂️ 飛撲美技攔截！
+            <div id="rivals-defense-actions" class="hidden absolute bottom-3 left-1/2 -translate-x-1/2 flex flex-wrap items-center justify-center gap-1.5 bg-slate-950/95 border-2 border-emerald-400 p-2 rounded-2xl shadow-2xl z-20 w-[95%] sm:w-auto">
+              <button id="btn-rivals-dive" onclick="triggerRivalsDiveQTE()" class="px-3 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 active:scale-95 text-slate-950 font-black text-xs cursor-pointer">
+                🦸‍♂️ 飛撲攔截！
               </button>
-              <span class="text-xs font-bold text-emerald-300 px-1">🎯 傳球目標：</span>
-              <button onclick="rivalsThrowToBase(1)" class="px-2.5 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs cursor-pointer">傳一壘(1B)</button>
-              <button onclick="rivalsThrowToBase(2)" class="px-2.5 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs cursor-pointer">傳二壘(2B)</button>
-              <button onclick="rivalsThrowToBase(3)" class="px-2.5 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs cursor-pointer">傳三壘(3B)</button>
-              <button onclick="rivalsThrowToBase(4)" class="px-2.5 py-1.5 rounded-lg bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs cursor-pointer">傳本壘(HOME)</button>
+              <span class="text-xs font-bold text-emerald-300 px-1">🎯 傳球：</span>
+              <button onclick="rivalsThrowToBase(1)" class="px-2.5 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 active:scale-95 text-white font-extrabold text-xs cursor-pointer">一壘 1B</button>
+              <button onclick="rivalsThrowToBase(2)" class="px-2.5 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 active:scale-95 text-white font-extrabold text-xs cursor-pointer">二壘 2B</button>
+              <button onclick="rivalsThrowToBase(3)" class="px-2.5 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 active:scale-95 text-white font-extrabold text-xs cursor-pointer">三壘 3B</button>
+              <button onclick="rivalsThrowToBase(4)" class="px-2.5 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 active:scale-95 text-white font-extrabold text-xs cursor-pointer">本壘 HOME</button>
             </div>
           </div>
 
-          <div id="rivals-live-log" class="mt-2.5 px-3.5 py-2 rounded-xl bg-[var(--background)] border border-[var(--border)] text-xs text-slate-200">
-            🏟️ <strong>《勁旅對決》實戰指南：</strong> 在本壘視角瞄準揮棒或縮圈投球，球打出去後鏡頭會自動切換至 <strong>3D 全景球場視角</strong>，即時呈現飛行拋物線、紅土草皮彈跳、摩擦滾動與傳接球攻防！
+          <div id="rivals-live-log" class="mt-2 px-3 py-2 rounded-xl bg-[var(--background)] border border-[var(--border)] text-xs text-slate-200 flex flex-wrap items-center justify-between gap-2">
+            <span>🏟️ <strong>《MLB 勁旅對決 3D》v2.5.0 道奇大谷翔平二刀流：</strong> 點擊螢幕任意位置直接開球/揮棒！右上角可隨時開啟「打者 AUTO」！</span>
+            <span class="text-[11px] font-mono text-sky-400 bg-sky-950/70 border border-sky-500/40 px-2 py-0.5 rounded-md font-bold">Ver: 2.5.0</span>
           </div>
         </div>
 
         <!-- Right Interactive Control Deck (4 cols) -->
-        <div class="lg:col-span-4 bg-[var(--card)] border border-[var(--border)] rounded-2xl p-4 shadow-sm flex flex-col justify-between space-y-4">
-          <!-- BATTER CONTROL PANEL -->
-          <div id="rivals-batter-panel" class="space-y-3.5">
+        <div class="lg:col-span-4 bg-[var(--card)] border border-[var(--border)] rounded-2xl p-4 shadow-sm flex flex-col justify-between space-y-3.5">
+          <!-- OHTANI / LINEUP PLAYER CARD -->
+          <div class="p-3 rounded-xl bg-gradient-to-br from-blue-950/90 via-slate-900 to-slate-950 border border-blue-500/40 flex items-center justify-between gap-3">
             <div>
-              <h3 class="text-base font-extrabold flex items-center gap-1.5 text-amber-400">
-                <span>🏏《勁旅對決》打擊操控台</span>
+              <div class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-amber-500/20 border border-amber-400/50 text-amber-300 text-[10px] font-black">
+                <span>★ SIGNATURE 二刀流</span>
+                <span>•</span>
+                <span id="rivals-card-ovr">OVR 128</span>
+              </div>
+              <div id="rivals-card-player" class="text-base font-black text-white mt-1">#17 大谷翔平 (Shohei Ohtani)</div>
+              <div id="rivals-card-sub" class="text-xs text-sky-300">洛杉磯道奇 LAD｜左打 LHB・右投 RHP (101 mph)</div>
+            </div>
+            <div class="text-right">
+              <div class="text-2xl font-black text-sky-400 italic">#17</div>
+              <button onclick="switchDodgersBatter()" class="mt-1 px-2 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-600 text-[11px] font-bold text-slate-200 cursor-pointer">
+                🔄 切換打線球員
+              </button>
+            </div>
+          </div>
+
+          <!-- BATTER CONTROL PANEL -->
+          <div id="rivals-batter-panel" class="space-y-3">
+            <div>
+              <h3 class="text-sm font-extrabold flex items-center gap-1.5 text-amber-400">
+                <span>🏏《MLB 勁旅對決》打擊操控台</span>
               </h3>
               <p class="text-xs text-[var(--muted-foreground)] mt-0.5">
-                滑鼠在畫面好球帶移動「球棒甜蜜點游標」，看準動態落點預測圈與左側時機條揮棒！
+                手指或滑鼠在好球帶滑動「球棒甜蜜點游標」，看準縮圈預測與球路軌跡按下揮棒！
               </p>
             </div>
 
-            <div class="space-y-1.5">
-              <div class="text-xs font-bold">1️⃣ 選擇揮棒模式（影響打擊框大小與仰角爆發力）：</div>
-              <div class="grid grid-cols-2 gap-2">
-                <button id="swing-mode-contact" onclick="setRivalsSwingMode('contact')" class="sub-btn active p-2.5 rounded-xl border border-[var(--border)] text-left cursor-pointer">
-                  <div class="font-bold text-xs text-sky-400">🎯 巧打模式 (Contact)</div>
-                  <div class="text-xs text-[var(--muted-foreground)]">打擊框大・高安打率平飛球</div>
-                </button>
-                <button id="swing-mode-power" onclick="setRivalsSwingMode('power')" class="sub-btn p-2.5 rounded-xl border border-[var(--border)] text-left cursor-pointer">
-                  <div class="font-bold text-xs text-rose-400">💥 強振模式 (Power)</div>
-                  <div class="text-xs text-[var(--muted-foreground)]">紅心甜蜜點・咬中直接全壘打</div>
-                </button>
-              </div>
-            </div>
-
-            <div class="space-y-2 pt-1">
-              <div class="text-xs font-bold">2️⃣ 投打對決操作（支援滑鼠點擊畫面或鍵盤空白鍵）：</div>
-              <button onclick="startRivalsPitchAction()" class="w-full py-3 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-sm shadow-lg transition cursor-pointer">
-                ⚾ 1. 呼叫投手投球！(Pitch / 空白鍵)
+            <div class="grid grid-cols-2 gap-2">
+              <button id="swing-mode-contact" onclick="setRivalsSwingMode('contact')" class="sub-btn p-2.5 rounded-xl border border-[var(--border)] text-left cursor-pointer">
+                <div class="font-bold text-xs text-sky-400">🎯 巧打模式 (Contact)</div>
+                <div class="text-[11px] text-[var(--muted-foreground)]">大甜蜜點・平飛安打</div>
               </button>
-              <button onclick="triggerRivalsSwing()" class="w-full py-3.5 px-4 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-black text-base shadow-lg transition cursor-pointer">
-                🏏 2. 抓準時機揮棒！(Swing / 點擊畫面)
+              <button id="swing-mode-power" onclick="setRivalsSwingMode('power')" class="sub-btn active p-2.5 rounded-xl border border-[var(--border)] text-left cursor-pointer">
+                <div class="font-bold text-xs text-rose-400">💥 大谷強振 (Power)</div>
+                <div class="text-[11px] text-[var(--muted-foreground)]">190km/h 初速・特大號全壘打</div>
               </button>
             </div>
 
-            <div class="p-3 rounded-xl bg-[var(--background)] border border-[var(--border)] text-xs space-y-1 text-[var(--muted-foreground)]">
-              <div class="font-bold text-slate-200">💡 勁旅打擊高分秘訣：</div>
-              <div>• 球棒中心擊中球心微偏下（仰角 15°~28°）會觸發 <strong>💥 完美爆擊慢動作特效</strong>！</div>
-              <div>• 球打出場後可點擊畫面下方 <strong>「⚡ 全員加速衝下一壘」</strong> 或在野手傳球時按 <strong>「🦶 曲腿滑壘 QTE」</strong> 閃避觸殺！</div>
+            <div class="grid grid-cols-2 gap-2 pt-1">
+              <button onclick="startRivalsPitchAction()" class="py-3 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-xs sm:text-sm shadow-lg transition cursor-pointer">
+                ⚾ 1. 投手投球 (Pitch)
+              </button>
+              <button onclick="triggerRivalsSwing()" class="py-3 px-3 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-black text-xs sm:text-sm shadow-lg transition cursor-pointer">
+                🏏 2. 揮棒！(Swing)
+              </button>
+            </div>
+
+            <div class="p-2.5 rounded-xl bg-[var(--background)] border border-[var(--border)] text-xs space-y-1 text-[var(--muted-foreground)]">
+              <div class="font-bold text-slate-200">📱 手機／平板／電腦操控秘訣：</div>
+              <div>• <strong>觸控滑動瞄準：</strong>手指在 3D 球場任意位置滑動即可移動打擊框（手指不擋好球帶）！</div>
+              <div>• <strong>一鍵揮棒：</strong>直接按畫面右下角 <strong>「🏏 揮棒」大圓鈕</strong> 或鍵盤空白鍵！</div>
             </div>
           </div>
 
           <!-- PITCHER CONTROL PANEL -->
-          <div id="rivals-pitcher-panel" class="hidden space-y-3.5">
+          <div id="rivals-pitcher-panel" class="hidden space-y-3">
             <div>
-              <h3 class="text-base font-extrabold flex items-center gap-1.5 text-blue-400">
-                <span>⚾《勁旅對決》王牌配球操控台</span>
+              <h3 class="text-sm font-extrabold flex items-center gap-1.5 text-sky-400">
+                <span>⚾ 大谷翔平 #17 王牌配球操控台</span>
               </h3>
               <p class="text-xs text-[var(--muted-foreground)] mt-0.5">
-                選擇球種卡，在好球帶拖曳設定進壘點（自動顯示變化預覽箭頭），再抓準縮圈重合瞬間放球！
+                點選大谷翔平招牌球種，在好球帶拖曳設定進壘點，再抓準縮圈重合瞬間放球！
               </p>
             </div>
 
-            <div class="space-y-1.5">
-              <div class="text-xs font-bold">1️⃣ 選擇球種卡（各自具備不同馬格努斯變化方向）：</div>
-              <div class="grid grid-cols-2 gap-1.5">
-                <button id="rcard-4seam" onclick="selectRivalsPitchCard('4seam')" class="sub-btn active p-2 rounded-xl border border-[var(--border)] text-left cursor-pointer">
-                  <div class="font-bold text-xs text-rose-400">🔥 四縫線 (↑上浮)</div>
-                  <div class="text-xs text-[var(--muted-foreground)]">92 km/h・高轉速壓制</div>
-                </button>
-                <button id="rcard-2seam" onclick="selectRivalsPitchCard('2seam')" class="sub-btn p-2 rounded-xl border border-[var(--border)] text-left cursor-pointer">
-                  <div class="font-bold text-xs text-amber-400">⚡ 二縫伸卡 (↙內沉)</div>
-                  <div class="text-xs text-[var(--muted-foreground)]">86 km/h・引誘滾地球</div>
-                </button>
-                <button id="rcard-slider" onclick="selectRivalsPitchCard('slider')" class="sub-btn p-2 rounded-xl border border-[var(--border)] text-left cursor-pointer">
-                  <div class="font-bold text-xs text-sky-400">🗡️ 犀利滑球 (↘外滑)</div>
-                  <div class="text-xs text-[var(--muted-foreground)]">81 km/h・橫向大轉彎</div>
-                </button>
-                <button id="rcard-changeup" onclick="selectRivalsPitchCard('changeup')" class="sub-btn p-2 rounded-xl border border-[var(--border)] text-left cursor-pointer">
-                  <div class="font-bold text-xs text-emerald-400">🐢 圈指變速 (↓慢墜)</div>
-                  <div class="text-xs text-[var(--muted-foreground)]">74 km/h・破壞揮棒節奏</div>
-                </button>
-                <button id="rcard-curve" onclick="selectRivalsPitchCard('curve')" class="sub-btn col-span-2 p-2 rounded-xl border border-[var(--border)] text-left cursor-pointer">
-                  <div class="font-bold text-xs text-purple-400">🌈 大曲球 (↷大幅彩虹下墜)</div>
-                  <div class="text-xs text-[var(--muted-foreground)]">68 km/h・高角度前旋縱向掉落</div>
-                </button>
-              </div>
-              <div id="rivals-pitch-card-desc" class="text-xs text-blue-300 pt-1">
-                🔥 四縫線直球：高轉速正後旋，進壘時有抗重力上浮尾勁！
-              </div>
-            </div>
-
-            <div class="space-y-2">
-              <div class="text-xs font-bold">2️⃣ 動態縮圈完美放球 (Pinpoint Release)：</div>
-              <button id="btn-rivals-pitch-main" onclick="startRivalsPitchAction()" class="w-full py-3.5 px-4 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-black text-sm shadow-lg transition cursor-pointer">
-                ⚾ 啟動縮圈投球 (再按一次鎖定完美放球點！)
+            <div class="grid grid-cols-2 gap-1.5">
+              <button id="rcard-4seam" onclick="selectRivalsPitchCard('4seam')" class="sub-btn active p-2 rounded-xl border border-[var(--border)] text-left cursor-pointer">
+                <div class="font-bold text-xs text-rose-400">🔥 四縫線火球 (↑上浮)</div>
+                <div class="text-[11px] text-[var(--muted-foreground)]">162 km/h (101 mph)</div>
+              </button>
+              <button id="rcard-sweeper" onclick="selectRivalsPitchCard('sweeper')" class="sub-btn p-2 rounded-xl border border-[var(--border)] text-left cursor-pointer">
+                <div class="font-bold text-xs text-sky-400">🌪️ 橫掃滑球 Sweeper</div>
+                <div class="text-[11px] text-[var(--muted-foreground)]">138 km/h・超大橫向位移</div>
+              </button>
+              <button id="rcard-splitter" onclick="selectRivalsPitchCard('splitter')" class="sub-btn p-2 rounded-xl border border-[var(--border)] text-left cursor-pointer">
+                <div class="font-bold text-xs text-emerald-400">🔱 高速指叉 Splitter</div>
+                <div class="text-[11px] text-[var(--muted-foreground)]">145 km/h・本壘前急墜</div>
+              </button>
+              <button id="rcard-2seam" onclick="selectRivalsPitchCard('2seam')" class="sub-btn p-2 rounded-xl border border-[var(--border)] text-left cursor-pointer">
+                <div class="font-bold text-xs text-amber-400">⚡ 二縫伸卡 Sinker</div>
+                <div class="text-[11px] text-[var(--muted-foreground)]">156 km/h・內角下沉滾地</div>
+              </button>
+              <button id="rcard-curve" onclick="selectRivalsPitchCard('curve')" class="sub-btn col-span-2 p-2 rounded-xl border border-[var(--border)] text-left cursor-pointer">
+                <div class="font-bold text-xs text-purple-400">🌈 動力曲球 Power Curve (↷大幅縱向掉落)</div>
+                <div class="text-[11px] text-[var(--muted-foreground)]">127 km/h・高轉速彩虹軌跡</div>
               </button>
             </div>
-
-            <div class="p-3 rounded-xl bg-[var(--background)] border border-[var(--border)] text-xs space-y-1 text-[var(--muted-foreground)]">
-              <div class="font-bold text-slate-200">💡 勁旅投球＆守備秘訣：</div>
-              <div>• 當藍色縮圈與黃色目標環重合時按下放球，可觸發 <strong>✨ PERFECT 完美放球</strong>（球威與變化幅度 +25%）！</div>
-              <div>• 被打出場內時，可按 <strong>「🦸‍♂️ 飛撲攔截」</strong> 並自己選擇傳往 <strong>一壘、二壘、三壘或本壘</strong> 演出雙殺守備！</div>
+            <div id="rivals-pitch-card-desc" class="text-xs text-sky-300">
+              🔥 四縫線火球：大谷翔平招牌 101 mph 剛猛速球，高轉速抗重力上浮尾勁！
             </div>
+
+            <button id="btn-rivals-pitch-main" onclick="startRivalsPitchAction()" class="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-black text-sm shadow-lg transition cursor-pointer">
+              ⚾ 啟動縮圈投球 (再按一次鎖定完美放球！)
+            </button>
           </div>
         </div>
       </div>
     </section>
 
     <!-- ==================== SECTION 1: PITCHING (真實物理投球實驗室) ==================== -->
-    <section id="sec-pitching" class="space-y-6">
+    <section id="sec-pitching" class="hidden space-y-6">
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
         <!-- Left: Ball Grip Visualizer (5 cols) -->
         <div class="lg:col-span-5 bg-[var(--card)] border border-[var(--border)] rounded-2xl p-5 shadow-sm flex flex-col justify-between">
@@ -2205,16 +2274,6 @@
       ctx.roundRect(52, batY - 7, 65, 14, 7);
       ctx.fill();
     }
-
-    window.addEventListener('DOMContentLoaded', () => {
-      drawGrip();
-      simulateLabPitchPhysics();
-      drawPitchSim();
-      drawMechanics();
-      renderQuiz();
-    });
-  </script>
-  <script src="rivals-game.js"></script>
 
     // ==================== 4. BASERUNNING DIAMOND SIMULATOR ====================
     let baseScenario = 'force';
