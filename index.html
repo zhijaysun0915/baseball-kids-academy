@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>小小職棒王：四年級棒球互動教學樂園 ＆《MLB 勁旅對決 3D》大谷翔平旗艦版 v2.6.0</title>
+  <title>小小職棒王：四年級棒球互動教學樂園 ＆《MLB 勁旅對決 3D》大谷翔平旗艦版 v2.7.0</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     :root {
@@ -42,7 +42,7 @@
           <span>•</span>
           <span>真實物理軌跡 ＆ 投打實戰對決</span>
           <span>•</span>
-          <span class="px-2 py-0.5 rounded-full bg-blue-500/25 text-blue-300 border border-blue-400/50 font-mono text-[11px] font-black">v2.6.0 MLB Rivals 一鍵慢速暢玩版</span>
+          <span class="px-2 py-0.5 rounded-full bg-blue-500/25 text-blue-300 border border-blue-400/50 font-mono text-[11px] font-black">v2.7.0 MLB Rivals 實戰深度＆再見逆轉版</span>
         </div>
         <h1 class="text-2xl md:text-3xl font-extrabold tracking-tight flex items-center gap-2">
           🏟️ 小小職棒王：棒球技能與真實物理特訓營
@@ -95,19 +95,19 @@
               <div>
                 <div class="text-[10px] uppercase tracking-wider text-amber-400 font-extrabold flex items-center gap-1.5">
                   <span>MLB RIVALS 3D</span>
-                  <span class="px-1.5 py-0.2 rounded bg-sky-500/25 border border-sky-400/50 text-sky-200 text-[9px] font-mono font-black">v2.6.0</span>
+                  <span class="px-1.5 py-0.2 rounded bg-sky-500/25 border border-sky-400/50 text-sky-200 text-[9px] font-mono font-black">v2.7.0</span>
                 </div>
-                <div id="rivals-inning" class="text-sm md:text-base font-black text-white">1局上</div>
+                <div id="rivals-inning" class="text-sm md:text-base font-black text-white">6局下</div>
               </div>
               <div class="h-7 w-px bg-[var(--border)]"></div>
               <div class="text-center min-w-[68px]">
                 <div id="rivals-user-team-label" class="text-xs text-sky-400 font-extrabold truncate">🔵 道奇 LAD</div>
-                <div id="rivals-score-user" class="text-xl md:text-2xl font-black leading-tight">0</div>
+                <div id="rivals-score-user" class="text-xl md:text-2xl font-black leading-tight">1</div>
               </div>
               <div class="text-[11px] font-black text-slate-400">VS</div>
               <div class="text-center min-w-[68px]">
-                <div id="rivals-opp-name" class="text-xs text-rose-400 font-extrabold truncate">🗽 洋基 NYY</div>
-                <div id="rivals-score-cpu" class="text-xl md:text-2xl font-black leading-tight">0</div>
+                <div id="rivals-opp-name" class="text-xs text-rose-400 font-extrabold truncate">🟡 教士 SD</div>
+                <div id="rivals-score-cpu" class="text-xl md:text-2xl font-black leading-tight">3</div>
               </div>
             </div>
 
@@ -122,7 +122,7 @@
               </div>
               <div class="flex items-center gap-1.5">
                 <span class="w-3.5 font-bold text-rose-400">O</span>
-                <span id="rivals-o" class="tracking-widest text-rose-400">○○○</span>
+                <span id="rivals-o" class="tracking-widest text-rose-400">●○○</span>
               </div>
             </div>
 
@@ -142,7 +142,7 @@
             </div>
           </div>
 
-          <!-- Right: Ohtani Two-Way Role Switch + Fullscreen + SFX -->
+          <!-- Right: Ohtani Two-Way Role Switch + Camera + Fullscreen + SFX -->
           <div class="flex flex-wrap items-center gap-1.5">
             <button id="rivals-role-twoway" onclick="setRivalsRole('twoway')" class="sub-btn active px-2.5 py-1.5 rounded-xl border border-[var(--border)] text-xs font-extrabold cursor-pointer text-amber-300">
               🦄 大谷二刀流 (投打攻守)
@@ -152,6 +152,9 @@
             </button>
             <button id="rivals-role-pitch" onclick="setRivalsRole('pitcher')" class="sub-btn px-2.5 py-1.5 rounded-xl border border-[var(--border)] text-xs font-bold cursor-pointer">
               ⚾ 專注投球 (#17 大谷右投)
+            </button>
+            <button id="rivals-cam-btn" onclick="cycleRivalsCameraAngle()" class="px-2.5 py-1.5 rounded-xl border border-amber-500/50 bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 text-xs font-bold cursor-pointer">
+              🎥 轉播標準視角
             </button>
             <button onclick="toggleRivalsFullscreen()" class="px-2.5 py-1.5 rounded-xl border border-sky-500/50 bg-sky-500/15 hover:bg-sky-500/25 text-sky-300 text-xs font-bold cursor-pointer">
               📱 全螢幕
@@ -165,40 +168,60 @@
           </div>
         </div>
 
-        <!-- MLB Teams & Ohtani Lineup Bar -->
+        <!-- Match Format Selector & MLB Teams Lineup Bar -->
         <div class="grid grid-cols-1 md:grid-cols-12 gap-2 pt-2 border-t border-[var(--border)] text-xs items-center">
-          <div class="md:col-span-5 flex flex-wrap items-center gap-1.5">
-            <span class="font-bold text-sky-400">⚾ 我方 MLB 球隊：</span>
-            <select id="rivals-user-team-select" onchange="setRivalsUserTeam(this.value)" class="bg-[var(--background)] border border-sky-500/50 text-white font-bold rounded-lg px-2.5 py-1 text-xs cursor-pointer">
-              <option value="LAD" selected>🔵 洛杉磯道奇 (LA Dodgers) ★大谷翔平 #17</option>
-              <option value="NYY">🗽 紐約洋基 (NY Yankees) ★Judge #99</option>
-              <option value="SD">🟡 聖地牙哥教士 (SD Padres) ★Darvish / Tatis</option>
-              <option value="ATL">🪓 亞特蘭大勇士 (Atlanta Braves) ★Acuña #13</option>
-              <option value="PHI">🔔 費城費城人 (Phillies) ★Harper #3</option>
-              <option value="HOU">🟠 休士頓太空人 (Astros) ★Alvarez #44</option>
-            </select>
-            <label class="inline-flex items-center gap-1 ml-1 px-2 py-1 rounded-lg bg-blue-500/15 border border-blue-500/30 text-blue-300 font-bold cursor-pointer">
-              <input type="checkbox" id="chk-ohtani-lock" checked onchange="toggleOhtaniLock(this.checked)" class="accent-blue-500">
-              <span>鎖定 #17 大谷翔平二刀流</span>
-            </label>
+          <div class="md:col-span-4 flex flex-wrap items-center gap-1.5">
+            <span class="font-bold text-amber-400">🏆 賽制模式：</span>
+            <button id="rivals-fmt-clutch" onclick="setRivalsMatchFormat('clutch')" class="sub-btn active px-2 py-1 rounded-lg border border-[var(--border)] text-[11px] font-bold text-amber-300 cursor-pointer">
+              🔥 6局下逆轉劇本
+            </button>
+            <button id="rivals-fmt-3inn" onclick="setRivalsMatchFormat('3inn')" class="sub-btn px-2 py-1 rounded-lg border border-[var(--border)] text-[11px] font-bold text-sky-300 cursor-pointer">
+              ⚡ 3局快打賽
+            </button>
+            <button id="rivals-fmt-9inn" onclick="setRivalsMatchFormat('9inn')" class="sub-btn px-2 py-1 rounded-lg border border-[var(--border)] text-[11px] font-bold text-emerald-300 cursor-pointer">
+              🏟️ 9局正規賽
+            </button>
           </div>
 
           <div class="md:col-span-4 flex flex-wrap items-center gap-1.5">
-            <span class="font-bold text-rose-400">🆚 對手 MLB 勁旅：</span>
-            <select id="rivals-opp-team-select" onchange="setRivalsOpponentTeam(this.value)" class="bg-[var(--background)] border border-rose-500/50 text-white font-bold rounded-lg px-2.5 py-1 text-xs cursor-pointer">
-              <option value="NYY" selected>🗽 紐約洋基 (NY Yankees - 進階)</option>
-              <option value="SD">🟡 聖地牙哥教士 (SD Padres - 入門)</option>
-              <option value="ATL">🪓 亞特蘭大勇士 (Atlanta Braves - 進階)</option>
-              <option value="PHI">🔔 費城費城人 (Phillies - 強敵)</option>
-              <option value="HOU">🟠 休士頓太空人 (Astros - 魔王)</option>
-              <option value="LAD">🔵 洛杉磯道奇鏡像戰 (LA Dodgers - 魔王)</option>
+            <span class="font-bold text-sky-400">⚾ 我方球隊：</span>
+            <select id="rivals-user-team-select" onchange="setRivalsUserTeam(this.value)" class="bg-[var(--background)] border border-sky-500/50 text-white font-bold rounded-lg px-2 py-1 text-xs cursor-pointer">
+              <option value="LAD" selected>🔵 洛杉磯道奇 (LA Dodgers) ★大谷翔平 #17</option>
+              <option value="NYY">🗽 紐約洋基 (NY Yankees) ★Judge #99</option>
+              <option value="SD">🟡 聖地牙哥教士 (SD Padres) ★Darvish / Tatis</option>
+              <option value="PHI">🔔 費城費城人 (Phillies) ★Harper #3</option>
+              <option value="ATL">🪓 亞特蘭大勇士 (Atlanta Braves) ★Acuña #13</option>
+              <option value="BAL">🐦‍⬛ 巴爾的摩金鶯 (Baltimore Orioles) ★Henderson #2</option>
+              <option value="BOS">🧦 波士頓紅襪 (Boston Red Sox) ★Devers #11</option>
+              <option value="CHC">🐻 芝加哥小熊 (Chicago Cubs) ★今永昇太/鈴木誠也</option>
+              <option value="HOU">🟠 休士頓太空人 (Astros) ★Alvarez #44</option>
             </select>
+            <label class="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg bg-blue-500/15 border border-blue-500/30 text-blue-300 font-bold cursor-pointer">
+              <input type="checkbox" id="chk-ohtani-lock" checked onchange="toggleOhtaniLock(this.checked)" class="accent-blue-500">
+              <span>鎖定 #17 大谷</span>
+            </label>
           </div>
 
-          <div class="md:col-span-3 flex flex-wrap items-center justify-end gap-3 text-[11px]">
-            <span>球速：<strong id="rivals-tele-pitch" class="text-sky-400">--</strong></span>
-            <span>擊球：<strong id="rivals-tele-hit" class="text-amber-400">--</strong></span>
-            <span>距離：<strong id="rivals-tele-dist" class="text-emerald-400">--</strong></span>
+          <div class="md:col-span-4 flex flex-wrap items-center justify-between gap-1.5">
+            <div class="flex items-center gap-1">
+              <span class="font-bold text-rose-400">🆚 對手：</span>
+              <select id="rivals-opp-team-select" onchange="setRivalsOpponentTeam(this.value)" class="bg-[var(--background)] border border-rose-500/50 text-white font-bold rounded-lg px-2 py-1 text-xs cursor-pointer">
+                <option value="SD" selected>🟡 聖地牙哥教士 (SD Padres - 宿敵)</option>
+                <option value="NYY">🗽 紐約洋基 (NY Yankees - 豪門)</option>
+                <option value="PHI">🔔 費城費城人 (Phillies - 強敵)</option>
+                <option value="ATL">🪓 亞特蘭大勇士 (Atlanta Braves - 進階)</option>
+                <option value="BAL">🐦‍⬛ 巴爾的摩金鶯 (Baltimore Orioles - 新星)</option>
+                <option value="BOS">🧦 波士頓紅襪 (Boston Red Sox - 傳統)</option>
+                <option value="CHC">🐻 芝加哥小熊 (Chicago Cubs - 日籍對決)</option>
+                <option value="HOU">🟠 休士頓太空人 (Astros - 魔王)</option>
+                <option value="LAD">🔵 洛杉磯道奇鏡像戰 (LA Dodgers - 魔王)</option>
+              </select>
+            </div>
+            <div class="flex items-center gap-2 text-[11px]">
+              <span>球速：<strong id="rivals-tele-pitch" class="text-sky-400">--</strong></span>
+              <span>擊球：<strong id="rivals-tele-hit" class="text-amber-400">--</strong></span>
+              <span>距離：<strong id="rivals-tele-dist" class="text-emerald-400">--</strong></span>
+            </div>
           </div>
         </div>
       </div>
@@ -213,6 +236,61 @@
             <!-- Center Broadcast Banner -->
             <div id="rivals-center-banner" class="pointer-events-none absolute top-3 left-1/2 -translate-x-1/2 px-4 py-1.5 rounded-full bg-slate-950/90 border-2 border-amber-400 text-amber-300 font-extrabold text-xs sm:text-sm md:text-base shadow-2xl hidden z-20 whitespace-nowrap">
               PLAY BALL!
+            </div>
+
+            <!-- Post-Game Box Score & Walk-Off Celebration Modal (v2.7.0) -->
+            <div id="rivals-postgame-modal" class="hidden absolute inset-0 bg-slate-950/90 backdrop-blur-md flex items-center justify-center p-4 z-30">
+              <div class="bg-slate-900 border-2 border-amber-400 rounded-2xl p-4 sm:p-6 max-w-md w-full shadow-2xl space-y-3 text-center">
+                <div class="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-amber-500/20 border border-amber-400/50 text-amber-300 text-[11px] font-black">
+                  <span>⚾ MLB RIVALS 3D OFFICIAL BOX SCORE</span>
+                </div>
+                <h3 id="rivals-pg-title" class="text-xl sm:text-2xl font-black text-amber-400">🏆 戲劇性再見逆轉勝！</h3>
+                <p id="rivals-pg-sub" class="text-xs text-slate-300">最終比數：道奇 4 : 3 教士</p>
+
+                <!-- Mini Box Score Table -->
+                <div class="bg-slate-950 border border-slate-800 rounded-xl overflow-hidden text-xs font-mono">
+                  <div class="grid grid-cols-5 bg-slate-800/80 text-slate-400 py-1.5 px-3 font-bold">
+                    <div class="text-left">TEAM</div>
+                    <div>R</div>
+                    <div>H</div>
+                    <div>HR</div>
+                    <div>SO</div>
+                  </div>
+                  <div class="grid grid-cols-5 py-2 px-3 border-t border-slate-800/80 text-rose-300 font-bold">
+                    <div id="rivals-pg-opp-code" class="text-left">SD</div>
+                    <div id="rivals-pg-opp-r">3</div>
+                    <div id="rivals-pg-opp-h">5</div>
+                    <div id="rivals-pg-opp-hr">1</div>
+                    <div id="rivals-pg-opp-so">2</div>
+                  </div>
+                  <div class="grid grid-cols-5 py-2 px-3 border-t border-slate-800/80 text-sky-300 font-extrabold bg-blue-950/30">
+                    <div id="rivals-pg-usr-code" class="text-left">LAD</div>
+                    <div id="rivals-pg-usr-r">4</div>
+                    <div id="rivals-pg-usr-h">6</div>
+                    <div id="rivals-pg-usr-hr">1</div>
+                    <div id="rivals-pg-usr-so">3</div>
+                  </div>
+                </div>
+
+                <!-- Game MVP Highlight Card -->
+                <div class="bg-gradient-to-r from-amber-500/15 via-blue-500/15 to-rose-500/15 border border-amber-400/50 rounded-xl p-3 text-left flex items-center justify-between">
+                  <div>
+                    <div class="text-[10px] font-black text-amber-300 uppercase">🌟 單場最佳球員 (PLAYER OF THE GAME)</div>
+                    <div id="rivals-pg-mvp-name" class="text-sm font-black text-white mt-0.5">#17 大谷翔平 (Shohei Ohtani)</div>
+                    <div id="rivals-pg-mvp-stat" class="text-xs text-sky-300 mt-0.5">單場 2 安打・1 全壘打・2 打點</div>
+                  </div>
+                  <div class="text-3xl">🏆</div>
+                </div>
+
+                <div class="flex items-center justify-center gap-2 pt-1">
+                  <button onclick="resetRivalsMatch()" class="px-4 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-rose-500 hover:from-amber-400 hover:to-rose-400 text-slate-950 font-black text-xs cursor-pointer shadow-lg">
+                    🔄 再戰一場 (Play Again)
+                  </button>
+                  <button onclick="closeRivalsPostGameModal()" class="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs cursor-pointer border border-slate-600">
+                    🎯 繼續自由練習
+                  </button>
+                </div>
+              </div>
             </div>
 
             <!-- Mobile & Tablet On-Screen Quick Pitch Selector Bar (Shown in Pitcher Mode) -->
@@ -273,8 +351,8 @@
           </div>
 
           <div id="rivals-live-log" class="mt-2 px-3 py-2 rounded-xl bg-[var(--background)] border border-[var(--border)] text-xs text-slate-200 flex flex-wrap items-center justify-between gap-2">
-            <span>🏟️ <strong>《MLB 勁旅對決 3D》v2.6.0 一鍵慢速暢玩版：</strong> 預設開啟「🐢慢速節奏＋🎯自動鎖定球心」，等縮圈重合時點一下畫面就能轟出全壘打！</span>
-            <span class="text-[11px] font-mono text-sky-400 bg-sky-950/70 border border-sky-500/40 px-2 py-0.5 rounded-md font-bold">Ver: 2.6.0</span>
+            <span>🏟️ <strong>《MLB 勁旅對決 3D》v2.7.0 實戰深度版：</strong> 支援 6局逆轉劇本/3局快打/9局正規賽、確信步全壘打慢動作特寫、再見安打慶祝與主審語音音效！</span>
+            <span class="text-[11px] font-mono text-sky-400 bg-sky-950/70 border border-sky-500/40 px-2 py-0.5 rounded-md font-bold">Ver: 2.7.0</span>
           </div>
         </div>
 
