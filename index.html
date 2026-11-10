@@ -478,49 +478,55 @@
       </div>
     </section>
 
-    <!-- ==================== SECTION 1: PITCHING (真實物理投球實驗室) ==================== -->
+        <!-- ==================== SECTION 1: PITCHING (真實物理投球實驗室) ==================== -->
     <section id="sec-pitching" class="hidden space-y-6">
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
         <!-- Left: Ball Grip Visualizer (5 cols) -->
         <div class="lg:col-span-5 bg-[var(--card)] border border-[var(--border)] rounded-2xl p-5 shadow-sm flex flex-col justify-between">
           <div>
             <div class="flex items-center justify-between mb-3">
-              <h2 class="text-lg font-bold flex items-center gap-2">🔍 不同球種握法與旋轉軸</h2>
-              <span class="text-xs px-2.5 py-1 rounded-full bg-blue-500/15 text-blue-400 font-semibold">點擊切換球種</span>
+              <h2 class="text-lg font-bold flex items-center gap-2">
+                <span>🔍 球種握法 ＆ 旋轉軸剖析</span>
+              </h2>
+              <span class="text-xs px-2.5 py-1 rounded-full bg-blue-500/15 text-blue-400 font-bold border border-blue-500/30">點擊切換球種</span>
             </div>
 
             <div class="grid grid-cols-2 gap-2 mb-3">
               <button onclick="selectPitch('4seam')" id="pitch-btn-4seam" class="sub-btn active p-2.5 rounded-xl border border-[var(--border)] text-left transition cursor-pointer">
                 <div class="font-bold text-sm">🔥 四縫線直球</div>
-                <div class="text-xs text-[var(--muted-foreground)]">強烈正後旋・上浮抗重力</div>
+                <div class="text-xs text-[var(--muted-foreground)]">強烈正後旋・抗重力上浮</div>
               </button>
               <button onclick="selectPitch('2seam')" id="pitch-btn-2seam" class="sub-btn p-2.5 rounded-xl border border-[var(--border)] text-left transition cursor-pointer">
                 <div class="font-bold text-sm">⚡ 二縫線伸卡</div>
-                <div class="text-xs text-[var(--muted-foreground)]">側後旋・往內角下沉滾地</div>
+                <div class="text-xs text-[var(--muted-foreground)]">側傾斜旋轉・內角下沉</div>
               </button>
               <button onclick="selectPitch('changeup')" id="pitch-btn-changeup" class="sub-btn p-2.5 rounded-xl border border-[var(--border)] text-left transition cursor-pointer">
                 <div class="font-bold text-sm">🐢 掌心變速球</div>
-                <div class="text-xs text-[var(--muted-foreground)]">低轉速減速・本壘前下墜</div>
+                <div class="text-xs text-[var(--muted-foreground)]">低轉速減速・進壘下墜</div>
               </button>
               <button onclick="selectPitch('curve')" id="pitch-btn-curve" class="sub-btn p-2.5 rounded-xl border border-[var(--border)] text-left transition cursor-pointer">
                 <div class="font-bold text-sm">🌈 曲球 (認識原理)</div>
-                <div class="text-xs text-[var(--muted-foreground)]">高速前旋・彩虹軌跡下墜</div>
+                <div class="text-xs text-[var(--muted-foreground)]">高速前旋・彩虹暴墜</div>
               </button>
             </div>
 
             <div class="flex flex-col items-center bg-[var(--background)] border border-[var(--border)] rounded-xl p-3 mb-3">
-              <canvas id="gripCanvas" width="320" height="195" class="w-full max-w-[320px] h-auto"></canvas>
-              <div class="text-xs text-[var(--muted-foreground)] mt-1">▲ 藍色＝食指 ｜ 綠色＝中指 ｜ 橘色＝無名指/大拇指</div>
+              <canvas id="gripCanvas" width="480" height="260" class="w-full max-w-[480px] h-auto"></canvas>
+              <div class="text-xs text-[var(--muted-foreground)] mt-2 flex items-center justify-center gap-3">
+                <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-blue-500 inline-block"></span> 食指</span>
+                <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block"></span> 中指</span>
+                <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-amber-500 inline-block"></span> 大拇指 (底座)</span>
+              </div>
             </div>
           </div>
 
           <div id="grip-info-box" class="bg-[var(--background)] border border-[var(--border)] rounded-xl p-3.5 text-sm space-y-1.5">
             <div class="font-bold text-blue-400" id="grip-title">🔥 四縫線直球 (4-Seam Fastball)</div>
             <p id="grip-desc" class="text-xs leading-relaxed text-[var(--foreground)]">
-              <strong>握法秘訣：</strong>先把棒球轉到像「馬蹄鐵（C字型）」的方向，將<strong>食指與中指分開約一指寬</strong>，橫跨在馬蹄形縫線上；<strong>大拇指</strong>托在球的正下方，掌心和球之間要留一點空隙！
+              <strong>握法秘訣：</strong>先把棒球轉到像「馬蹄鐵（C字型）」的方向，將<strong>食指與中指分開約一指寬</strong>，橫跨在馬蹄形縫線上；<strong>大拇指</strong>托在球的正下方，掌心和球之間要留約一指寬空隙（像含著一顆乒乓球）！
             </p>
             <p id="grip-tip" class="text-xs text-amber-400 font-medium">
-              💡 小四練習重點：傳接球跟投球都用四縫線，球飛得最直、最不會亂飄！
+              💡 小四練習重點：傳接球跟投球都用四縫線！正後旋產生的上浮馬格努斯力最大，球飛得最直最穩！
             </p>
           </div>
         </div>
@@ -530,9 +536,12 @@
           <div>
             <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
               <div>
-                <h2 class="text-lg font-bold">🚀 3D 真實物理投球軌跡模擬器（含落地彈跳＆滾動）</h2>
+                <h2 class="text-lg font-bold flex items-center gap-2">
+                  <span>🚀 3D 真實物理投球軌跡模擬器</span>
+                  <span class="text-xs px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-mono font-bold">Statcast 雙視角</span>
+                </h2>
                 <p class="text-xs text-[var(--muted-foreground)]">
-                  同時顯示：<span class="text-slate-400">灰色虛線＝無旋轉純重力拋物線</span> ｜ <span class="text-amber-400">亮色實線＝真實馬格努斯空氣動力軌跡</span> ｜ <span class="text-emerald-400">點線＝提前落地彈跳滾動</span>
+                  左圖：側向飛行與挖地瓜彈跳 ｜ 右圖：捕手／主審 3D 進壘好球帶與打者站姿
                 </p>
               </div>
               <div class="flex items-center gap-2">
@@ -543,14 +552,16 @@
             </div>
 
             <div class="bg-[var(--background)] border border-[var(--border)] rounded-xl p-2 mb-3">
-              <canvas id="pitchSimCanvas" width="600" height="310" class="w-full h-auto rounded-lg cursor-pointer" title="點擊九宮格或挖地瓜區域可直接瞄準投球"></canvas>
+              <canvas id="pitchSimCanvas" width="640" height="320" class="w-full h-auto rounded-lg cursor-pointer" title="點擊九宮格或挖地瓜區域可直接瞄準投球"></canvas>
             </div>
           </div>
 
           <!-- Physics Sliders & Aiming Grid -->
           <div class="grid grid-cols-1 sm:grid-cols-12 gap-3 bg-[var(--background)] border border-[var(--border)] rounded-xl p-3.5 items-center">
             <div class="sm:col-span-5">
-              <div class="text-xs font-bold mb-1.5">🎯 選擇進壘目標（含挖地瓜彈跳測試）：</div>
+              <div class="text-xs font-bold mb-1.5 flex items-center justify-between">
+                <span>🎯 瞄準九宮格進壘點：</span>
+              </div>
               <div class="grid grid-cols-3 gap-1 w-44" id="strike-zone-grid">
                 <button onclick="setAim(0,0)" class="aim-cell py-1 rounded border border-[var(--border)] text-xs font-bold hover:bg-blue-500/20 cursor-pointer">1 高內</button>
                 <button onclick="setAim(1,0)" class="aim-cell py-1 rounded border border-[var(--border)] text-xs font-bold hover:bg-blue-500/20 cursor-pointer">2 高中</button>
@@ -561,7 +572,7 @@
                 <button onclick="setAim(0,2)" class="aim-cell py-1 rounded border border-[var(--border)] text-xs font-bold hover:bg-blue-500/20 cursor-pointer">7 低內</button>
                 <button onclick="setAim(1,2)" class="aim-cell py-1 rounded border border-[var(--border)] text-xs font-bold hover:bg-blue-500/20 cursor-pointer">8 低中</button>
                 <button onclick="setAim(2,2)" class="aim-cell py-1 rounded border border-[var(--border)] text-xs font-bold hover:bg-blue-500/20 cursor-pointer">9 低外</button>
-                <button onclick="setAim(1,3)" class="aim-cell col-span-3 py-1 rounded border border-amber-500/50 text-amber-300 text-xs font-bold hover:bg-amber-500/20 cursor-pointer">💥 投挖地瓜球 (測試紅土彈跳滾動)</button>
+                <button onclick="setAim(1,3)" class="aim-cell col-span-3 py-1 rounded border border-amber-500/50 text-amber-300 text-xs font-bold hover:bg-amber-500/20 cursor-pointer">💥 投挖地瓜球 (紅土彈跳滾動)</button>
               </div>
             </div>
 
@@ -570,20 +581,20 @@
                 <div>
                   <label class="flex justify-between text-xs text-[var(--muted-foreground)]">
                     <span>出手球速:</span>
-                    <strong id="lbl-pitch-speed" class="text-emerald-400">85 km/h</strong>
+                    <strong id="lbl-pitch-speed" class="text-emerald-400 font-mono">88 km/h</strong>
                   </label>
-                  <input id="slider-pitch-speed" type="range" min="60" max="105" value="85" oninput="onPitchSliderChange()" class="w-full accent-emerald-500 cursor-pointer">
+                  <input id="slider-pitch-speed" type="range" min="60" max="105" value="88" oninput="onPitchSliderChange()" class="w-full accent-emerald-500 cursor-pointer">
                 </div>
                 <div>
                   <label class="flex justify-between text-xs text-[var(--muted-foreground)]">
                     <span>手指扣球轉速:</span>
-                    <strong id="lbl-pitch-rpm" class="text-blue-400">1800 RPM</strong>
+                    <strong id="lbl-pitch-rpm" class="text-blue-400 font-mono">1900 RPM</strong>
                   </label>
-                  <input id="slider-pitch-rpm" type="range" min="600" max="2400" step="100" value="1800" oninput="onPitchSliderChange()" class="w-full accent-blue-500 cursor-pointer">
+                  <input id="slider-pitch-rpm" type="range" min="600" max="2400" step="100" value="1900" oninput="onPitchSliderChange()" class="w-full accent-blue-500 cursor-pointer">
                 </div>
               </div>
               <div id="pitch-flight-desc" class="p-2.5 rounded-lg bg-[var(--card)] border border-[var(--border)] leading-relaxed">
-                <strong>軌道物理分析：</strong>四縫線直球因為手指由上往下扣球，產生強烈的「正後旋 (Backspin)」，馬格努斯力會把球往上托，比灰色無旋轉拋物線高出約 18 公分！
+                <strong>🌪️ Statcast 馬格努斯空力實測：</strong>在 <strong>88 km/h、1900 RPM</strong> 下，四縫線正後旋讓球抵抗地心引力，進壘時比灰色無旋轉拋物線上浮約 18 公分！
               </div>
             </div>
           </div>
@@ -594,8 +605,11 @@
       <div class="bg-[var(--card)] border border-[var(--border)] rounded-2xl p-5 shadow-sm">
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-2 mb-4">
           <div>
-            <h2 class="text-lg font-bold">🕺 身體的投球方法：全身協調五分解動作</h2>
-            <p class="text-xs text-[var(--muted-foreground)]">投球不是只靠手臂用力！要用「腳蹬地 ➔ 轉腰 ➔ 帶動手臂」才投得快又不會手痛！</p>
+            <h2 class="text-lg font-bold flex items-center gap-2">
+              <span>🕺 投手全身協調五分解動作</span>
+              <span class="text-xs px-2.5 py-0.5 rounded-full bg-blue-500/20 text-blue-300 border border-blue-500/30 font-bold">小球員真人擬真圖解</span>
+            </h2>
+            <p class="text-xs text-[var(--muted-foreground)]">投球不是只靠手臂死甩！要用「蹬地 ➔ 轉腰 ➔ 帶動手肘 ➔ 高點扣指」才投得遠又保護手臂不痛！</p>
           </div>
           <div class="flex items-center gap-2">
             <button onclick="prevPitchStep()" class="px-3 py-1.5 rounded-lg border border-[var(--border)] text-xs font-bold hover:bg-[var(--background)] cursor-pointer">◀ 上一步</button>
@@ -607,31 +621,31 @@
         <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
           <div class="md:col-span-5 space-y-2">
             <button onclick="setPitchStep(0)" id="pstep-0" class="w-full text-left p-3 rounded-xl border border-blue-500 bg-blue-500/15 transition cursor-pointer">
-              <div class="font-bold text-sm">步驟 1：站穩抬腿 (Balance)</div>
-              <div class="text-xs text-[var(--muted-foreground)]">側身對捕手，後腳站穩，前腳像白鷺鷥一樣抬到大腿水平。</div>
+              <div class="font-bold text-sm text-sky-400">步驟 1：站穩抬腿 (Balance 核心平衡)</div>
+              <div class="text-xs text-[var(--muted-foreground)]">側身對捕手，重心穩在後腳投手板，前腳像白鷺鷥金雞獨立抬至水平。</div>
             </button>
             <button onclick="setPitchStep(1)" id="pstep-1" class="w-full text-left p-3 rounded-xl border border-[var(--border)] transition cursor-pointer">
-              <div class="font-bold text-sm">步驟 2：跨步展翅成「L型」(Power Position)</div>
-              <div class="text-xs text-[var(--muted-foreground)]">前腳往本壘跨出，手套指目標，投球手高舉成 90 度「L型」。</div>
+              <div class="font-bold text-sm text-amber-400">步驟 2：跨步展翅成「L型」(Power Position)</div>
+              <div class="text-xs text-[var(--muted-foreground)]">前腳往本壘大步跨出，手套瞄準目標，投球手肘舉高成 90 度「L型」！</div>
             </button>
             <button onclick="setPitchStep(2)" id="pstep-2" class="w-full text-left p-3 rounded-xl border border-[var(--border)] transition cursor-pointer">
-              <div class="font-bold text-sm">步驟 3：轉腰帶動手肘 (Hip Rotation)</div>
-              <div class="text-xs text-[var(--muted-foreground)]">肚臍轉向捕手！手套手拉回胸口，手肘往前帶動。</div>
+              <div class="font-bold text-sm text-emerald-400">步驟 3：轉腰帶動手肘 (Hip Rotation 核心旋轉)</div>
+              <div class="text-xs text-[var(--muted-foreground)]">肚臍用力轉向捕手！手套手拉回胸口，手肘領先往前帶出甩動。</div>
             </button>
             <button onclick="setPitchStep(3)" id="pstep-3" class="w-full text-left p-3 rounded-xl border border-[var(--border)] transition cursor-pointer">
-              <div class="font-bold text-sm">步驟 4：高點放球與扣腕 (Release)</div>
-              <div class="text-xs text-[var(--muted-foreground)]">在頭頂前上方最高點放球，手指往下扣壓縫線！</div>
+              <div class="font-bold text-sm text-rose-400">步驟 4：高點放球與扣腕 (Release Point 扣指壓縫線)</div>
+              <div class="text-xs text-[var(--muted-foreground)]">在頭頂前上方最高點放球，食指與中指全力由上往下扣壓縫線！</div>
             </button>
             <button onclick="setPitchStep(4)" id="pstep-4" class="w-full text-left p-3 rounded-xl border border-[var(--border)] transition cursor-pointer">
-              <div class="font-bold text-sm">步驟 5：收尾與準備守備 (Follow Through)</div>
-              <div class="text-xs text-[var(--muted-foreground)]">手臂自然揮到前腳膝蓋外側，後腳往前踩平變成守備姿勢。</div>
+              <div class="font-bold text-sm text-purple-400">步驟 5：收尾與準備防守 (Follow Through)</div>
+              <div class="text-xs text-[var(--muted-foreground)]">手臂自然揮至前腳外側減速，後腳順勢往前踏平變成防守準備姿勢。</div>
             </button>
           </div>
 
           <div class="md:col-span-7 bg-[var(--background)] border border-[var(--border)] rounded-xl p-4 flex flex-col items-center">
-            <canvas id="mechanicsCanvas" width="480" height="250" class="w-full h-auto"></canvas>
+            <canvas id="mechanicsCanvas" width="600" height="300" class="w-full h-auto"></canvas>
             <div id="mechanics-caption" class="mt-2 text-xs font-medium text-center px-3 py-2 rounded-lg bg-[var(--card)] border border-[var(--border)] w-full">
-              👀 動作口訣：「一抬腿、二展翅、三轉腰、四扣腕、五收尾！」
+              👀 動作五大口訣：「一抬腿、二展翅、三轉腰、四扣腕、五收尾！」
             </div>
           </div>
         </div>
@@ -643,66 +657,69 @@
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
         <div class="lg:col-span-6 bg-[var(--card)] border border-[var(--border)] rounded-2xl p-5 shadow-sm flex flex-col justify-between">
           <div>
-            <h2 class="text-lg font-bold mb-1">🧤 傳接球與守備黃金基本功</h2>
-            <p class="text-xs text-[var(--muted-foreground)] mb-4">點選三種守備情境，看看手部與腳步該怎麼擺！</p>
+            <div class="flex items-center justify-between mb-1">
+              <h2 class="text-lg font-bold">🧤 傳接球與守備黃金基本功</h2>
+              <span class="text-xs px-2.5 py-1 rounded-full bg-emerald-500/15 text-emerald-400 font-bold border border-emerald-500/30">金手套指南</span>
+            </div>
+            <p class="text-xs text-[var(--muted-foreground)] mb-4">掌握手套方向、身體正三角形站姿與墊步，球接得穩又傳得快！</p>
 
             <div class="grid grid-cols-3 gap-2 mb-4">
               <button onclick="selectFieldingMode('alligator')" id="fmode-alligator" class="sub-btn active p-2.5 rounded-xl border border-[var(--border)] text-center cursor-pointer">
                 <div class="text-base">🐊</div>
-                <div class="font-bold text-xs mt-0.5">鱷魚嘴接滾地球</div>
+                <div class="font-bold text-xs mt-0.5">鱷魚嘴雙手接球</div>
               </button>
               <button onclick="selectFieldingMode('clock')" id="fmode-clock" class="sub-btn p-2.5 rounded-xl border border-[var(--border)] text-center cursor-pointer">
                 <div class="text-base">👐</div>
-                <div class="font-bold text-xs mt-0.5">高低球手套方向</div>
+                <div class="font-bold text-xs mt-0.5">高低球肚臍分界線</div>
               </button>
               <button onclick="selectFieldingMode('crowhop')" id="fmode-crowhop" class="sub-btn p-2.5 rounded-xl border border-[var(--border)] text-center cursor-pointer">
                 <div class="text-base">👟</div>
-                <div class="font-bold text-xs mt-0.5">墊步助跑傳球</div>
+                <div class="font-bold text-xs mt-0.5">墊步助跑強傳</div>
               </button>
             </div>
 
             <div class="bg-[var(--background)] border border-[var(--border)] rounded-xl p-3 mb-3 flex flex-col items-center">
-              <canvas id="fieldingSkillCanvas" width="440" height="220" class="w-full h-auto"></canvas>
+              <canvas id="fieldingSkillCanvas" width="560" height="280" class="w-full h-auto"></canvas>
             </div>
           </div>
 
           <div id="fielding-skill-desc" class="bg-[var(--background)] border border-[var(--border)] rounded-xl p-4 text-xs leading-relaxed space-y-1.5">
-            <div class="font-bold text-sm text-emerald-400">🐊 滾地球三角形站姿 ＋「鱷魚嘴巴」雙手接球</div>
-            <p>1. <strong>正三角形站法：</strong>雙腳張開比肩膀寬（當作三角形底邊），手套放在雙腳正前方地面（當作三角形頂點），屁股坐低，眼睛盯著球進手套。</p>
-            <p>2. <strong>鱷魚嘴巴 (Alligator Hands)：</strong>手套在下面張開，另一隻空手放在手套上方像鱷魚的上顎。球一進手套，上面的手立刻蓋住並把球拿出來傳球，球絕對不會彈出來！</p>
+            <div class="font-bold text-sm text-emerald-400">🐊 滾地球正三角形站姿 ＋「鱷魚嘴巴」雙手接球</div>
+            <p>1. <strong>正三角形站法：</strong>雙腳張開比肩膀寬（當底邊），手套放在雙腳前方地面（當頂點），屁股坐低，眼睛盯著球進手套。</p>
+            <p>2. <strong>鱷魚嘴巴 (Alligator Hands)：</strong>手套在下面貼地張開，另一隻空手在上方像鱷魚上顎。球一進手套立刻蓋上，球絕不漏彈！</p>
           </div>
         </div>
 
         <div class="lg:col-span-6 bg-[var(--card)] border border-[var(--border)] rounded-2xl p-5 shadow-sm flex flex-col justify-between">
           <div>
             <div class="flex items-center justify-between mb-1">
-              <h2 class="text-lg font-bold">🛡️ 守壘包的技巧（封殺 vs 觸殺）</h2>
+              <h2 class="text-lg font-bold">🛡️ 壘包防守技巧（一壘封殺 vs 二壘觸殺）</h2>
               <button onclick="animateBasePlay()" class="px-3.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs cursor-pointer">
-                ▶ 模擬傳球進壘
+                ▶ 播放傳球進壘動畫
               </button>
             </div>
-            <p class="text-xs text-[var(--muted-foreground)] mb-4">站在壘包錯的位置很容易跟跑者撞在一起！學會正確踩壘位置保護自己又能抓出局！</p>
+            <p class="text-xs text-[var(--muted-foreground)] mb-4">學會正確踩壘包位置，保護自己不被跑者踩傷，還能抓到出局！</p>
 
             <div class="grid grid-cols-2 gap-2 mb-4">
               <button onclick="selectBasePlay('force1b')" id="bplay-force1b" class="sub-btn active p-3 rounded-xl border border-[var(--border)] text-left cursor-pointer">
                 <div class="font-bold text-xs">🦶 一壘封殺 (Force Out)</div>
-                <div class="text-xs text-[var(--muted-foreground)] mt-0.5">腳踩壘包內側邊＋跨步延伸</div>
+                <div class="text-xs text-[var(--muted-foreground)] mt-0.5">腳踩內側邊緣＋大跨步延伸接球</div>
               </button>
               <button onclick="selectBasePlay('tag2b')" id="bplay-tag2b" class="sub-btn p-3 rounded-xl border border-[var(--border)] text-left cursor-pointer">
                 <div class="font-bold text-xs">🧤 二/三壘觸殺 (Tag Play)</div>
-                <div class="text-xs text-[var(--muted-foreground)] mt-0.5">跨站壘包旁＋手套放壘包前等他滑</div>
+                <div class="text-xs text-[var(--muted-foreground)] mt-0.5">雙腳跨站壘包旁＋手套放地上等滑壘</div>
               </button>
             </div>
 
             <div class="bg-[var(--background)] border border-[var(--border)] rounded-xl p-3 mb-3 flex flex-col items-center">
-              <canvas id="baseCoverCanvas" width="440" height="220" class="w-full h-auto"></canvas>
+              <canvas id="baseCoverCanvas" width="560" height="280" class="w-full h-auto"></canvas>
             </div>
           </div>
 
           <div id="base-cover-desc" class="bg-[var(--background)] border border-[var(--border)] rounded-xl p-4 text-xs leading-relaxed space-y-1.5">
-            <div class="font-bold text-sm text-blue-400">🦶 一壘手守壘秘訣：踩「朝向場內的壘包邊緣」</div>
-            <p>• <strong>千萬別踩壘包正中間或外側：</strong>因為打者會全力踩壘包外側衝過去，踩中間很容易被踩到腳！</p>
-            <p>• <strong>先等球再跨步 (Stretch)：</strong>雙腳先面對傳球方向，看清楚球飛過來的方向後，接球腳再往球的方向跨出去拉長身體，能讓球提早半秒進手套！</p>
+            <div class="font-bold text-sm text-blue-400">🦶 一壘手守壘秘訣：踩「朝向場內的壘包內側邊緣」</div>
+            <p>• <strong>絕不踩壘包正中間或外側：</strong>因為打者會全力踩外側邊緣衝過去，踩中間很容易被釘鞋踩傷腳！</p>
+            <p>• <strong>先看球再跨步 (Stretch)：</strong>看清楚球傳來的方向後，接球腳再朝球的方向大跨步延伸，提早半秒進手套抓出局！</p>
           </div>
         </div>
       </div>
@@ -713,29 +730,32 @@
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
         <div class="lg:col-span-5 bg-[var(--card)] border border-[var(--border)] rounded-2xl p-5 shadow-sm flex flex-col justify-between">
           <div>
-            <h2 class="text-lg font-bold mb-1">✊ 握棒方法與擊球後跑一壘</h2>
-            <p class="text-xs text-[var(--muted-foreground)] mb-3">為什麼有的人打不遠？秘密就在雙手握棒的「敲門關節」！</p>
+            <div class="flex items-center justify-between mb-1">
+              <h2 class="text-lg font-bold">✊ 握棒技巧 ＆ 擊球後跑一壘路線</h2>
+              <span class="text-xs px-2.5 py-1 rounded-full bg-amber-500/15 text-amber-400 font-bold border border-amber-500/30">打擊核心</span>
+            </div>
+            <p class="text-xs text-[var(--muted-foreground)] mb-3">打得遠的秘密就在雙手的「敲門關節」！跑一壘路線更有學問！</p>
 
             <div class="grid grid-cols-2 gap-2 mb-3">
               <button onclick="selectBatView('knuckles')" id="batview-knuckles" class="sub-btn active p-2.5 rounded-xl border border-[var(--border)] text-left cursor-pointer">
                 <div class="font-bold text-xs">👊 敲門關節對齊法</div>
-                <div class="text-xs text-[var(--muted-foreground)]">手腕靈活揮棒快</div>
+                <div class="text-xs text-[var(--muted-foreground)]">手腕靈活・揮棒如揮鞭</div>
               </button>
               <button onclick="selectBatView('run1b')" id="batview-run1b" class="sub-btn p-2.5 rounded-xl border border-[var(--border)] text-left cursor-pointer">
                 <div class="font-bold text-xs">🏃 擊球後跑一壘路線</div>
-                <div class="text-xs text-[var(--muted-foreground)]">直線衝刺 vs 香蕉轉彎</div>
+                <div class="text-xs text-[var(--muted-foreground)]">直線衝刺 vs 香蕉彎繞壘</div>
               </button>
             </div>
 
             <div class="bg-[var(--background)] border border-[var(--border)] rounded-xl p-3 mb-3 flex flex-col items-center">
-              <canvas id="batGripCanvas" width="360" height="210" class="w-full h-auto"></canvas>
+              <canvas id="batGripCanvas" width="520" height="280" class="w-full h-auto"></canvas>
             </div>
           </div>
 
           <div id="bat-grip-desc" class="bg-[var(--background)] border border-[var(--border)] rounded-xl p-3.5 text-xs leading-relaxed space-y-1.5">
             <div class="font-bold text-amber-400">👊 握棒黃金法則：「敲門關節排成一直線」</div>
             <p>1. <strong>哪隻手在上面？</strong>右打者「左手在下、右手在上」（左打者相反），雙手緊靠在一起不留縫隙。</p>
-            <p>2. <strong>敲門關節對齊：</strong>比出「敲門」動作的第二指關節，上下兩手要對齊成一直線！不要把球棒握在手掌心太深處，要用手指根部扣住球棒。</p>
+            <p>2. <strong>敲門關節對齊：</strong>比出「敲門」動作的第二指關節，上下兩手要對齊成一直線！不要握在掌心深處，用手指根部扣住，手腕才能順暢翻轉！</p>
           </div>
         </div>
 
@@ -744,9 +764,12 @@
           <div>
             <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
               <div>
-                <h2 class="text-lg font-bold">💥 擊球仰角、落地彈跳 ＆ 草地滾動物理模擬器</h2>
+                <h2 class="text-lg font-bold flex items-center gap-2">
+                  <span>💥 擊球仰角、落地彈跳 ＆ 草地滾動物理</span>
+                  <span class="text-xs px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 font-mono font-bold">Statcast 仰角實驗室</span>
+                </h2>
                 <p class="text-xs text-[var(--muted-foreground)]">
-                  真實呈現：<span class="text-amber-400">空中飛行軌跡</span> ➔ <span class="text-emerald-400">紅土/草地彈跳高度差異</span> ➔ <span class="text-sky-400">地面摩擦滾動減速停止</span>
+                  空中飛行 ➔ 紅土高彈跳 / 外野草皮低彈跳 ➔ 草地摩擦力減速停止
                 </p>
               </div>
               <button onclick="swingBatSim()" class="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-bold text-sm shadow cursor-pointer">
@@ -755,27 +778,27 @@
             </div>
 
             <div class="bg-[var(--background)] border border-[var(--border)] rounded-xl p-2 mb-3">
-              <canvas id="hitSimCanvas" width="600" height="280" class="w-full h-auto rounded-lg"></canvas>
+              <canvas id="hitSimCanvas" width="640" height="300" class="w-full h-auto rounded-lg"></canvas>
             </div>
           </div>
 
           <div class="bg-[var(--background)] border border-[var(--border)] rounded-xl p-3.5 space-y-3">
             <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
               <button onclick="setHitType('ground')" id="hit-btn-ground" class="sub-btn p-2 rounded-lg border border-[var(--border)] text-center cursor-pointer">
-                <div class="font-bold text-xs">📉 強勁滾地球 (-6°)</div>
-                <div class="text-xs text-[var(--muted-foreground)]">前旋彈跳＋長距離滾動</div>
+                <div class="font-bold text-xs">📉 強勁滾地 (-6°)</div>
+                <div class="text-xs text-[var(--muted-foreground)]">打球心上方・前旋長滾</div>
               </button>
               <button onclick="setHitType('line')" id="hit-btn-line" class="sub-btn active p-2 rounded-lg border border-[var(--border)] text-center cursor-pointer">
                 <div class="font-bold text-xs">⚡ 平飛安打 (14°)</div>
-                <div class="text-xs text-[var(--muted-foreground)]">落地後快速往前滾穿外野</div>
+                <div class="text-xs text-[var(--muted-foreground)]">正中球心・彈跳穿外野</div>
               </button>
               <button onclick="setHitType('homerun')" id="hit-btn-homerun" class="sub-btn p-2 rounded-lg border border-[var(--border)] text-center cursor-pointer">
                 <div class="font-bold text-xs">🎆 深遠長打 (28°)</div>
-                <div class="text-xs text-[var(--muted-foreground)]">後旋飛越外野全壘打牆</div>
+                <div class="text-xs text-[var(--muted-foreground)]">黃金仰角・後旋飛出牆</div>
               </button>
               <button onclick="setHitType('popup')" id="hit-btn-popup" class="sub-btn p-2 rounded-lg border border-[var(--border)] text-center cursor-pointer">
                 <div class="font-bold text-xs">🎈 內野高飛 (55°)</div>
-                <div class="text-xs text-[var(--muted-foreground)]">陡降彈跳高、滾動短</div>
+                <div class="text-xs text-[var(--muted-foreground)]">切到球下緣・原地落難</div>
               </button>
             </div>
             <div class="flex flex-wrap items-center justify-between gap-2 text-xs px-1">
@@ -784,7 +807,7 @@
               <span id="hit-stat-bounces" class="font-bold text-amber-400">彈跳次數：3 次後轉為貼地滾動</span>
             </div>
             <div id="hit-result-desc" class="text-xs p-2.5 rounded-lg bg-[var(--card)] border border-[var(--border)]">
-              <strong>⚡ 平飛球物理 (Line Drive)：</strong>球棒正中球心（仰角 14°），飛行軌跡平直，在外野草地第一次落地後因為水平速度極快，會連續彈跳 2～3 次再貼著草皮滾動到全壘打牆前！
+              <strong>⚡ 平飛球物理 (Line Drive)：</strong>球棒正中球心（仰角 14°），飛行平直速度快，在外野草地第一次落地後因水平動能大，會連續彈跳 2～3 次再貼著草皮滾動到全壘打牆前！
             </div>
           </div>
         </div>
@@ -797,8 +820,11 @@
         <div class="lg:col-span-7 bg-[var(--card)] border border-[var(--border)] rounded-2xl p-5 shadow-sm">
           <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
             <div>
-              <h2 class="text-lg font-bold">🏟️ 壘上跑壘情境戰術模擬器</h2>
-              <p class="text-xs text-[var(--muted-foreground)]">當你在壘包上時，隊友打出不同球路該怎麼跑？點選情境看跑者怎麼移動！</p>
+              <h2 class="text-lg font-bold flex items-center gap-2">
+                <span>🏟️ 壘上跑壘情境戰術模擬器</span>
+                <span class="text-xs px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-300 border border-blue-500/40 font-mono font-bold">3D 球場視角</span>
+              </h2>
+              <p class="text-xs text-[var(--muted-foreground)]">身為壘上跑者，隊友打出不同球路該怎麼跑？點選情境看球路與跑者互動！</p>
             </div>
             <button onclick="playBaserunningScenario()" class="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs shadow cursor-pointer">
               ▶ 播放跑壘動畫
@@ -807,54 +833,56 @@
 
           <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-3">
             <button onclick="selectBaseScenario('force')" id="bscene-force" class="sub-btn active p-2.5 rounded-xl border border-[var(--border)] text-left cursor-pointer">
-              <div class="font-bold text-xs">1️⃣ 一壘有人＋滾地球</div>
-              <div class="text-xs text-[var(--muted-foreground)]">強迫進壘全力衝</div>
+              <div class="font-bold text-xs">1️⃣ 一壘有人＋滾地</div>
+              <div class="text-xs text-[var(--muted-foreground)]">強迫進壘全力衝二壘</div>
             </button>
             <button onclick="selectBaseScenario('tagup')" id="bscene-tagup" class="sub-btn p-2.5 rounded-xl border border-[var(--border)] text-left cursor-pointer">
-              <div class="font-bold text-xs">2️⃣ 三壘有人＋外野高飛</div>
+              <div class="font-bold text-xs">2️⃣ 三壘有人＋高飛</div>
               <div class="text-xs text-[var(--muted-foreground)]">踩壘等待 (Tag Up)</div>
             </button>
             <button onclick="selectBaseScenario('twoouts')" id="bscene-twoouts" class="sub-btn p-2.5 rounded-xl border border-[var(--border)] text-left cursor-pointer">
               <div class="font-bold text-xs">3️⃣ 兩出局任何打擊</div>
-              <div class="text-xs text-[var(--muted-foreground)]">球一打出去馬上衝</div>
+              <div class="text-xs text-[var(--muted-foreground)]">球一打出馬上全力狂奔</div>
             </button>
             <button onclick="selectBaseScenario('lead')" id="bscene-lead" class="sub-btn p-2.5 rounded-xl border border-[var(--border)] text-left cursor-pointer">
               <div class="font-bold text-xs">4️⃣ 離壘與第二離壘</div>
-              <div class="text-xs text-[var(--muted-foreground)]">側滑步隨時回壘</div>
+              <div class="text-xs text-[var(--muted-foreground)]">側滑步隨時安全回壘</div>
             </button>
           </div>
 
           <div class="bg-[var(--background)] border border-[var(--border)] rounded-xl p-3 flex flex-col items-center">
-            <canvas id="diamondCanvas" width="520" height="310" class="w-full h-auto"></canvas>
+            <canvas id="diamondCanvas" width="600" height="360" class="w-full h-auto"></canvas>
           </div>
         </div>
 
         <div class="lg:col-span-5 bg-[var(--card)] border border-[var(--border)] rounded-2xl p-5 shadow-sm flex flex-col justify-between space-y-4">
           <div>
-            <h2 class="text-lg font-bold mb-3">📘 壘上跑者四大聰明口訣</h2>
+            <h2 class="text-lg font-bold mb-3 flex items-center gap-2">
+              <span>📘 壘上跑者四大聰明口訣</span>
+            </h2>
             <div id="baserunning-detail-card" class="bg-[var(--background)] border border-blue-500/40 rounded-xl p-4 text-xs leading-relaxed space-y-2 mb-4">
               <div class="text-sm font-bold text-blue-400" id="bscene-title">情境 1：一壘有人，隊友打出內野滾地球</div>
               <p id="bscene-body">
-                因為打者要跑一壘，一壘跑者<strong>「被強迫一定要往二壘跑 (Force Play)」</strong>！所以一看到球往地上彈，不用猶豫，<strong>低頭全力衝向二壘</strong>！如果能滑壘進二壘，還可以避免被雙殺喔！
+                因為打者要跑一壘，一壘跑者<strong>「被強迫一定要往二壘跑 (Force Play)」</strong>！所以一看到球往地上彈，不用猶豫，<strong>低頭全力衝向二壘</strong>！滑壘進二壘還可以避免被傳一壘雙殺！
               </p>
             </div>
 
             <div class="space-y-2.5 text-xs">
               <div class="p-3 rounded-xl bg-[var(--background)] border border-[var(--border)]">
-                <div class="font-bold text-amber-400 mb-1">👀 口訣一：上壘先看「幾出局」與「守備位置」</div>
-                <p class="text-[var(--muted-foreground)]">踏上壘包第一件事：伸手比出現在幾人出局，並看外野手站得深不深。</p>
+                <div class="font-bold text-amber-400 mb-1">👀 口訣一：踏上壘包先看「幾出局」與「野手站位」</div>
+                <p class="text-[var(--muted-foreground)]">上壘第一件事：伸手向三壘指導教練比出現在幾人出局，並觀察外野手站得深還是淺。</p>
               </div>
               <div class="p-3 rounded-xl bg-[var(--background)] border border-[var(--border)]">
                 <div class="font-bold text-emerald-400 mb-1">✈️ 口訣二：少於兩出局，高飛球不能傻傻一直衝！</div>
-                <p class="text-[var(--muted-foreground)]">野手如果接殺高飛球，跑者必須回到原本的壘包踩一下才算安全！外野深遠高飛球可先踩在壘包上（Tag Up），等球進野手手套那一瞬間立刻起跑推進！</p>
+                <p class="text-[var(--muted-foreground)]">野手如果接殺高飛球，跑者必須回原壘踩一下（Tag Up）才能起跑！外野深遠高飛球先踩好三壘壘包，球一進野手手套瞬間立刻全力衝本壘！</p>
               </div>
               <div class="p-3 rounded-xl bg-[var(--background)] border border-[var(--border)]">
-                <div class="font-bold text-rose-400 mb-1">⚡ 口訣三：兩出局 (2 Outs) 球打出去就全力跑！</div>
-                <p class="text-[var(--muted-foreground)]">兩出局時就算高飛球被接殺也是第三出局換局，所以球棒一碰到球，全壘上的跑者馬上全力狂奔，能多跑一壘是一壘！</p>
+                <div class="font-bold text-rose-400 mb-1">⚡ 口訣三：兩出局 (2 Outs) 球打出去就全力狂奔！</div>
+                <p class="text-[var(--muted-foreground)]">兩出局時就算高飛球被接殺也是第三出局換局，所以球棒碰到球的瞬間，全壘上所有跑者不用看球，全力衝刺能衝幾壘是幾壘！</p>
               </div>
               <div class="p-3 rounded-xl bg-[var(--background)] border border-[var(--border)]">
-                <div class="font-bold text-purple-400 mb-1">🛡️ 口訣四：安全滑壘雙手舉高，千萬別用手撐地！</div>
-                <p class="text-[var(--muted-foreground)]">滑壘時一腳伸直、一腳彎曲成「4字型」，屁股側面著地，雙手要握拳舉高，才不會扭傷手腕！</p>
+                <div class="font-bold text-purple-400 mb-1">🛡️ 口訣四：安全滑壘「4字型」，雙手高舉別撐地！</div>
+                <p class="text-[var(--muted-foreground)]">滑壘時一腳伸直、一腳向內收彎成「4字型」，臀部外側著地滑行，雙手握拳高舉，千萬不能用手掌去撐地以防扭傷！</p>
               </div>
             </div>
           </div>
@@ -867,10 +895,13 @@
       <div class="bg-[var(--card)] border border-[var(--border)] rounded-2xl p-6 shadow-sm max-w-3xl mx-auto">
         <div class="flex items-center justify-between mb-4">
           <div>
-            <h2 class="text-xl font-bold">🏆 四年級小國手隨堂挑戰賽</h2>
-            <p class="text-xs text-[var(--muted-foreground)]">答對全部 5 題就能獲得「五星全能小國手」認證徽章！</p>
+            <h2 class="text-xl font-bold flex items-center gap-2">
+              <span>🏆 四年級小國手隨堂挑戰賽</span>
+              <span class="text-xs px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 font-bold">棒球小博士認證</span>
+            </h2>
+            <p class="text-xs text-[var(--muted-foreground)] mt-0.5">答對全部 5 題就能獲得「五星全能小國手」最高榮譽認證！</p>
           </div>
-          <div id="quiz-score-badge" class="px-3.5 py-1.5 rounded-xl bg-amber-500/20 text-amber-400 font-bold text-sm">
+          <div id="quiz-score-badge" class="px-3.5 py-1.5 rounded-xl bg-amber-500/20 text-amber-400 font-bold text-sm border border-amber-500/30">
             得分：0 / 5
           </div>
         </div>
@@ -885,6 +916,7 @@
         </div>
       </div>
     </section>
+
   </div>
 
   <script>
@@ -922,9 +954,61 @@
       }
     }
 
+
+    // ==================== COMMON GRAPHICS HELPERS ====================
+    function drawSpinningBaseball(ctx, x, y, r, phase, borderColor) {
+      ctx.save();
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.35)';
+      ctx.beginPath();
+      ctx.ellipse(x, y + r * 0.95, r * 0.9, r * 0.32, 0, 0, Math.PI * 2);
+      ctx.fill();
+
+      const grad = ctx.createRadialGradient(x - r * 0.35, y - r * 0.35, r * 0.15, x, y, r);
+      grad.addColorStop(0, '#ffffff');
+      grad.addColorStop(0.65, '#f8fafc');
+      grad.addColorStop(0.88, '#e2e8f0');
+      grad.addColorStop(1, '#94a3b8');
+      ctx.fillStyle = grad;
+      ctx.beginPath();
+      ctx.arc(x, y, r, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.strokeStyle = borderColor || '#ef4444';
+      ctx.lineWidth = Math.max(1.5, r * 0.18);
+      ctx.stroke();
+
+      ctx.save();
+      ctx.beginPath();
+      ctx.arc(x, y, r - 0.5, 0, Math.PI * 2);
+      ctx.clip();
+
+      const seamOffset = Math.sin(phase) * (r * 0.42);
+      ctx.strokeStyle = '#dc2626';
+      ctx.lineWidth = Math.max(1.2, r * 0.14);
+      ctx.beginPath();
+      ctx.arc(x + seamOffset * 0.4, y, r * 0.72, -0.6 * Math.PI, 0.6 * Math.PI);
+      ctx.stroke();
+
+      ctx.strokeStyle = '#b91c1c';
+      ctx.lineWidth = Math.max(1.0, r * 0.1);
+      const stitchCount = 7;
+      for (let i = 0; i < stitchCount; i++) {
+        const ang = -0.45 * Math.PI + (0.9 * Math.PI * i) / (stitchCount - 1);
+        const sx = x + seamOffset * 0.4 + Math.cos(ang) * (r * 0.72);
+        const sy = y + Math.sin(ang) * (r * 0.72);
+        const tickLen = r * 0.22;
+        ctx.beginPath();
+        ctx.moveTo(sx - Math.sin(ang) * tickLen * 0.5, sy + Math.cos(ang) * tickLen * 0.5);
+        ctx.lineTo(sx + Math.sin(ang) * tickLen * 0.5, sy - Math.cos(ang) * tickLen * 0.5);
+        ctx.stroke();
+      }
+      ctx.restore();
+      ctx.restore();
+    }
+
     // ==================== 1. REAL PHYSICS PITCHING LAB ====================
     let currentPitch = '4seam';
-    let aimCol = 1, aimRow = 1; // row 0..2 strike zone, row 3 = dirt bounce
+    let aimCol = 1, aimRow = 1;
     let pitchLabPoints = [];
     let pitchLabGravityPoints = [];
     let pitchLabAnimIdx = 0;
@@ -933,20 +1017,19 @@
     const pitchData = {
       '4seam': {
         title: '🔥 四縫線直球 (4-Seam Fastball)',
-        desc: '<strong>握法秘訣：</strong>先把棒球轉到像「馬蹄鐵（C字型）」的方向，將<strong>食指與中指分開約一指寬</strong>，橫跨在馬蹄形縫線上；<strong>大拇指</strong>托在球的正下方，掌心和球之間要留一點空隙！',
-        tip: '💡 小四練習重點：傳接球跟投球都用四縫線，正後旋產生的上浮馬格努斯力最大，球飛得最直！',
+        desc: '<strong>握法秘訣：</strong>先把棒球轉到像「馬蹄鐵（C字型）」的方向，將<strong>食指與中指分開約一指寬</strong>，橫跨在馬蹄形縫線上；<strong>大拇指</strong>托在球的正下方，掌心和球之間要留約一指寬空隙（像含著一顆乒乓球）！',
+        tip: '💡 小四練習重點：傳接球跟投球都用四縫線！由上往下扣縫線產生強烈「正後旋 (Backspin)」，馬格努斯力向上托住球抵抗地心引力，球飛得最直、最不會飄！',
         defaultSpeed: 88,
         defaultRpm: 1900,
         color: '#ef4444',
-        // Spin vector: pure backspin (lifts Z up)
         spinX: 0.0,
         spinZ: 1.0,
         spinAxisAngle: 0
       },
       '2seam': {
         title: '⚡ 二縫線伸卡球 (2-Seam / Sinker)',
-        desc: '<strong>握法秘訣：</strong>找到棒球上兩條靠得最窄、平行的縫線，把<strong>食指與中指順著放在這兩條縫線上</strong>，放球時食指稍微多施力，讓旋轉軸傾斜。',
-        tip: '💡 物理原理：傾斜的旋轉軸加上縫線氣流，讓球飛到本壘前往右打者內角橫移並往下沉，最容易讓打者打成滾地球！',
+        desc: '<strong>握法秘訣：</strong>找到棒球上兩條靠得最窄、平行的縫線，把<strong>食指與中指順著貼在兩條縫線上</strong>；放球時食指稍微多出一點力，讓球旋轉軸產生側向傾斜。',
+        tip: '💡 物理原理：傾斜的旋轉軸加上縫線氣流阻力，讓球飛到本壘板前突然往右打者內角橫移並快速下沉，最容易讓打者擊出擊球點不佳的軟弱滾地球！',
         defaultSpeed: 84,
         defaultRpm: 1700,
         color: '#f59e0b',
@@ -956,8 +1039,8 @@
       },
       'changeup': {
         title: '🐢 掌心變速球 / 圈指變速球 (Changeup)',
-        desc: '<strong>握法秘訣：</strong>用<strong>食指、中指、無名指三根手指</strong>放在球上方，把球稍微塞進手掌心深處，讓球離開手指時轉速與球速自然降低。',
-        tip: '💡 物理原理：用跟直球一樣的揮臂速度投出，但因球速慢了 12 km/h 且後旋較弱，重力讓球在本壘板前明顯下墜！',
+        desc: '<strong>握法秘訣：</strong>用<strong>食指、中指、無名指三根手指</strong>放在球的上方，把球<strong>深深塞進手掌心深處</strong>；投球時揮臂速度跟直球一模一樣，但因為掌心摩擦力，球離開手時球速與轉速自然大減！',
+        tip: '💡 物理原理：投球動作完全偽裝成快速直球，但球速慢了 15 km/h 且後旋極低，打者容易太早揮棒揮空；而且在重力作用下球會在進壘前明顯下墜！',
         defaultSpeed: 73,
         defaultRpm: 1100,
         color: '#10b981',
@@ -967,8 +1050,8 @@
       },
       'curve': {
         title: '🌈 曲球 (Curveball - 認識前旋馬格努斯力)',
-        desc: '<strong>握法原理：</strong>中指沿著右側長縫線貼放，放球時讓球產生由上往下的<strong>「前旋 (Topspin)」</strong>，空氣壓力會把球大力往下壓！',
-        tip: '⚠️ 小四護手特別叮嚀：國小四年級骨頭還在發育，千萬不要刻意大力扭轉手腕投曲球喔！先認識它的物理原理即可！',
+        desc: '<strong>握法原理：</strong>中指沿著右側長縫線貼放，食指緊靠在旁邊；放球時手腕微側，由中指向下撥球，讓球產生由上往下的<strong>「前旋 (Topspin)」</strong>！',
+        tip: '⚠️ 小四護手特別叮嚀：國小四年級小朋友的手骨與手肘韌帶還在發育，千萬不要刻意大力扭轉手腕投變化球喔！先認識「前旋會讓球暴墜」的物理原理即可，平時以四縫線直球練好控球最安全！',
         defaultSpeed: 68,
         defaultRpm: 2100,
         color: '#a855f7',
@@ -981,25 +1064,38 @@
     function selectPitch(type) {
       currentPitch = type;
       ['4seam', '2seam', 'changeup', 'curve'].forEach(k => {
-        document.getElementById('pitch-btn-' + k).classList.toggle('active', k === type);
+        const btn = document.getElementById('pitch-btn-' + k);
+        if (btn) btn.classList.toggle('active', k === type);
       });
       const info = pitchData[type];
-      document.getElementById('grip-title').textContent = info.title;
-      document.getElementById('grip-desc').innerHTML = info.desc;
-      document.getElementById('grip-tip').textContent = info.tip;
-      document.getElementById('slider-pitch-speed').value = info.defaultSpeed;
-      document.getElementById('slider-pitch-rpm').value = info.defaultRpm;
-      document.getElementById('lbl-pitch-speed').textContent = info.defaultSpeed + ' km/h';
-      document.getElementById('lbl-pitch-rpm').textContent = info.defaultRpm + ' RPM';
+      const elTitle = document.getElementById('grip-title');
+      const elDesc = document.getElementById('grip-desc');
+      const elTip = document.getElementById('grip-tip');
+      if (elTitle) elTitle.textContent = info.title;
+      if (elDesc) elDesc.innerHTML = info.desc;
+      if (elTip) elTip.textContent = info.tip;
+      const sSpd = document.getElementById('slider-pitch-speed');
+      const sRpm = document.getElementById('slider-pitch-rpm');
+      if (sSpd) sSpd.value = info.defaultSpeed;
+      if (sRpm) sRpm.value = info.defaultRpm;
+      const lSpd = document.getElementById('lbl-pitch-speed');
+      const lRpm = document.getElementById('lbl-pitch-rpm');
+      if (lSpd) lSpd.textContent = info.defaultSpeed + ' km/h';
+      if (lRpm) lRpm.textContent = info.defaultRpm + ' RPM';
       drawGrip();
       throwPitch();
     }
 
     function onPitchSliderChange() {
-      const spd = document.getElementById('slider-pitch-speed').value;
-      const rpm = document.getElementById('slider-pitch-rpm').value;
-      document.getElementById('lbl-pitch-speed').textContent = spd + ' km/h';
-      document.getElementById('lbl-pitch-rpm').textContent = rpm + ' RPM';
+      const sSpd = document.getElementById('slider-pitch-speed');
+      const sRpm = document.getElementById('slider-pitch-rpm');
+      if (!sSpd || !sRpm) return;
+      const spd = sSpd.value;
+      const rpm = sRpm.value;
+      const lSpd = document.getElementById('lbl-pitch-speed');
+      const lRpm = document.getElementById('lbl-pitch-rpm');
+      if (lSpd) lSpd.textContent = spd + ' km/h';
+      if (lRpm) lRpm.textContent = rpm + ' RPM';
       throwPitch();
     }
 
@@ -1021,25 +1117,17 @@
       throwPitch();
     }
 
-    // Real 3D Pitch Physics Integrator (Youth Mound Distance = 14.0m)
-    // Coordinates: y = 0 (mound release) to 15.2m (catcher mitt behind home plate at 14.0m)
-    // x = horizontal (-0.8m inside to +0.8m outside), z = height above ground (m)
     function computePitchTrajectory(pitchType, speedKmh, rpm, targetCol, targetRow) {
       const info = pitchData[pitchType];
-      const v0 = (speedKmh / 3.6); // m/s
+      const v0 = (speedKmh / 3.6);
       const distToPlate = 14.0;
       const flightTimeEst = distToPlate / v0;
 
-      // Target coordinates at plate (y = 14.0m)
-      const targetX = (targetCol - 1) * 0.22; // -0.22m, 0m, +0.22m
-      let targetZ = 0.92 - targetRow * 0.24; // row 0: 0.92m, row 1: 0.68m, row 2: 0.44m
-      if (targetRow === 3) targetZ = -0.18; // Intentional dirt bounce before plate!
+      const targetX = (targetCol - 1) * 0.22;
+      let targetZ = 0.92 - targetRow * 0.24;
+      if (targetRow === 3) targetZ = -0.18;
 
-      // Release point
       const x0 = -0.12, y0 = 0, z0 = 1.48;
-
-      // Launch angles so that a standard gravity-only ball would aim toward initial sightline
-      // Pitchers aim slightly higher to account for gravity, while Magnus alters the path
       const gravityDropEst = 0.5 * 9.81 * flightTimeEst * flightTimeEst * 0.55;
       const vx0 = (targetX - x0) / flightTimeEst;
       const vz0 = (targetZ + gravityDropEst - z0) / flightTimeEst;
@@ -1051,7 +1139,6 @@
 
       let x = x0, y = y0, z = z0;
       let vx = vx0, vy = vy0, vz = vz0;
-
       let gx = x0, gy = y0, gz = z0;
       let gvx = vx0, gvy = vy0, gvz = vz0;
 
@@ -1069,7 +1156,6 @@
 
         if (y >= 15.0) break;
 
-        // Air drag & Magnus acceleration
         const speed = Math.sqrt(vx * vx + vy * vy + vz * vz);
         const drag = 0.0045 * speed;
         const ax = -drag * vx + spinFactor * info.spinX * vy;
@@ -1084,24 +1170,21 @@
         y += vy * dt;
         z += vz * dt;
 
-        // Ground collision (Dirt bounce & friction!)
         if (z <= 0.035) {
           z = 0.035;
           bounced = true;
           bounceCount++;
           if (Math.abs(vz) > 0.9) {
-            vz = -vz * 0.46; // Dirt coefficient of restitution
-            vy *= 0.78;      // Turf/dirt horizontal friction on bounce
+            vz = -vz * 0.46;
+            vy *= 0.78;
             vx *= 0.82;
           } else {
-            // Rolling on the dirt!
             vz = 0;
             vy *= 0.96;
             vx *= 0.96;
           }
         }
 
-        // Pure gravity reference trajectory (no Magnus)
         gvx += (-0.0045 * speed * gvx) * dt;
         gvy += (-0.0045 * speed * gvy) * dt;
         gvz += (-9.81 - 0.0045 * speed * gvz) * dt;
@@ -1114,25 +1197,27 @@
     }
 
     function simulateLabPitchPhysics() {
-      const spd = parseFloat(document.getElementById('slider-pitch-speed').value || 85);
-      const rpm = parseFloat(document.getElementById('slider-pitch-rpm').value || 1800);
+      const sSpd = document.getElementById('slider-pitch-speed');
+      const sRpm = document.getElementById('slider-pitch-rpm');
+      const spd = parseFloat(sSpd ? sSpd.value : 85);
+      const rpm = parseFloat(sRpm ? sRpm.value : 1800);
       const res = computePitchTrajectory(currentPitch, spd, rpm, aimCol, aimRow);
       pitchLabPoints = res.pts;
       pitchLabGravityPoints = res.gravPts;
 
-      // Update educational description with exact physics numbers
       const platePt = pitchLabPoints.find(p => p.y >= 14.0) || pitchLabPoints[pitchLabPoints.length - 1];
       const gravPlatePt = pitchLabGravityPoints.find(p => p.y >= 14.0) || pitchLabGravityPoints[pitchLabGravityPoints.length - 1];
       const liftCm = Math.round((platePt.z - gravPlatePt.z) * 100);
       const breakCm = Math.round((platePt.x - gravPlatePt.x) * 100);
       const descEl = document.getElementById('pitch-flight-desc');
-
-      if (platePt.bounced) {
-        descEl.innerHTML = `<strong>💥 提前落地彈跳物理：</strong>球在本壘板前撞擊紅土（恢復係數 <code>e=0.46</code>），垂直方向反彈並因地面摩擦力損失約 22% 水平速度，接著轉為貼地滾動！`;
-      } else {
-        const vertText = liftCm >= 0 ? `比無旋轉拋物線上浮 <strong>+${liftCm} cm</strong>` : `因前旋/重力下墜 <strong>${liftCm} cm</strong>`;
-        const horzText = Math.abs(breakCm) > 2 ? `，橫向偏移 <strong>${breakCm > 0 ? '+' : ''}${breakCm} cm</strong>` : '';
-        descEl.innerHTML = `<strong>🌪️ 馬格努斯效應實測：</strong>在 <strong>${spd} km/h、${rpm} RPM</strong> 下，此球到達本壘板時${vertText}${horzText}！`;
+      if (descEl) {
+        if (platePt.bounced) {
+          descEl.innerHTML = `<span class="text-amber-400 font-bold">💥 提前落地挖地瓜物理：</span>球在到達本壘前撞擊紅土（恢復係數 <code>e=0.46</code>），垂直方向低角度反彈並因紅土顆粒摩擦力損失約 22% 球速，接著向前滾動進入捕手護膝前！`;
+        } else {
+          const vertText = liftCm >= 0 ? `比無旋轉拋物線上浮 <strong class="text-emerald-400">+${liftCm} cm</strong>` : `因前旋/重力急劇下墜 <strong class="text-rose-400">${liftCm} cm</strong>`;
+          const horzText = Math.abs(breakCm) > 2 ? `，橫向位移 <strong class="text-sky-400">${breakCm > 0 ? '+' : ''}${breakCm} cm</strong>` : '';
+          descEl.innerHTML = `<span class="text-cyan-400 font-bold">🌪️ Statcast 馬格努斯空力實測：</span>在 <strong>${spd} km/h、${rpm} RPM</strong> 下，此球進壘時${vertText}${horzText}！`;
+        }
       }
     }
 
@@ -1153,6 +1238,265 @@
       pitchLabAnimId = requestAnimationFrame(step);
     }
 
+    // ==================== 1A. PITCH GRIP CANVAS (BROADCAST 3D) ====================
+    function drawGrip() {
+      const canvas = document.getElementById('gripCanvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const W = canvas.width, H = canvas.height;
+      ctx.clearRect(0, 0, W, H);
+
+      // Dark card backdrop
+      const bgGrad = ctx.createLinearGradient(0, 0, 0, H);
+      bgGrad.addColorStop(0, '#090d16');
+      bgGrad.addColorStop(1, '#0f172a');
+      ctx.fillStyle = bgGrad;
+      ctx.fillRect(0, 0, W, H);
+
+      // Center divider line
+      ctx.strokeStyle = '#334155';
+      ctx.lineWidth = 1;
+      ctx.setLineDash([4, 4]);
+      ctx.beginPath();
+      ctx.moveTo(W / 2, 15);
+      ctx.lineTo(W / 2, H - 15);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      // Section Titles
+      ctx.fillStyle = '#94a3b8';
+      ctx.font = 'bold 12px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('正面：手指扣縫線位置', W * 0.25, 25);
+      ctx.fillText('側面：掌心空隙剖面', W * 0.75, 25);
+
+      // --- LEFT PANEL: FRONT VIEW OF BASEBALL + HAND ---
+      const lx = W * 0.25, ly = 132;
+      const br = 64;
+
+      // Draw 3D Baseball
+      const bGrad = ctx.createRadialGradient(lx - 20, ly - 20, 10, lx, ly, br);
+      bGrad.addColorStop(0, '#ffffff');
+      bGrad.addColorStop(0.7, '#f1f5f9');
+      bGrad.addColorStop(0.9, '#cbd5e1');
+      bGrad.addColorStop(1, '#94a3b8');
+      ctx.fillStyle = bGrad;
+      ctx.beginPath();
+      ctx.arc(lx, ly, br, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.strokeStyle = '#cbd5e1';
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+
+      // Draw Seams based on pitch type
+      ctx.save();
+      ctx.beginPath();
+      ctx.arc(lx, ly, br - 0.5, 0, Math.PI * 2);
+      ctx.clip();
+      ctx.strokeStyle = '#dc2626';
+      ctx.lineWidth = 3;
+
+      if (currentPitch === '4seam') {
+        // Horseshoe seam across the top
+        ctx.beginPath();
+        ctx.arc(lx, ly - 60, 52, 0.22 * Math.PI, 0.78 * Math.PI);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.arc(lx, ly + 60, 52, 1.22 * Math.PI, 1.78 * Math.PI);
+        ctx.stroke();
+        // Stitches
+        ctx.strokeStyle = '#b91c1c';
+        ctx.lineWidth = 1.6;
+        for (let a = 0.26; a <= 0.74; a += 0.08) {
+          const sx = lx + Math.cos(a * Math.PI) * 52;
+          const sy = ly - 60 + Math.sin(a * Math.PI) * 52;
+          ctx.beginPath();
+          ctx.moveTo(sx - 3, sy - 3);
+          ctx.lineTo(sx + 3, sy + 3);
+          ctx.stroke();
+        }
+      } else if (currentPitch === '2seam') {
+        // Parallel seams running vertically
+        ctx.beginPath();
+        ctx.arc(lx - 55, ly, 48, -0.32 * Math.PI, 0.32 * Math.PI);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.arc(lx + 55, ly, 48, 0.68 * Math.PI, 1.32 * Math.PI);
+        ctx.stroke();
+      } else if (currentPitch === 'changeup') {
+        // Three seams
+        ctx.beginPath();
+        ctx.arc(lx - 52, ly, 46, -0.3 * Math.PI, 0.3 * Math.PI);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.arc(lx + 52, ly, 46, 0.7 * Math.PI, 1.3 * Math.PI);
+        ctx.stroke();
+      } else if (currentPitch === 'curve') {
+        ctx.beginPath();
+        ctx.arc(lx - 48, ly, 48, -0.35 * Math.PI, 0.35 * Math.PI);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.arc(lx + 48, ly, 48, 0.65 * Math.PI, 1.35 * Math.PI);
+        ctx.stroke();
+      }
+      ctx.restore();
+
+      // Hand & Fingers on Front View
+      if (currentPitch === '4seam') {
+        // Index and Middle finger resting across horseshoe
+        drawFingertipPill(ctx, lx - 18, ly - 22, 18, 52, '#3b82f6', '食指');
+        drawFingertipPill(ctx, lx + 18, ly - 22, 18, 52, '#10b981', '中指');
+        // Thumb underneath
+        drawFingertipPill(ctx, lx, ly + 62, 28, 22, '#f59e0b', '大拇指');
+
+        // Spin arrow: pure backspin
+        drawSpinArrow(ctx, lx + 56, ly, 0, -32, '#38bdf8', '正後旋 ↑');
+      } else if (currentPitch === '2seam') {
+        // Fingers along narrow parallel seams
+        drawFingertipPill(ctx, lx - 15, ly - 18, 17, 54, '#3b82f6', '食指');
+        drawFingertipPill(ctx, lx + 15, ly - 18, 17, 54, '#10b981', '中指');
+        drawFingertipPill(ctx, lx - 4, ly + 62, 28, 22, '#f59e0b', '大拇指');
+        drawSpinArrow(ctx, lx + 54, ly + 10, -22, -26, '#facc15', '側傾旋 ↙');
+      } else if (currentPitch === 'changeup') {
+        // 3 fingers across top (Index, Middle, Ring)
+        drawFingertipPill(ctx, lx - 28, ly - 14, 15, 48, '#3b82f6', '食');
+        drawFingertipPill(ctx, lx, ly - 22, 15, 52, '#10b981', '中');
+        drawFingertipPill(ctx, lx + 28, ly - 14, 15, 48, '#f59e0b', '無');
+        drawFingertipPill(ctx, lx, ly + 62, 28, 22, '#f59e0b', '拇指');
+        drawSpinArrow(ctx, lx + 54, ly, 0, -16, '#34d399', '低轉速 ⭮');
+      } else if (currentPitch === 'curve') {
+        // Middle finger hooked, index resting
+        drawFingertipPill(ctx, lx + 6, ly - 22, 16, 52, '#3b82f6', '食');
+        drawFingertipPill(ctx, lx + 28, ly - 18, 18, 56, '#10b981', '中(扣)');
+        drawFingertipPill(ctx, lx - 18, ly + 60, 28, 22, '#f59e0b', '拇指');
+        drawSpinArrow(ctx, lx - 54, ly - 10, 0, 32, '#c084fc', '前旋暴墜 ↓');
+      }
+
+      // --- RIGHT PANEL: SIDE PROFILE VIEW (PALM GAP) ---
+      const rx = W * 0.75, ry = 132;
+      const sbr = 54;
+
+      // Ball
+      const sbGrad = ctx.createRadialGradient(rx - 15, ry - 15, 8, rx, ry, sbr);
+      sbGrad.addColorStop(0, '#ffffff');
+      sbGrad.addColorStop(0.7, '#f1f5f9');
+      sbGrad.addColorStop(1, '#94a3b8');
+      ctx.fillStyle = sbGrad;
+      ctx.beginPath();
+      ctx.arc(rx, ry, sbr, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.strokeStyle = '#cbd5e1';
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+
+      // Hand Profile Wrapping Ball
+      const isDeep = currentPitch === 'changeup';
+      const palmX = isDeep ? rx + 24 : rx + 44; // Deep palm vs fingertip gap
+
+      // Palm flesh
+      ctx.fillStyle = '#ea580c';
+      ctx.beginPath();
+      ctx.ellipse(palmX, ry + 12, 14, 38, 0.2, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Fingers over top
+      ctx.strokeStyle = '#3b82f6';
+      ctx.lineWidth = 8;
+      ctx.lineCap = 'round';
+      ctx.beginPath();
+      ctx.moveTo(palmX, ry - 32);
+      ctx.quadraticCurveTo(rx + 22, ry - sbr - 8, rx - 10, ry - sbr + 4);
+      ctx.stroke();
+
+      // Thumb under bottom
+      ctx.strokeStyle = '#f59e0b';
+      ctx.lineWidth = 8;
+      ctx.beginPath();
+      ctx.moveTo(palmX, ry + 36);
+      ctx.quadraticCurveTo(rx + 16, ry + sbr + 6, rx - 8, ry + sbr - 4);
+      ctx.stroke();
+
+      if (!isDeep) {
+        // Dotted circle for ping pong ball in gap
+        ctx.strokeStyle = '#22c55e';
+        ctx.lineWidth = 2;
+        ctx.setLineDash([3, 3]);
+        ctx.beginPath();
+        ctx.arc(rx + 22, ry + 2, 15, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        ctx.fillStyle = '#4ade80';
+        ctx.font = 'bold 11px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('🏓 留一指空隙', rx + 22, ry - 18);
+        ctx.fillText('（放得進乒乓球）', rx + 22, ry + 32);
+
+        ctx.fillStyle = '#fde047';
+        ctx.font = 'bold 11px sans-serif';
+        ctx.fillText('✅ 掌心不碰球，手指才能全力扣壓縫線！', rx, H - 24);
+      } else {
+        ctx.fillStyle = '#f87171';
+        ctx.font = 'bold 12px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('❌ 掌心貼死無空隙！', rx + 24, ry + 4);
+
+        ctx.fillStyle = '#34d399';
+        ctx.font = 'bold 11px sans-serif';
+        ctx.fillText('🐢 球深塞掌心消除旋轉，進壘前失速急墜！', rx, H - 24);
+      }
+    }
+
+    function drawFingertipPill(ctx, x, y, w, h, color, text) {
+      ctx.save();
+      // Drop shadow
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.4)';
+      ctx.beginPath();
+      ctx.roundRect(x - w / 2 + 2, y - h / 2 + 3, w, h, w / 2);
+      ctx.fill();
+
+      // Body
+      const fGrad = ctx.createLinearGradient(x - w / 2, 0, x + w / 2, 0);
+      fGrad.addColorStop(0, '#fbcfe8');
+      fGrad.addColorStop(0.35, '#fde047');
+      fGrad.addColorStop(0.7, '#fed7aa');
+      fGrad.addColorStop(1, '#ea580c');
+      ctx.fillStyle = fGrad;
+      ctx.beginPath();
+      ctx.roundRect(x - w / 2, y - h / 2, w, h, w / 2);
+      ctx.fill();
+
+      // Fingertip colored pad
+      ctx.fillStyle = color;
+      ctx.beginPath();
+      ctx.roundRect(x - w / 2, y - h / 2, w, h * 0.45, [w / 2, w / 2, 4, 4]);
+      ctx.fill();
+
+      // White label
+      ctx.fillStyle = '#ffffff';
+      ctx.font = 'bold 10px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText(text, x, y - h / 2 + 11);
+      ctx.restore();
+    }
+
+    function drawSpinArrow(ctx, x, y, dx, dy, color, label) {
+      ctx.save();
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.moveTo(x, y - dy);
+      ctx.lineTo(x + dx, y + dy);
+      ctx.stroke();
+
+      ctx.fillStyle = color;
+      ctx.font = 'bold 11px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText(label, x + dx, y + dy + (dy >= 0 ? 14 : -6));
+      ctx.restore();
+    }
+
+    // ==================== 1B. 3D PITCH SIMULATOR CANVAS ====================
     function drawPitchSim() {
       const canvas = document.getElementById('pitchSimCanvas');
       if (!canvas) return;
@@ -1161,72 +1505,65 @@
       ctx.clearRect(0, 0, W, H);
 
       if (pitchLabPoints.length === 0) simulateLabPitchPhysics();
-
       const info = pitchData[currentPitch];
 
-      // Background
-      ctx.fillStyle = '#0f172a';
-      ctx.fillRect(0, 0, W, H);
-
-      // Split into Left (0..375: Side Physics View + Top Ground Track) & Right (380..600: 3D Catcher Perspective View)
-      ctx.strokeStyle = '#334155';
-      ctx.lineWidth = 2;
+      // --- LEFT PANEL: SIDE VIEW TRAJECTORY (MOUND TO PLATE) ---
+      const splitX = 390;
+      ctx.save();
       ctx.beginPath();
-      ctx.moveTo(375, 10);
-      ctx.lineTo(375, H - 10);
-      ctx.stroke();
+      ctx.rect(0, 0, splitX, H);
+      ctx.clip();
 
-      // Titles
-      ctx.fillStyle = '#cbd5e1';
-      ctx.font = 'bold 12px sans-serif';
-      ctx.textAlign = 'left';
-      ctx.fillText('📐 側面真實物理軌跡 (實線:馬格努斯 / 虛線:純重力)', 12, 22);
-      ctx.fillText('🎯 3D 捕手視角與進壘軌跡線', 392, 22);
+      // Stadium Night Sky
+      const skyGrad = ctx.createLinearGradient(0, 0, 0, 240);
+      skyGrad.addColorStop(0, '#020617');
+      skyGrad.addColorStop(0.6, '#0f172a');
+      skyGrad.addColorStop(1, '#1e293b');
+      ctx.fillStyle = skyGrad;
+      ctx.fillRect(0, 0, splitX, 240);
 
-      // --- LEFT PANEL: SIDE VIEW ---
-      // Map y (0..15m) -> px (48..352), z (0..2.0m) -> py (250..65)
-      const mapSideX = y => 48 + (y / 15.0) * 304;
-      const mapSideY = z => 250 - (z / 2.0) * 185;
+      // Stadium Floodlights glow
+      const lightGrad = ctx.createRadialGradient(70, 30, 5, 70, 30, 90);
+      lightGrad.addColorStop(0, 'rgba(254, 240, 138, 0.25)');
+      lightGrad.addColorStop(1, 'rgba(254, 240, 138, 0)');
+      ctx.fillStyle = lightGrad;
+      ctx.fillRect(0, 0, 180, 100);
 
-      // Dirt mound & ground
-      ctx.fillStyle = '#78350f';
-      ctx.beginPath();
-      ctx.moveTo(12, 250);
-      ctx.quadraticCurveTo(48, 232, 92, 250);
-      ctx.lineTo(365, 250);
-      ctx.lineTo(365, 295);
-      ctx.lineTo(12, 295);
-      ctx.closePath();
-      ctx.fill();
+      // Infield Clay & Grass
+      ctx.fillStyle = '#78350f'; // Dirt
+      ctx.fillRect(0, 240, splitX, H - 240);
+      ctx.fillStyle = '#14532d'; // Grass strip
+      ctx.fillRect(75, 240, 210, H - 240);
 
-      // Home plate in side view (y = 14.0m)
-      const hpSideX = mapSideX(14.0);
+      // Distance markers
+      ctx.fillStyle = '#94a3b8';
+      ctx.font = '10px sans-serif';
+      ctx.textAlign = 'center';
+      const mapSideX = y => 45 + (y / 15.0) * 300;
+      const mapSideY = z => 240 - (z / 2.2) * 165;
+      [0, 5, 10, 14].forEach(m => {
+        const mx = mapSideX(m);
+        ctx.fillText(m + 'm', mx, 255);
+      });
+      ctx.fillText('投手板', mapSideX(0), 272);
+      ctx.fillText('本壘板', mapSideX(14), 272);
+
+      // Home Plate in Side View
+      const hpX = mapSideX(14.0);
       ctx.fillStyle = '#ffffff';
-      ctx.fillRect(hpSideX - 8, 246, 16, 4);
+      ctx.fillRect(hpX - 7, 238, 14, 4);
 
-      // Strike zone vertical bar at y = 14.0m (z = 0.42m to 1.02m)
+      // Strike Zone Bar at Plate
       ctx.strokeStyle = '#94a3b8';
       ctx.lineWidth = 2;
-      ctx.strokeRect(hpSideX - 4, mapSideY(1.02), 8, mapSideY(0.42) - mapSideY(1.02));
+      ctx.strokeRect(hpX - 3, mapSideY(1.02), 6, mapSideY(0.44) - mapSideY(1.02));
 
-      // Animated Pitcher on mound
-      const releaseProgress = Math.min(1, pitchLabAnimIdx / 12);
-      ctx.strokeStyle = '#60a5fa';
-      ctx.lineWidth = 3;
-      ctx.beginPath();
-      ctx.arc(44, 145, 7, 0, Math.PI * 2);
-      ctx.moveTo(44, 152);
-      ctx.lineTo(46, 195);
-      ctx.lineTo(34, 236);
-      ctx.moveTo(46, 195);
-      ctx.lineTo(62, 238);
-      ctx.moveTo(45, 165);
-      ctx.lineTo(36 + releaseProgress * 18, 132 + releaseProgress * 14);
-      ctx.stroke();
+      // Pitcher on Mound
+      drawSidePitcherSilhouette(ctx, 45, 240);
 
-      // 1. Draw Gravity-Only Reference Line (Grey Dashed)
+      // 1. Gravity Only Dashed Line
       ctx.strokeStyle = '#64748b';
-      ctx.lineWidth = 1.8;
+      ctx.lineWidth = 1.6;
       ctx.setLineDash([4, 4]);
       ctx.beginPath();
       pitchLabGravityPoints.forEach((p, idx) => {
@@ -1238,19 +1575,7 @@
       ctx.stroke();
       ctx.setLineDash([]);
 
-      // 2. Draw Ground Shadow Line on the dirt
-      ctx.strokeStyle = 'rgba(0,0,0,0.45)';
-      ctx.lineWidth = 2;
-      ctx.beginPath();
-      for (let i = 0; i <= pitchLabAnimIdx; i++) {
-        const p = pitchLabPoints[i];
-        const sx = mapSideX(p.y);
-        if (i === 0) ctx.moveTo(sx, 250);
-        else ctx.lineTo(sx, 250);
-      }
-      ctx.stroke();
-
-      // 3. Draw Real Magnus Trajectory Ribbon (Solid for air, dotted for ground bounce/roll)
+      // 2. Trajectory Ribbon up to pitchLabAnimIdx
       for (let i = 1; i <= pitchLabAnimIdx; i++) {
         const p0 = pitchLabPoints[i - 1];
         const p1 = pitchLabPoints[i];
@@ -1263,64 +1588,90 @@
         ctx.lineTo(mapSideX(p1.y), mapSideY(p1.z));
         ctx.stroke();
 
-        // Mark bounce impact point
         if (!p0.bounced && p1.bounced) {
-          ctx.setLineDash([]);
           ctx.fillStyle = '#facc15';
           ctx.beginPath();
-          ctx.arc(mapSideX(p1.y), 250, 5, 0, Math.PI * 2);
+          ctx.arc(mapSideX(p1.y), 240, 5, 0, Math.PI * 2);
           ctx.fill();
-          ctx.font = 'bold 11px sans-serif';
-          ctx.fillText('💥紅土彈跳!', mapSideX(p1.y) - 20, 272);
         }
       }
       ctx.setLineDash([]);
 
-      // Current Ball in Side View with spinning seam
+      // Ball in Side View
       const curP = pitchLabPoints[pitchLabAnimIdx] || pitchLabPoints[0];
       const bsx = mapSideX(curP.y);
       const bsy = mapSideY(curP.z);
-      drawSpinningBaseball(ctx, bsx, bsy, 7, pitchLabAnimIdx * 0.45, info.color);
+      drawSpinningBaseball(ctx, bsx, bsy, 7.5, pitchLabAnimIdx * 0.45, info.color);
+
+      ctx.restore();
+
+      // Divider Line between Panels
+      ctx.strokeStyle = '#334155';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(splitX, 0);
+      ctx.lineTo(splitX, H);
+      ctx.stroke();
 
       // --- RIGHT PANEL: 3D PERSPECTIVE CATCHER VIEW ---
-      // Camera sits behind home plate looking toward the mound
-      const camCenterX = 488;
-      const camBaseY = 235;
-      // Project 3D (x, y, z) where y in [0..14.5] into 2D screen
-      const projectCatcher3D = (x, y, z) => {
-        const depth = Math.max(1.2, 16.2 - y); // 16.2 at mound, 2.2 at plate
+      const camX = (splitX + W) / 2;
+      const camY = 225;
+      const project3D = (x, y, z) => {
+        const depth = Math.max(1.5, 16.5 - y);
         const scale = 250 / depth;
-        const px = camCenterX + x * scale;
-        const py = camBaseY - (z - 0.55) * scale - (14.0 - y) * 2.2;
+        const px = camX + x * scale;
+        const py = camY - (z - 0.55) * scale - (14.0 - y) * 2.1;
         return { px, py, scale };
       };
 
-      // Draw 3D Perspective Lane from Mound to Home Plate
-      const mLeft = projectCatcher3D(-0.45, 0, 0);
-      const mRight = projectCatcher3D(0.45, 0, 0);
-      const pLeft = projectCatcher3D(-0.55, 14.0, 0);
-      const pRight = projectCatcher3D(0.55, 14.0, 0);
+      // Infield Dirt perspective lane
+      const mTL = project3D(-0.45, 0, 0);
+      const mTR = project3D(0.45, 0, 0);
+      const pBL = project3D(-0.6, 14.5, 0);
+      const pBR = project3D(0.6, 14.5, 0);
+
       ctx.fillStyle = '#451a03';
       ctx.beginPath();
-      ctx.moveTo(mLeft.px, mLeft.py);
-      ctx.lineTo(mRight.px, mRight.py);
-      ctx.lineTo(pRight.px, pRight.py);
-      ctx.lineTo(pLeft.px, pLeft.py);
+      ctx.moveTo(mTL.px, mTL.py);
+      ctx.lineTo(mTR.px, mTR.py);
+      ctx.lineTo(pBR.px, pBR.py);
+      ctx.lineTo(pBL.px, pBL.py);
       ctx.closePath();
       ctx.fill();
 
-      // Strike Zone at y = 14.0m (x: -0.33..+0.33, z: 0.44..1.02)
-      const szTL = projectCatcher3D(-0.33, 14.0, 1.02);
-      const szBR = projectCatcher3D(0.33, 14.0, 0.44);
+      // Batter & Catcher Silhouettes in 3D View
+      draw3DBatterCatcher(ctx, camX, camY);
+
+      // Home Plate in 3D Perspective
+      const hpTL = project3D(-0.25, 14.0, 0);
+      const hpTR = project3D(0.25, 14.0, 0);
+      const hpBL = project3D(-0.25, 14.3, 0);
+      const hpBR = project3D(0.25, 14.3, 0);
+      const hpTip = project3D(0, 14.45, 0);
+      ctx.fillStyle = '#ffffff';
+      ctx.beginPath();
+      ctx.moveTo(hpTL.px, hpTL.py);
+      ctx.lineTo(hpTR.px, hpTR.py);
+      ctx.lineTo(hpBR.px, hpBR.py);
+      ctx.lineTo(hpTip.px, hpTip.py);
+      ctx.lineTo(hpBL.px, hpBL.py);
+      ctx.closePath();
+      ctx.fill();
+
+      // Strike Zone at Plate (y = 14.0m)
+      const szTL = project3D(-0.32, 14.0, 1.02);
+      const szBR = project3D(0.32, 14.0, 0.44);
       const szW = szBR.px - szTL.px;
       const szH = szBR.py - szTL.py;
 
-      ctx.strokeStyle = '#e2e8f0';
+      ctx.fillStyle = 'rgba(59, 130, 246, 0.12)';
+      ctx.fillRect(szTL.px, szTL.py, szW, szH);
+      ctx.strokeStyle = '#38bdf8';
       ctx.lineWidth = 2;
       ctx.strokeRect(szTL.px, szTL.py, szW, szH);
 
-      // 9-Grid lines
-      ctx.strokeStyle = 'rgba(148, 163, 184, 0.45)';
+      // Strike Zone 9-Grid
+      ctx.strokeStyle = 'rgba(148, 163, 184, 0.4)';
       ctx.lineWidth = 1;
       for (let i = 1; i <= 2; i++) {
         ctx.beginPath();
@@ -1333,225 +1684,188 @@
         ctx.stroke();
       }
 
-      // Draw 3D Trajectory Ribbon in Catcher View
+      // Highlight active aim cell in grid
+      if (aimRow < 3) {
+        ctx.fillStyle = 'rgba(250, 204, 21, 0.35)';
+        ctx.fillRect(szTL.px + (szW / 3) * aimCol, szTL.py + (szH / 3) * aimRow, szW / 3, szH / 3);
+      } else {
+        ctx.fillStyle = 'rgba(245, 158, 11, 0.35)';
+        ctx.fillRect(szTL.px, szBR.py + 4, szW, 16);
+        ctx.fillStyle = '#fde047';
+        ctx.font = 'bold 9px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('▼ 挖地瓜彈跳區', camX, szBR.py + 16);
+      }
+
+      // 3D Trajectory Ribbon in Catcher View
       for (let i = 1; i <= pitchLabAnimIdx; i++) {
         const p0 = pitchLabPoints[i - 1];
         const p1 = pitchLabPoints[i];
-        const pr0 = projectCatcher3D(p0.x, p0.y, p0.z);
-        const pr1 = projectCatcher3D(p1.x, p1.y, p1.z);
+        const pr0 = project3D(p0.x, p0.y, p0.z);
+        const pr1 = project3D(p1.x, p1.y, p1.z);
 
-        // Ground shadow in 3D view
-        const sh0 = projectCatcher3D(p0.x, p0.y, 0);
-        const sh1 = projectCatcher3D(p1.x, p1.y, 0);
-        ctx.strokeStyle = 'rgba(0,0,0,0.4)';
+        // Ground shadow
+        const sh0 = project3D(p0.x, p0.y, 0);
+        const sh1 = project3D(p1.x, p1.y, 0);
+        ctx.strokeStyle = 'rgba(0,0,0,0.45)';
         ctx.lineWidth = 2;
         ctx.beginPath();
         ctx.moveTo(sh0.px, sh0.py);
         ctx.lineTo(sh1.px, sh1.py);
         ctx.stroke();
 
-        // Glowing 3D trail
         ctx.strokeStyle = p1.bounced ? '#34d399' : info.color;
-        ctx.lineWidth = Math.max(1.5, (pr1.scale / 110) * 3.5);
+        ctx.lineWidth = Math.max(1.8, (pr1.scale / 100) * 3.8);
         ctx.beginPath();
         ctx.moveTo(pr0.px, pr0.py);
         ctx.lineTo(pr1.px, pr1.py);
         ctx.stroke();
       }
 
-      // Ball in 3D Catcher View with rotating seams
-      const curProj = projectCatcher3D(curP.x, curP.y, curP.z);
-      const ballRad3D = Math.max(3.5, (curProj.scale / 110) * 9.5);
-      drawSpinningBaseball(ctx, curProj.px, curProj.py, ballRad3D, pitchLabAnimIdx * 0.55, info.color);
+      // 3D Ball in Catcher View
+      const curPr = project3D(curP.x, curP.y, curP.z);
+      const rad3D = Math.max(3.8, (curPr.scale / 110) * 9.5);
+      drawSpinningBaseball(ctx, curPr.px, curPr.py, rad3D, pitchLabAnimIdx * 0.55, info.color);
 
-      // Legend at bottom of Right Panel
-      ctx.fillStyle = '#94a3b8';
-      ctx.font = '11px sans-serif';
+      // Top Statcast HUD banner
+      ctx.fillStyle = 'rgba(15, 23, 42, 0.85)';
+      ctx.strokeStyle = '#334155';
+      ctx.lineWidth = 1;
+      ctx.roundRect(splitX + 12, 10, W - splitX - 24, 28, 6);
+      ctx.fill();
+      ctx.stroke();
+
+      ctx.fillStyle = '#f8fafc';
+      ctx.font = 'bold 11px sans-serif';
       ctx.textAlign = 'center';
-      ctx.fillText('✨ 3D 軌跡線＋縫線旋轉＋地面陰影同步模擬', camCenterX, 295);
+      ctx.fillText(`⚡ ${info.title.split(' ')[0]} ｜ ${document.getElementById('slider-pitch-speed').value} km/h ｜ ${document.getElementById('slider-pitch-rpm').value} RPM`, (splitX + W) / 2, 28);
     }
 
-    function drawSpinningBaseball(ctx, x, y, r, phase, borderColor) {
+    function drawSidePitcherSilhouette(ctx, x, y) {
       ctx.save();
+      ctx.translate(x, y);
+
+      // Cleats / Dirt Mound
       ctx.fillStyle = '#ffffff';
+      ctx.fillRect(-12, -2, 16, 3); // Rubber plate
+
+      // White Pants with Blue Stripe
+      ctx.fillStyle = '#f8fafc';
       ctx.beginPath();
-      ctx.arc(x, y, r, 0, Math.PI * 2);
+      ctx.moveTo(-4, -2);
+      ctx.lineTo(-6, -42);
+      ctx.lineTo(8, -42);
+      ctx.lineTo(14, -2);
+      ctx.closePath();
       ctx.fill();
-      ctx.strokeStyle = borderColor || '#ef4444';
-      ctx.lineWidth = Math.max(1.5, r * 0.22);
+
+      ctx.strokeStyle = '#2563eb';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.moveTo(-5, -42);
+      ctx.lineTo(-4, -2);
       ctx.stroke();
 
-      // Rotating red seam inside the ball
-      ctx.strokeStyle = '#dc2626';
-      ctx.lineWidth = Math.max(1, r * 0.18);
-      const offset = Math.sin(phase) * r * 0.45;
+      // Dodgers Home Jersey #17
+      ctx.fillStyle = '#ffffff';
       ctx.beginPath();
-      ctx.arc(x + offset * 0.4, y + offset, r * 0.65, 0.2 * Math.PI, 0.85 * Math.PI);
-      ctx.stroke();
+      ctx.roundRect(-8, -78, 22, 36, 4);
+      ctx.fill();
+
+      // Royal Blue Raglan Sleeves
+      ctx.fillStyle = '#1d4ed8';
+      ctx.beginPath();
+      ctx.roundRect(-10, -78, 6, 22, 3);
+      ctx.roundRect(10, -78, 6, 22, 3);
+      ctx.fill();
+
+      // Cap with Brim
+      ctx.fillStyle = '#1d4ed8';
+      ctx.beginPath();
+      ctx.arc(3, -92, 11, Math.PI, 0);
+      ctx.fill();
+      ctx.fillRect(8, -94, 12, 3.5); // Visor
+
+      // Head
+      ctx.fillStyle = '#fed7aa';
+      ctx.beginPath();
+      ctx.arc(3, -88, 8.5, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Glove on Front Hand
+      ctx.fillStyle = '#b45309';
+      ctx.beginPath();
+      ctx.roundRect(18, -68, 12, 14, 4);
+      ctx.fill();
+
       ctx.restore();
     }
 
-    function drawGrip() {
-      const canvas = document.getElementById('gripCanvas');
-      if (!canvas) return;
-      const ctx = canvas.getContext('2d');
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      const centers = [
-        { x: 95, y: 95, label: '正面手指與縫線' },
-        { x: 235, y: 95, label: '側面掌心空隙' }
-      ];
-
-      centers.forEach(c => {
-        const grad = ctx.createRadialGradient(c.x - 15, c.y - 15, 8, c.x, c.y, 56);
-        grad.addColorStop(0, '#ffffff');
-        grad.addColorStop(1, '#e2e8f0');
-        ctx.fillStyle = grad;
-        ctx.beginPath();
-        ctx.arc(c.x, c.y, 54, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.lineWidth = 2;
-        ctx.strokeStyle = '#94a3b8';
-        ctx.stroke();
-
-        ctx.fillStyle = '#94a3b8';
-        ctx.font = 'bold 12px sans-serif';
-        ctx.textAlign = 'center';
-        ctx.fillText(c.label, c.x, 174);
-      });
-
-      const lx = 95, ly = 95;
-      ctx.strokeStyle = '#dc2626';
-      ctx.lineWidth = 2.5;
-      ctx.setLineDash([4, 3]);
-
-      if (currentPitch === '4seam') {
-        ctx.beginPath();
-        ctx.arc(lx, ly - 52, 46, 0.25 * Math.PI, 0.75 * Math.PI);
-        ctx.stroke();
-        ctx.beginPath();
-        ctx.arc(lx, ly + 52, 46, 1.25 * Math.PI, 1.75 * Math.PI);
-        ctx.stroke();
-        ctx.setLineDash([]);
-        drawFinger(ctx, lx - 16, ly - 15, 13, 38, '#3b82f6', '食');
-        drawFinger(ctx, lx + 16, ly - 15, 13, 38, '#10b981', '中');
-      } else if (currentPitch === '2seam') {
-        ctx.beginPath();
-        ctx.arc(lx - 58, ly, 46, -0.28 * Math.PI, 0.28 * Math.PI);
-        ctx.stroke();
-        ctx.beginPath();
-        ctx.arc(lx + 58, ly, 46, 0.72 * Math.PI, 1.28 * Math.PI);
-        ctx.stroke();
-        ctx.setLineDash([]);
-        drawFinger(ctx, lx - 14, ly - 12, 13, 40, '#3b82f6', '食');
-        drawFinger(ctx, lx + 14, ly - 12, 13, 40, '#10b981', '中');
-      } else if (currentPitch === 'changeup') {
-        ctx.beginPath();
-        ctx.arc(lx - 58, ly, 46, -0.28 * Math.PI, 0.28 * Math.PI);
-        ctx.stroke();
-        ctx.beginPath();
-        ctx.arc(lx + 58, ly, 46, 0.72 * Math.PI, 1.28 * Math.PI);
-        ctx.stroke();
-        ctx.setLineDash([]);
-        drawFinger(ctx, lx - 22, ly - 10, 11, 36, '#3b82f6', '食');
-        drawFinger(ctx, lx, ly - 14, 11, 38, '#10b981', '中');
-        drawFinger(ctx, lx + 22, ly - 10, 11, 36, '#f59e0b', '無');
-      } else if (currentPitch === 'curve') {
-        ctx.beginPath();
-        ctx.arc(lx - 55, ly, 46, -0.3 * Math.PI, 0.3 * Math.PI);
-        ctx.stroke();
-        ctx.beginPath();
-        ctx.arc(lx + 55, ly, 46, 0.7 * Math.PI, 1.3 * Math.PI);
-        ctx.stroke();
-        ctx.setLineDash([]);
-        drawFinger(ctx, lx + 4, ly - 14, 12, 36, '#3b82f6', '食');
-        drawFinger(ctx, lx + 22, ly - 12, 12, 38, '#10b981', '中');
-        ctx.strokeStyle = '#a855f7';
-        ctx.lineWidth = 3;
-        ctx.beginPath();
-        ctx.arc(lx - 20, ly, 22, -0.6 * Math.PI, 0.6 * Math.PI, true);
-        ctx.stroke();
-      }
-
-      const rx = 235, ry = 95;
-      ctx.setLineDash([4, 3]);
-      ctx.strokeStyle = '#dc2626';
+    function draw3DBatterCatcher(ctx, cx, cy) {
+      ctx.save();
+      // Crouching Catcher in Royal Blue Gear
+      ctx.fillStyle = '#1e3a8a';
       ctx.beginPath();
-      ctx.arc(rx, ry, 38, -0.4 * Math.PI, 0.4 * Math.PI);
-      ctx.stroke();
-      ctx.setLineDash([]);
+      ctx.ellipse(cx, cy + 18, 16, 22, 0, 0, Math.PI * 2);
+      ctx.fill();
 
-      const gapOffset = currentPitch === 'changeup' ? 3 : 14;
-      ctx.strokeStyle = '#f59e0b';
-      ctx.lineWidth = 8;
-      ctx.lineCap = 'round';
+      // Catcher Helmet & Mask
+      ctx.fillStyle = '#0f172a';
       ctx.beginPath();
-      ctx.arc(rx, ry, 54 + gapOffset, -0.42 * Math.PI, 0.42 * Math.PI);
+      ctx.arc(cx, cy - 2, 8, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.strokeStyle = '#cbd5e1';
+      ctx.lineWidth = 1.5;
       ctx.stroke();
 
-      ctx.fillStyle = '#3b82f6';
+      // Right-handed Batter in Left Box
+      const bx = cx - 52, by = cy - 14;
+      ctx.fillStyle = '#334155';
       ctx.beginPath();
-      ctx.arc(rx, ry - 51, 9, 0, Math.PI * 2);
+      ctx.ellipse(bx, by + 16, 8, 22, 0, 0, Math.PI * 2); // Body
       ctx.fill();
 
-      ctx.fillStyle = '#f97316';
+      // Batter Helmet
+      ctx.fillStyle = '#1d4ed8';
       ctx.beginPath();
-      ctx.arc(rx, ry + 51, 9, 0, Math.PI * 2);
+      ctx.arc(bx, by - 6, 7, 0, Math.PI * 2);
       ctx.fill();
 
-      ctx.fillStyle = currentPitch === 'changeup' ? '#10b981' : '#3b82f6';
-      ctx.font = 'bold 12px sans-serif';
-      ctx.textAlign = 'center';
-      ctx.fillText(currentPitch === 'changeup' ? '貼近掌心減速' : '留一指空隙！', rx, ry + 4);
+      // Bat held high
+      ctx.strokeStyle = '#d97706';
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.moveTo(bx + 4, by - 8);
+      ctx.lineTo(bx - 12, by - 36);
+      ctx.stroke();
+
+      ctx.restore();
     }
 
-    function drawFinger(ctx, x, y, w, h, color, label) {
-      ctx.fillStyle = color;
-      ctx.beginPath();
-      ctx.roundRect(x - w / 2, y - h / 2, w, h, 7);
-      ctx.fill();
-      ctx.fillStyle = '#ffffff';
-      ctx.font = 'bold 11px sans-serif';
-      ctx.textAlign = 'center';
-      ctx.fillText(label, x, y + 4);
-    }
-
-    // ==================== 1B. PITCHING BODY MECHANICS ====================
+    // ==================== 1C. 5-STEP PITCHING BODY MECHANICS ====================
     let pitchStepIdx = 0;
     let pitchPlayTimer = null;
 
     const pitchStepsInfo = [
       {
-        caption: '步驟 1【站穩抬腿】：側身對準捕手，重心穩定在後腳，前腳像白鷺鷥一樣抬高到大腿水平，雙手合在胸前。',
-        head: [220, 62], hip: [220, 135],
-        backFoot: [235, 215], frontKnee: [190, 125], frontFoot: [192, 165],
-        gloveHand: [200, 98], throwElbow: [235, 98], throwHand: [208, 98]
+        title: '步驟 1：站穩抬腿 (Balance 核心平衡)',
+        caption: '👀 口訣：「金雞獨立看目標」！側身對準捕手，後腳踩穩投手板，前腳抬到大腿水平，胸口核心保持直立不晃動！'
       },
       {
-        caption: '步驟 2【跨步展翅成 L 型】：前腳往本壘跨出一大步，手套手指著捕手當瞄準鏡，投球手高舉成 90 度「L型」！',
-        head: [215, 72], hip: [215, 145],
-        backFoot: [265, 215], frontKnee: [160, 175], frontFoot: [140, 215],
-        gloveHand: [145, 95], throwElbow: [255, 95], throwHand: [258, 55]
+        title: '步驟 2：跨步展翅成 L 型 (Power Position)',
+        caption: '👀 口訣：「前手瞄準、後手成L」！前腳往本壘大步跨出，手套當瞄準鏡，投球手肘舉高成 90°「L型」（絕不可低於肩膀，否則傷手肘）！'
       },
       {
-        caption: '步驟 3【轉腰帶動手肘】：後腳用力蹬地、肚臍轉向捕手！手套手拉回胸口，投球手肘往前帶領出來。',
-        head: [195, 72], hip: [195, 145],
-        backFoot: [255, 215], frontKnee: [152, 172], frontFoot: [140, 215],
-        gloveHand: [172, 112], throwElbow: [175, 78], throwHand: [205, 52]
+        title: '步驟 3：轉腰帶動手肘 (Hip Rotation 核心旋轉)',
+        caption: '👀 口訣：「肚臍先轉、手肘鞭打」！前腳踩穩後肚臍用力轉向捕手！手套拉回胸口，手肘領先往前拉出，如同甩皮鞭！'
       },
       {
-        caption: '步驟 4【最高點放球扣腕】：在眼睛前上方最高點把球放開，手腕與手指用力往下扣壓縫線！',
-        head: [178, 74], hip: [182, 145],
-        backFoot: [240, 205], frontKnee: [145, 172], frontFoot: [140, 215],
-        gloveHand: [168, 120], throwElbow: [152, 82], throwHand: [122, 62],
-        ball: [95, 58]
+        title: '步驟 4：最高點放球扣腕 (Release Point 扣指壓縫線)',
+        caption: '👀 口訣：「頭頂前方最高點」！身體前傾壓低，在眼睛前上方最高點放球，食指與中指全力由上往下扣壓縫線，賦予球最強正後旋！'
       },
       {
-        caption: '步驟 5【收尾與防守】：投球手自然揮到前腳膝蓋外側，後腳順勢往前踏平，立刻變成內野守備姿勢！',
-        head: [158, 88], hip: [170, 150],
-        backFoot: [185, 210], frontKnee: [142, 175], frontFoot: [140, 215],
-        gloveHand: [155, 128], throwElbow: [148, 135], throwHand: [132, 172],
-        ball: [40, 68]
+        title: '步驟 5：順勢收尾變防守 (Follow Through & Fielding)',
+        caption: '👀 口訣：「收尾減速、雙腳站平」！手臂順勢揮到前膝外側平順減速，後腳順勢往前踏平，立刻變成內野防守準備接球！'
       }
     ];
 
@@ -1559,10 +1873,13 @@
       pitchStepIdx = idx;
       for (let i = 0; i < 5; i++) {
         const el = document.getElementById('pstep-' + i);
-        el.classList.toggle('border-blue-500', i === idx);
-        el.classList.toggle('bg-blue-500/15', i === idx);
+        if (el) {
+          el.classList.toggle('border-blue-500', i === idx);
+          el.classList.toggle('bg-blue-500/15', i === idx);
+        }
       }
-      document.getElementById('mechanics-caption').textContent = pitchStepsInfo[idx].caption;
+      const capEl = document.getElementById('mechanics-caption');
+      if (capEl) capEl.textContent = pitchStepsInfo[idx].caption;
       drawMechanics();
     }
 
@@ -1588,7 +1905,7 @@
         } else {
           setPitchStep(s);
         }
-      }, 900);
+      }, 1000);
     }
 
     function drawMechanics() {
@@ -1598,91 +1915,306 @@
       const W = canvas.width, H = canvas.height;
       ctx.clearRect(0, 0, W, H);
 
-      ctx.fillStyle = '#1e293b';
+      // Stadium Night Clay & Sky Background
+      const bgGrad = ctx.createLinearGradient(0, 0, 0, H);
+      bgGrad.addColorStop(0, '#090d16');
+      bgGrad.addColorStop(0.7, '#1e293b');
+      bgGrad.addColorStop(1, '#78350f');
+      ctx.fillStyle = bgGrad;
       ctx.fillRect(0, 0, W, H);
-      ctx.fillStyle = '#78350f';
-      ctx.fillRect(0, 215, W, 35);
 
-      ctx.fillStyle = '#94a3b8';
+      // Pitching Mound Clay
+      ctx.fillStyle = '#92400e';
+      ctx.beginPath();
+      ctx.ellipse(320, 275, 260, 48, 0, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Pitching Rubber Plate
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(360, 268, 48, 6);
+
+      // Direction Marker
+      ctx.fillStyle = '#38bdf8';
       ctx.font = 'bold 12px sans-serif';
       ctx.textAlign = 'left';
-      ctx.fillText('⬅ 往本壘捕手方向', 20, 30);
+      ctx.fillText('⬅ 往本壘捕手方向 (方向性核心一致)', 24, 30);
 
-      const st = pitchStepsInfo[pitchStepIdx];
-      ctx.lineCap = 'round';
-      ctx.lineJoin = 'round';
-
-      ctx.strokeStyle = '#3b82f6';
-      ctx.lineWidth = 8;
-      ctx.beginPath();
-      ctx.moveTo(st.hip[0], st.hip[1]);
-      ctx.lineTo(st.backFoot[0], st.backFoot[1]);
-      ctx.stroke();
-
+      // Step HUD badge
+      ctx.fillStyle = 'rgba(15, 23, 42, 0.85)';
       ctx.strokeStyle = '#38bdf8';
-      ctx.beginPath();
-      ctx.moveTo(st.hip[0], st.hip[1]);
-      ctx.lineTo(st.frontKnee[0], st.frontKnee[1]);
-      ctx.lineTo(st.frontFoot[0], st.frontFoot[1]);
+      ctx.lineWidth = 1.5;
+      ctx.roundRect(W - 270, 15, 250, 32, 8);
+      ctx.fill();
       ctx.stroke();
 
-      ctx.strokeStyle = '#60a5fa';
-      ctx.lineWidth = 12;
+      ctx.fillStyle = '#facc15';
+      ctx.font = 'bold 12px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText(pitchStepsInfo[pitchStepIdx].title, W - 145, 35);
+
+      // Draw Youth Baseball Player in Dodgers Home Uniform executing step
+      draw3DPitcherStepPlayer(ctx, 300, 260, pitchStepIdx);
+    }
+
+    function draw3DPitcherStepPlayer(ctx, cx, cy, step) {
+      ctx.save();
+
+      if (step === 0) {
+        // Step 0: Balance 站穩抬腿
+        // Plumb line (laser)
+        ctx.strokeStyle = '#22c55e';
+        ctx.lineWidth = 2;
+        ctx.setLineDash([4, 4]);
+        ctx.beginPath();
+        ctx.moveTo(cx + 80, 50);
+        ctx.lineTo(cx + 80, cy);
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        ctx.fillStyle = '#4ade80';
+        ctx.font = 'bold 11px sans-serif';
+        ctx.fillText('⚖️ 垂直重心平衡軸', cx + 80, 44);
+
+        // Right leg solid on rubber
+        drawPlayerLimb(ctx, cx + 80, cy - 65, cx + 80, cy, 14, '#f8fafc', '#1d4ed8');
+        // Left leg lifted high (90 deg knee)
+        drawPlayerLimb(ctx, cx + 70, cy - 65, cx + 20, cy - 70, 13, '#f8fafc', '#1d4ed8');
+        drawPlayerLimb(ctx, cx + 20, cy - 70, cx + 22, cy - 25, 12, '#f8fafc', '#1d4ed8');
+
+        // Torso upright #17
+        drawPlayerTorso(ctx, cx + 75, cy - 115, 28, 52, 0, '17');
+
+        // Hands together at chest
+        drawPlayerLimb(ctx, cx + 64, cy - 110, cx + 38, cy - 100, 9, '#1d4ed8', null);
+        drawPlayerLimb(ctx, cx + 86, cy - 110, cx + 46, cy - 100, 9, '#1d4ed8', null);
+        // Glove & ball
+        ctx.fillStyle = '#b45309';
+        ctx.beginPath();
+        ctx.arc(cx + 42, cy - 100, 11, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Head & Cap
+        drawPlayerHeadCap(ctx, cx + 75, cy - 138, true);
+
+      } else if (step === 1) {
+        // Step 1: Power Position 跨步展翅成 L 型
+        // Stride legs
+        drawPlayerLimb(ctx, cx + 90, cy - 65, cx + 115, cy, 14, '#f8fafc', '#1d4ed8');
+        drawPlayerLimb(ctx, cx + 70, cy - 65, cx - 75, cy, 14, '#f8fafc', '#1d4ed8');
+
+        // Torso
+        drawPlayerTorso(ctx, cx + 75, cy - 115, 30, 52, -0.05, '17');
+
+        // Front Glove Arm Aiming
+        drawPlayerLimb(ctx, cx + 62, cy - 112, cx - 20, cy - 114, 9, '#1d4ed8', null);
+        ctx.fillStyle = '#b45309';
+        ctx.beginPath();
+        ctx.arc(cx - 24, cy - 114, 12, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Target reticle on glove
+        ctx.strokeStyle = '#38bdf8';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.arc(cx - 70, cy - 114, 14, 0, Math.PI * 2);
+        ctx.moveTo(cx - 88, cy - 114); ctx.lineTo(cx - 52, cy - 114);
+        ctx.moveTo(cx - 70, cy - 132); ctx.lineTo(cx - 70, cy - 96);
+        ctx.stroke();
+        ctx.fillStyle = '#38bdf8';
+        ctx.font = 'bold 11px sans-serif';
+        ctx.fillText('手套瞄準目標', cx - 70, cy - 138);
+
+        // Throwing Arm 90-degree L
+        drawPlayerLimb(ctx, cx + 88, cy - 112, cx + 130, cy - 112, 10, '#1d4ed8', null);
+        drawPlayerLimb(ctx, cx + 130, cy - 112, cx + 130, cy - 155, 9, '#fed7aa', null);
+        drawSpinningBaseball(ctx, cx + 130, cy - 162, 7, 0, '#ef4444');
+
+        // 90 degree Angle Arc
+        ctx.strokeStyle = '#facc15';
+        ctx.lineWidth = 2.5;
+        ctx.beginPath();
+        ctx.arc(cx + 130, cy - 112, 16, -0.5 * Math.PI, Math.PI, true);
+        ctx.stroke();
+        ctx.fillStyle = '#facc15';
+        ctx.font = 'bold 12px sans-serif';
+        ctx.fillText('✨ 安全 90°「L型」', cx + 162, cy - 128);
+        ctx.fillText('肘高絕不可低於肩！', cx + 162, cy - 112);
+
+        // Head
+        drawPlayerHeadCap(ctx, cx + 75, cy - 138, true);
+
+      } else if (step === 2) {
+        // Step 2: Hip Rotation 轉腰帶動手肘
+        drawPlayerLimb(ctx, cx + 85, cy - 65, cx + 105, cy - 8, 14, '#f8fafc', '#1d4ed8');
+        drawPlayerLimb(ctx, cx + 60, cy - 65, cx - 75, cy, 14, '#f8fafc', '#1d4ed8');
+
+        // Torso rotating toward catcher
+        drawPlayerTorso(ctx, cx + 65, cy - 115, 30, 52, 0.15, '17');
+
+        // Torso torque circular arrows
+        ctx.strokeStyle = '#f59e0b';
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.arc(cx + 65, cy - 90, 28, -0.2 * Math.PI, 0.8 * Math.PI);
+        ctx.stroke();
+        ctx.fillStyle = '#f59e0b';
+        ctx.font = 'bold 12px sans-serif';
+        ctx.fillText('🔥 下盤轉腰帶出！', cx + 65, cy - 60);
+
+        // Glove pulled to chest
+        drawPlayerLimb(ctx, cx + 45, cy - 110, cx + 30, cy - 95, 9, '#1d4ed8', null);
+        ctx.fillStyle = '#b45309';
+        ctx.beginPath();
+        ctx.arc(cx + 30, cy - 95, 11, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Throwing elbow leading forward
+        drawPlayerLimb(ctx, cx + 78, cy - 114, cx + 55, cy - 145, 10, '#1d4ed8', null);
+        drawPlayerLimb(ctx, cx + 55, cy - 145, cx + 90, cy - 165, 9, '#fed7aa', null);
+        drawSpinningBaseball(ctx, cx + 94, cy - 170, 7, 0.4, '#ef4444');
+
+        drawPlayerHeadCap(ctx, cx + 65, cy - 138, true);
+
+      } else if (step === 3) {
+        // Step 3: Release Point 最高點放球
+        drawPlayerLimb(ctx, cx + 75, cy - 65, cx + 100, cy - 14, 14, '#f8fafc', '#1d4ed8');
+        drawPlayerLimb(ctx, cx + 45, cy - 65, cx - 80, cy, 14, '#f8fafc', '#1d4ed8');
+
+        // Torso bent forward over knee
+        drawPlayerTorso(ctx, cx + 40, cy - 110, 30, 52, 0.35, '17');
+
+        // Glove at hip
+        drawPlayerLimb(ctx, cx + 25, cy - 105, cx + 15, cy - 80, 9, '#1d4ed8', null);
+
+        // High Release Point Arm
+        drawPlayerLimb(ctx, cx + 50, cy - 115, cx - 15, cy - 172, 10, '#1d4ed8', null);
+        drawPlayerLimb(ctx, cx - 15, cy - 172, cx - 45, cy - 195, 9, '#fed7aa', null);
+
+        // Release Starburst & Downward wrist snap
+        ctx.strokeStyle = '#ef4444';
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.moveTo(cx - 45, cy - 195);
+        ctx.lineTo(cx - 72, cy - 190);
+        ctx.stroke();
+
+        // Ball with speed rings
+        drawSpinningBaseball(ctx, cx - 78, cy - 190, 8.5, 0.8, '#ef4444');
+
+        ctx.fillStyle = '#ef4444';
+        ctx.font = 'bold 13px sans-serif';
+        ctx.textAlign = 'right';
+        ctx.fillText('💥 頭頂最高點向下扣指！', cx - 85, cy - 190);
+
+        drawPlayerHeadCap(ctx, cx + 30, cy - 132, true);
+
+      } else {
+        // Step 4: Follow Through 收尾準備防守
+        // Balanced square feet
+        drawPlayerLimb(ctx, cx + 15, cy - 65, cx + 35, cy, 14, '#f8fafc', '#1d4ed8');
+        drawPlayerLimb(ctx, cx - 15, cy - 65, cx - 65, cy, 14, '#f8fafc', '#1d4ed8');
+
+        drawPlayerTorso(ctx, cx - 10, cy - 105, 30, 52, 0.25, '17');
+
+        // Arm naturally across left knee
+        drawPlayerLimb(ctx, cx + 5, cy - 110, cx - 55, cy - 80, 9, '#1d4ed8', null);
+
+        // Glove ready in front
+        ctx.fillStyle = '#b45309';
+        ctx.beginPath();
+        ctx.arc(cx - 35, cy - 75, 12, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Deceleration arc
+        ctx.strokeStyle = '#a855f7';
+        ctx.lineWidth = 2.5;
+        ctx.setLineDash([4, 3]);
+        ctx.beginPath();
+        ctx.arc(cx - 20, cy - 120, 65, 0.2 * Math.PI, 0.9 * Math.PI);
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        ctx.fillStyle = '#c084fc';
+        ctx.font = 'bold 12px sans-serif';
+        ctx.textAlign = 'left';
+        ctx.fillText('🛡️ 手臂平順減速，踏平雙腳準備防守！', cx - 100, cy - 20);
+
+        drawPlayerHeadCap(ctx, cx - 18, cy - 126, true);
+      }
+
+      ctx.restore();
+    }
+
+    function drawPlayerLimb(ctx, x1, y1, x2, y2, thickness, mainColor, stripeColor) {
+      ctx.save();
+      ctx.strokeStyle = mainColor;
+      ctx.lineWidth = thickness;
+      ctx.lineCap = 'round';
       ctx.beginPath();
-      ctx.moveTo(st.hip[0], st.hip[1]);
-      ctx.lineTo(st.head[0], st.head[1] + 16);
+      ctx.moveTo(x1, y1);
+      ctx.lineTo(x2, y2);
       ctx.stroke();
 
-      ctx.strokeStyle = '#93c5fd';
-      ctx.lineWidth = 7;
-      ctx.beginPath();
-      ctx.moveTo(st.head[0], st.head[1] + 22);
-      ctx.lineTo(st.gloveHand[0], st.gloveHand[1]);
-      ctx.stroke();
+      if (stripeColor) {
+        ctx.strokeStyle = stripeColor;
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(x2, y2);
+        ctx.stroke();
+      }
+      ctx.restore();
+    }
 
-      ctx.fillStyle = '#d97706';
+    function drawPlayerTorso(ctx, x, y, w, h, angle, number) {
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.rotate(angle);
+      // Uniform white
+      ctx.fillStyle = '#f8fafc';
       ctx.beginPath();
-      ctx.arc(st.gloveHand[0], st.gloveHand[1], 10, 0, Math.PI * 2);
+      ctx.roundRect(-w / 2, -h / 2, w, h, 6);
       ctx.fill();
 
-      ctx.strokeStyle = '#facc15';
-      ctx.lineWidth = 7;
-      ctx.beginPath();
-      ctx.moveTo(st.head[0], st.head[1] + 22);
-      ctx.lineTo(st.throwElbow[0], st.throwElbow[1]);
-      ctx.lineTo(st.throwHand[0], st.throwHand[1]);
-      ctx.stroke();
+      // Blue Belt
+      ctx.fillStyle = '#1e3a8a';
+      ctx.fillRect(-w / 2, h / 2 - 8, w, 7);
 
-      ctx.fillStyle = '#fde68a';
-      ctx.beginPath();
-      ctx.arc(st.head[0], st.head[1], 15, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.fillStyle = '#2563eb';
-      ctx.beginPath();
-      ctx.arc(st.head[0], st.head[1] - 3, 15, Math.PI, 0);
-      ctx.fill();
-      ctx.fillRect(st.head[0] - 24, st.head[1] - 6, 15, 4);
+      // Jersey Number #17
+      ctx.fillStyle = '#1d4ed8';
+      ctx.font = 'black 14px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText(number, 0, 4);
 
-      const bx = st.ball ? st.ball[0] : st.throwHand[0];
-      const by = st.ball ? st.ball[1] : st.throwHand[1];
+      ctx.restore();
+    }
+
+    function drawPlayerHeadCap(ctx, x, y, facingLeft) {
+      ctx.save();
+      ctx.translate(x, y);
+
+      // Head
+      ctx.fillStyle = '#fed7aa';
+      ctx.beginPath();
+      ctx.arc(0, 0, 11, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Dodgers Cap
+      ctx.fillStyle = '#1d4ed8';
+      ctx.beginPath();
+      ctx.arc(0, -3, 11, Math.PI, 0);
+      ctx.fill();
+
+      // Visor
+      ctx.fillRect(facingLeft ? -18 : 6, -5, 12, 3.5);
+
+      // LA Logo dot
       ctx.fillStyle = '#ffffff';
       ctx.beginPath();
-      ctx.arc(bx, by, 7, 0, Math.PI * 2);
+      ctx.arc(0, -6, 2, 0, Math.PI * 2);
       ctx.fill();
-      ctx.strokeStyle = '#ef4444';
-      ctx.lineWidth = 2;
-      ctx.stroke();
 
-      if (pitchStepIdx === 1) {
-        ctx.fillStyle = '#facc15';
-        ctx.font = 'bold 13px sans-serif';
-        ctx.fillText('✨ 手臂舉成「L型」！', 280, 68);
-        ctx.fillText('✨ 手套指準目標！', 50, 95);
-      } else if (pitchStepIdx === 3) {
-        ctx.fillStyle = '#4ade80';
-        ctx.font = 'bold 13px sans-serif';
-        ctx.fillText('✨ 眼睛前方最高點放球！', 60, 42);
-      }
+      ctx.restore();
     }
 
     // ==================== 2. FIELDING & BASE COVERING ====================
@@ -1690,27 +2222,30 @@
     function selectFieldingMode(m) {
       fieldingMode = m;
       ['alligator', 'clock', 'crowhop'].forEach(k => {
-        document.getElementById('fmode-' + k).classList.toggle('active', k === m);
+        const btn = document.getElementById('fmode-' + k);
+        if (btn) btn.classList.toggle('active', k === m);
       });
       const descBox = document.getElementById('fielding-skill-desc');
-      if (m === 'alligator') {
-        descBox.innerHTML = `
-          <div class="font-bold text-sm text-emerald-400">🐊 滾地球三角形站姿 ＋「鱷魚嘴巴」雙手接球</div>
-          <p>1. <strong>正三角形站法：</strong>雙腳張開比肩膀寬（當作三角形底邊），手套放在雙腳正前方地面（當作三角形頂點），屁股坐低，眼睛盯著球進手套。</p>
-          <p>2. <strong>鱷魚嘴巴 (Alligator Hands)：</strong>手套在下面張開，另一隻空手放在手套上方像鱷魚的上顎。球一進手套，上面的手立刻蓋住並把球拿出來傳球！</p>
-        `;
-      } else if (m === 'clock') {
-        descBox.innerHTML = `
-          <div class="font-bold text-sm text-blue-400">👐 高低球接法：「胸口以上大拇指相連，腰部以下小拇指相連」</div>
-          <p>1. <strong>胸口以上／高飛球：</strong>手套手指朝上，雙手<strong>大拇指靠近</strong>，在額頭前上方接球。</p>
-          <p>2. <strong>腰部以下／滾地球：</strong>手套手指朝下貼地，雙手<strong>小拇指靠近</strong>，像鏟子一樣把球接進來！千萬別反過來，不然球會打到手腕！</p>
-        `;
-      } else {
-        descBox.innerHTML = `
-          <div class="font-bold text-sm text-amber-400">👟 傳球「墊步 (Crow Hop)」：用腳步幫手臂加力！</div>
-          <p>1. 接到球起身時，後腳往目標方向<strong>墊步小跳一下</strong>，讓前肩膀直接對準要傳球的隊友胸口。</p>
-          <p>2. <strong>不要原地站著只用手丟球！</strong>養成「接球 ➔ 雙手合胸前側身墊步 ➔ 傳球」的節奏，傳球會又平又準！</p>
-        `;
+      if (descBox) {
+        if (m === 'alligator') {
+          descBox.innerHTML = `
+            <div class="font-bold text-sm text-emerald-400">🐊 滾地球正三角形站姿 ＋「鱷魚嘴巴」雙手接球</div>
+            <p>1. <strong>正三角形站法：</strong>雙腳張開比肩膀寬（當底邊），手套放在雙腳正前方地面（當頂點），屁股坐低，眼睛盯著球進手套。</p>
+            <p>2. <strong>鱷魚嘴巴 (Alligator Hands)：</strong>手套在下面貼地張開，另一隻空手在上方像鱷魚上顎。球一進手套立刻蓋上，球絕不漏彈且能最快傳球！</p>
+          `;
+        } else if (m === 'clock') {
+          descBox.innerHTML = `
+            <div class="font-bold text-sm text-blue-400">👐 高低球接法：「肚臍腰帶分界線：胸口以上大拇指靠近，腰部以下小拇指靠近」</div>
+            <p>1. <strong>胸口以上／高飛球：</strong>手套手指朝上，雙手<strong>大拇指相連</strong>，在額頭前上方接球形成安全捕球網。</p>
+            <p>2. <strong>腰部以下／滾地球：</strong>手套手指朝下貼地，雙手<strong>小拇指相連</strong>，像推土機鏟子一樣把球鏟進來！千萬別反過來，否則球容易彈打到手腕！</p>
+          `;
+        } else {
+          descBox.innerHTML = `
+            <div class="font-bold text-sm text-amber-400">👟 傳球「墊步 (Crow Hop)」：用下盤腳步幫手臂加力！</div>
+            <p>1. 接到球起身時，後腳往前<strong>墊步小跨一步</strong>，讓前肩膀直接對準要傳球的隊友胸口。</p>
+            <p>2. <strong>絕不原地站著只用手臂死甩！</strong>養成「雙手接球 ➔ 雙手合胸前側身墊步 ➔ 大步強傳」的三拍子節奏，傳球又平又準！</p>
+          `;
+        }
       }
       drawFieldingSkill();
     }
@@ -1721,140 +2256,312 @@
       const ctx = canvas.getContext('2d');
       const W = canvas.width, H = canvas.height;
       ctx.clearRect(0, 0, W, H);
-      ctx.fillStyle = '#0f172a';
+
+      // Stadium Infield Clay Background
+      const bgGrad = ctx.createLinearGradient(0, 0, 0, H);
+      bgGrad.addColorStop(0, '#090d16');
+      bgGrad.addColorStop(0.65, '#1e293b');
+      bgGrad.addColorStop(1, '#78350f');
+      ctx.fillStyle = bgGrad;
       ctx.fillRect(0, 0, W, H);
 
       if (fieldingMode === 'alligator') {
-        ctx.strokeStyle = '#10b981';
-        ctx.lineWidth = 3;
+        // --- MODE 1: ALLIGATOR HANDS ---
+        // Left: Athletic fielding squat with triangle
+        const lx = 145, ly = 195;
+
+        // Triangle on clay
+        ctx.strokeStyle = '#facc15';
+        ctx.lineWidth = 2.5;
         ctx.beginPath();
-        ctx.moveTo(55, 165);
-        ctx.lineTo(155, 165);
-        ctx.lineTo(105, 95);
+        ctx.moveTo(lx - 55, ly + 25);
+        ctx.lineTo(lx + 55, ly + 25);
+        ctx.lineTo(lx, ly - 35);
         ctx.closePath();
         ctx.stroke();
 
-        ctx.fillStyle = '#38bdf8';
-        ctx.fillRect(42, 158, 26, 14);
-        ctx.fillRect(142, 158, 26, 14);
-        ctx.fillStyle = '#f59e0b';
-        ctx.beginPath();
-        ctx.arc(105, 95, 14, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(250, 204, 21, 0.12)';
         ctx.fill();
 
-        ctx.fillStyle = '#e2e8f0';
+        // Cleats
+        ctx.fillStyle = '#1d4ed8';
+        ctx.fillRect(lx - 68, ly + 18, 26, 12);
+        ctx.fillRect(lx + 42, ly + 18, 26, 12);
+
+        // Squatting Fielder in Dodgers Uniform
+        drawFielderSquatFigure(ctx, lx, ly - 10);
+
+        ctx.fillStyle = '#fde047';
         ctx.font = 'bold 12px sans-serif';
         ctx.textAlign = 'center';
-        ctx.fillText('▲ 雙腳與手套成「正三角形」', 105, 198);
+        ctx.fillText('▲ 正三角形黃金站姿（屁股坐低）', lx, ly + 50);
 
-        const rx = 315;
-        ctx.fillStyle = '#d97706';
+        // Divider
+        ctx.strokeStyle = '#334155';
+        ctx.lineWidth = 1;
+        ctx.setLineDash([4, 4]);
         ctx.beginPath();
-        ctx.ellipse(rx, 138, 42, 16, 0, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.fillStyle = '#fcd34d';
+        ctx.moveTo(W * 0.52, 20);
+        ctx.lineTo(W * 0.52, H - 20);
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        // Right: Alligator Hands Close-Up
+        const rx = W * 0.76, ry = 140;
+
+        // Bottom Glove (Lower Jaw)
+        ctx.fillStyle = '#b45309';
         ctx.beginPath();
-        ctx.ellipse(rx, 82, 36, 13, -0.15, 0, Math.PI * 2);
+        ctx.roundRect(rx - 70, ry + 12, 115, 34, [10, 10, 16, 16]);
         ctx.fill();
+        ctx.strokeStyle = '#d97706';
+        ctx.lineWidth = 2;
+        ctx.stroke();
 
         ctx.fillStyle = '#ffffff';
+        ctx.font = 'bold 11px sans-serif';
+        ctx.fillText('手套貼地張開（鱷魚下顎）', rx - 10, ry + 32);
+
+        // Top Bare Hand (Upper Jaw)
+        ctx.fillStyle = '#fed7aa';
         ctx.beginPath();
-        ctx.arc(rx - 10, 110, 11, 0, Math.PI * 2);
+        ctx.roundRect(rx - 65, ry - 42, 105, 30, [14, 14, 8, 8]);
         ctx.fill();
-        ctx.strokeStyle = '#ef4444';
+        ctx.strokeStyle = '#ea580c';
         ctx.lineWidth = 2;
+        ctx.stroke();
+
+        ctx.fillStyle = '#0f172a';
+        ctx.font = 'bold 11px sans-serif';
+        ctx.fillText('空手準備蓋下（鱷魚上顎）', rx - 10, ry - 22);
+
+        // Baseball in middle
+        drawSpinningBaseball(ctx, rx - 12, ry + 4, 15, 0.5, '#ef4444');
+
+        // Clamping Action Arrows
+        ctx.strokeStyle = '#22c55e';
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.moveTo(rx - 12, ry - 8);
+        ctx.lineTo(rx - 12, ry - 2);
         ctx.stroke();
 
         ctx.fillStyle = '#4ade80';
         ctx.font = 'bold 12px sans-serif';
-        ctx.fillText('上：空手準備蓋住 (鱷魚上顎)', rx, 52);
-        ctx.fillText('下：手套貼地張開 (鱷魚下顎)', rx, 175);
-      } else if (fieldingMode === 'clock') {
-        ctx.fillStyle = '#e2e8f0';
-        ctx.font = 'bold 13px sans-serif';
         ctx.textAlign = 'center';
-        ctx.fillText('🔼 胸口以上：手指朝上（大拇指靠攏）', 115, 38);
-        ctx.fillText('🔽 腰部以下：手指朝下（小拇指靠攏）', 325, 38);
+        ctx.fillText('⚡ 球一進手套立刻蓋上！絕對不漏彈！', rx - 10, H - 25);
 
-        ctx.fillStyle = '#d97706';
-        ctx.beginPath();
-        ctx.roundRect(78, 65, 42, 55, [18, 18, 8, 8]);
-        ctx.fill();
-        ctx.fillStyle = '#fde68a';
-        ctx.beginPath();
-        ctx.roundRect(124, 72, 32, 48, [14, 14, 8, 8]);
-        ctx.fill();
-        ctx.fillStyle = '#ffffff';
-        ctx.beginPath();
-        ctx.arc(99, 92, 11, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.fillStyle = '#60a5fa';
-        ctx.font = '12px sans-serif';
-        ctx.fillText('👍 大拇指相連擋在球後', 115, 155);
+      } else if (fieldingMode === 'clock') {
+        // --- MODE 2: GLOVE ORIENTATION (BELT LINE) ---
+        // Center player silhouette with belt dividing line
+        const cx = W * 0.5, cy = 135;
 
-        ctx.fillStyle = '#d97706';
+        // Belt Dividing Line
+        ctx.strokeStyle = '#38bdf8';
+        ctx.lineWidth = 2.5;
+        ctx.setLineDash([6, 4]);
         ctx.beginPath();
-        ctx.roundRect(288, 75, 42, 55, [8, 8, 18, 18]);
-        ctx.fill();
-        ctx.fillStyle = '#fde68a';
-        ctx.beginPath();
-        ctx.roundRect(334, 75, 32, 48, [8, 8, 14, 14]);
-        ctx.fill();
-        ctx.fillStyle = '#ffffff';
-        ctx.beginPath();
-        ctx.arc(309, 105, 11, 0, Math.PI * 2);
-        ctx.fill();
+        ctx.moveTo(35, cy);
+        ctx.lineTo(W - 35, cy);
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        ctx.fillStyle = '#38bdf8';
+        ctx.font = 'bold 12px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('⚡ 肚臍／腰帶分界線 (The Belt Line)', cx, cy - 8);
+
+        // TOP ZONE: Above belt (High balls)
+        const topX = 145, topY = 65;
         ctx.fillStyle = '#4ade80';
-        ctx.fillText('🤙 小拇指相連像鏟子鏟球', 325, 155);
+        ctx.font = 'bold 13px sans-serif';
+        ctx.fillText('🔼 胸口以上／高飛球：手套手指朝上！', topX + 15, topY - 24);
+
+        // Glove pointing up
+        ctx.fillStyle = '#b45309';
+        ctx.beginPath();
+        ctx.roundRect(topX - 35, topY - 15, 42, 54, [16, 16, 6, 6]);
+        ctx.fill();
+
+        // Bare hand beside
+        ctx.fillStyle = '#fed7aa';
+        ctx.beginPath();
+        ctx.roundRect(topX + 12, topY - 8, 32, 46, [14, 14, 6, 6]);
+        ctx.fill();
+
+        // Ball catching
+        drawSpinningBaseball(ctx, topX - 14, topY + 6, 12, 0, '#ef4444');
+
+        ctx.fillStyle = '#fde047';
+        ctx.font = 'bold 11px sans-serif';
+        ctx.fillText('👍 雙手大拇指靠近相連，形成捕球網！', topX + 15, topY + 54);
+
+        // BOTTOM ZONE: Below belt (Low balls)
+        const botX = W - 170, botY = 205;
+        ctx.fillStyle = '#f59e0b';
+        ctx.font = 'bold 13px sans-serif';
+        ctx.fillText('🔽 腰部以下／滾地球：手套手指朝下！', botX + 15, botY - 28);
+
+        // Glove pointing down
+        ctx.fillStyle = '#b45309';
+        ctx.beginPath();
+        ctx.roundRect(botX - 35, botY - 18, 42, 54, [6, 6, 16, 16]);
+        ctx.fill();
+
+        // Bare hand beside
+        ctx.fillStyle = '#fed7aa';
+        ctx.beginPath();
+        ctx.roundRect(botX + 12, botY - 18, 32, 46, [6, 6, 14, 14]);
+        ctx.fill();
+
+        // Ball scooping
+        drawSpinningBaseball(ctx, botX - 14, botY + 12, 12, 0, '#ef4444');
+
+        ctx.fillStyle = '#fde047';
+        ctx.font = 'bold 11px sans-serif';
+        ctx.fillText('🤙 雙手小拇指靠近相連，像推土機鏟球！', botX + 15, botY + 52);
+
       } else {
+        // --- MODE 3: CROW-HOP SEQUENCE ---
         const steps = [
-          { x: 85, y: 115, title: '1. 雙手接球進胸口' },
-          { x: 220, y: 105, title: '2. 後腳往前墊步側身' },
-          { x: 355, y: 115, title: '3. 前肩對準目標傳出' }
+          { x: W * 0.2, title: '1. 雙手收球進胸前', desc: '屁股壓低，雙手把球穩穩抱進心窩！' },
+          { x: W * 0.5, title: '2. 後腳向前小墊步', desc: '後腳向前小跳一步，肩膀轉向一壘！' },
+          { x: W * 0.8, title: '3. 大跨步雷射強傳', desc: '利用全身前衝慣性，手臂全力揮出！' }
         ];
-        steps.forEach(s => {
+
+        steps.forEach((s, idx) => {
+          // Card Box
           ctx.fillStyle = '#1e293b';
-          ctx.strokeStyle = '#3b82f6';
+          ctx.strokeStyle = idx === 1 ? '#38bdf8' : '#334155';
           ctx.lineWidth = 2;
           ctx.beginPath();
-          ctx.roundRect(s.x - 58, 45, 116, 130, 12);
+          ctx.roundRect(s.x - 75, 40, 150, 185, 12);
           ctx.fill();
           ctx.stroke();
 
-          ctx.fillStyle = '#f8fafc';
+          // Action Figure
+          drawCrowHopMiniPlayer(ctx, s.x, 135, idx);
+
+          // Labels
+          ctx.fillStyle = idx === 1 ? '#38bdf8' : '#f8fafc';
           ctx.font = 'bold 12px sans-serif';
           ctx.textAlign = 'center';
-          ctx.fillText(s.title, s.x, 198);
+          ctx.fillText(s.title, s.x, 195);
+
+          ctx.fillStyle = '#94a3b8';
+          ctx.font = '10px sans-serif';
+          ctx.fillText(s.desc, s.x, 212);
         });
-        ctx.fillStyle = '#f59e0b';
-        ctx.font = 'bold 28px sans-serif';
-        ctx.fillText('🧤+⚾', 85, 118);
-        ctx.fillText('👟💨', 220, 118);
-        ctx.fillText('🎯⚾', 355, 118);
+
+        // Flow Arrows
+        ctx.fillStyle = '#38bdf8';
+        ctx.font = 'bold 18px sans-serif';
+        ctx.fillText('➔', W * 0.35, 130);
+        ctx.fillText('➔', W * 0.65, 130);
       }
     }
 
+    function drawFielderSquatFigure(ctx, x, y) {
+      ctx.save();
+      ctx.translate(x, y);
+
+      // Pants in deep squat
+      ctx.fillStyle = '#f8fafc';
+      ctx.beginPath();
+      ctx.moveTo(-35, 20);
+      ctx.lineTo(-20, -15);
+      ctx.lineTo(20, -15);
+      ctx.lineTo(35, 20);
+      ctx.closePath();
+      ctx.fill();
+
+      // Jersey
+      ctx.fillStyle = '#ffffff';
+      ctx.beginPath();
+      ctx.roundRect(-22, -45, 44, 34, 5);
+      ctx.fill();
+
+      // Cap & Head
+      drawPlayerHeadCap(ctx, 0, -56, false);
+
+      // Low Glove out front
+      ctx.fillStyle = '#b45309';
+      ctx.beginPath();
+      ctx.roundRect(-16, -2, 32, 22, 6);
+      ctx.fill();
+
+      ctx.restore();
+    }
+
+    function drawCrowHopMiniPlayer(ctx, x, y, stage) {
+      ctx.save();
+      ctx.translate(x, y);
+
+      if (stage === 0) {
+        // Squat with hands at chest
+        ctx.fillStyle = '#f8fafc';
+        ctx.fillRect(-12, 0, 24, 25);
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(-10, -25, 20, 25);
+        drawPlayerHeadCap(ctx, 0, -32, true);
+        ctx.fillStyle = '#b45309';
+        ctx.beginPath();
+        ctx.arc(0, -14, 8, 0, Math.PI * 2);
+        ctx.fill();
+      } else if (stage === 1) {
+        // Crow-hop jump (side turned)
+        ctx.fillStyle = '#f8fafc';
+        ctx.beginPath();
+        ctx.moveTo(-6, -5); ctx.lineTo(-18, 20);
+        ctx.moveTo(6, -5); ctx.lineTo(12, 16);
+        ctx.strokeStyle = '#f8fafc'; ctx.lineWidth = 10; ctx.stroke();
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(-10, -30, 20, 25);
+        drawPlayerHeadCap(ctx, 0, -38, true);
+        // Ball cocked back
+        drawSpinningBaseball(ctx, 18, -32, 6, 0, '#ef4444');
+      } else {
+        // Full stride throw
+        ctx.strokeStyle = '#f8fafc'; ctx.lineWidth = 10;
+        ctx.beginPath();
+        ctx.moveTo(-10, -5); ctx.lineTo(-32, 24);
+        ctx.moveTo(10, -5); ctx.lineTo(28, 22);
+        ctx.stroke();
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(-12, -28, 24, 25);
+        drawPlayerHeadCap(ctx, -4, -36, true);
+        // Arm forward
+        drawSpinningBaseball(ctx, -28, -42, 6.5, 0.4, '#ef4444');
+      }
+      ctx.restore();
+    }
+
+    // ==================== 2B. BASE COVERING CANVAS ====================
     let basePlayMode = 'force1b';
     let basePlayProgress = 1;
     let basePlayAnimId = null;
 
     function selectBasePlay(mode) {
       basePlayMode = mode;
-      document.getElementById('bplay-force1b').classList.toggle('active', mode === 'force1b');
-      document.getElementById('bplay-tag2b').classList.toggle('active', mode === 'tag2b');
+      const b1 = document.getElementById('bplay-force1b');
+      const b2 = document.getElementById('bplay-tag2b');
+      if (b1) b1.classList.toggle('active', mode === 'force1b');
+      if (b2) b2.classList.toggle('active', mode === 'tag2b');
       const box = document.getElementById('base-cover-desc');
-      if (mode === 'force1b') {
-        box.innerHTML = `
-          <div class="font-bold text-sm text-blue-400">🦶 一壘手守壘秘訣：踩「朝向場內的壘包邊緣」</div>
-          <p>• <strong>千萬別踩壘包正中間或外側：</strong>因為打者會全力踩壘包外側衝過去，踩中間很容易被踩到腳或相撞！</p>
-          <p>• <strong>先等球再跨步 (Stretch)：</strong>看清楚球傳過來的方向後，接球腳再往球的方向跨出去延伸，能讓球提早進手套！</p>
-        `;
-      } else {
-        box.innerHTML = `
-          <div class="font-bold text-sm text-amber-400">🧤 二、三壘觸殺秘訣：「雙腳跨站壘包旁，手套放壘包前等跑者滑進來」</div>
-          <p>• <strong>不要主動拿手套去追跑者的身體：</strong>把手套放在壘包正前方的地面上，讓跑者的腳滑過來自己碰到手套最安全又最快！</p>
-          <p>• <strong>雙手護球：</strong>觸殺時另一隻手可幫忙護住球，碰到跑者後立刻把球舉高給裁判看！</p>
-        `;
+      if (box) {
+        if (mode === 'force1b') {
+          box.innerHTML = `
+            <div class="font-bold text-sm text-blue-400">🦶 一壘手守壘秘訣：腳踩「朝向場內的壘包內側邊緣」</div>
+            <p>• <strong>絕不踩壘包正中間或外側：</strong>因為跑者會全力踩壘包外側邊緣衝刺，踩中間極容易被跑者釘鞋踩斷腳或發生嚴重相撞！</p>
+            <p>• <strong>先看球再跨步 (Stretch)：</strong>看清楚隊友傳球方向後，接球腳朝球的方向大步延伸拉長身體，能讓球提早半秒進手套抓出局！</p>
+          `;
+        } else {
+          box.innerHTML = `
+            <div class="font-bold text-sm text-amber-400">🧤 二、三壘觸殺秘訣：「雙腳跨站壘包旁，手套放地上等跑者滑進來」</div>
+            <p>• <strong>絕不可主動拿手套追著跑者的身體晃：</strong>把手套穩穩貼在壘包正前方地面，讓跑者的腳滑過來自己碰到手套最安全又最快！</p>
+            <p>• <strong>雙手護球：</strong>觸殺時另一隻空手幫忙扣住手套裡的球，觸殺完成立刻高舉給裁判看！</p>
+          `;
+        }
       }
       animateBasePlay();
     }
@@ -1863,7 +2570,7 @@
       if (basePlayAnimId) cancelAnimationFrame(basePlayAnimId);
       basePlayProgress = 0;
       function loop() {
-        basePlayProgress += 0.03;
+        basePlayProgress += 0.025;
         if (basePlayProgress > 1) basePlayProgress = 1;
         drawBaseCover();
         if (basePlayProgress < 1) basePlayAnimId = requestAnimationFrame(loop);
@@ -1877,122 +2584,181 @@
       const ctx = canvas.getContext('2d');
       const W = canvas.width, H = canvas.height;
       ctx.clearRect(0, 0, W, H);
-      ctx.fillStyle = '#14532d';
+
+      // Infield Dirt & Grass
+      ctx.fillStyle = '#14532d'; // Grass
       ctx.fillRect(0, 0, W, H);
 
-      ctx.fillStyle = '#92400e';
-      ctx.fillRect(0, 75, W, 90);
+      ctx.fillStyle = '#78350f'; // Dirt lane
+      ctx.fillRect(0, 75, W, 130);
 
-      ctx.fillStyle = '#ffffff';
-      ctx.strokeStyle = '#cbd5e1';
+      // Foul line chalk for 1st base
+      if (basePlayMode === 'force1b') {
+        ctx.strokeStyle = '#ffffff';
+        ctx.lineWidth = 4;
+        ctx.beginPath();
+        ctx.moveTo(0, 160);
+        ctx.lineTo(W, 160);
+        ctx.stroke();
+
+        ctx.fillStyle = '#94a3b8';
+        ctx.font = '10px sans-serif';
+        ctx.textAlign = 'left';
+        ctx.fillText('界內區 (場內)', 20, 145);
+        ctx.fillText('界外區 (跑道)', 20, 180);
+      }
+
+      // 3D Base Bag
+      const bx = 280, by = 135;
+      ctx.fillStyle = '#e2e8f0';
+      ctx.strokeStyle = '#94a3b8';
       ctx.lineWidth = 2;
-      ctx.fillRect(230, 95, 44, 44);
-      ctx.strokeRect(230, 95, 44, 44);
+      ctx.beginPath();
+      ctx.roundRect(bx - 26, by - 26, 52, 52, 6);
+      ctx.fill();
+      ctx.stroke();
+
+      // Base anchor pin in center
+      ctx.fillStyle = '#64748b';
+      ctx.beginPath();
+      ctx.arc(bx, by, 5, 0, Math.PI * 2);
+      ctx.fill();
 
       const t = basePlayProgress;
 
       if (basePlayMode === 'force1b') {
-        const rx = 395 - t * 175;
-        ctx.fillStyle = '#ef4444';
-        ctx.beginPath();
-        ctx.arc(rx, 130, 13, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.fillStyle = '#ffffff';
-        ctx.font = 'bold 11px sans-serif';
-        ctx.textAlign = 'center';
-        ctx.fillText('跑者', rx, 134);
+        // Safe inside edge zone highlight
+        ctx.fillStyle = 'rgba(34, 197, 94, 0.35)';
+        ctx.fillRect(bx - 26, by - 26, 18, 52); // Inside edge
 
-        ctx.strokeStyle = '#fca5a5';
-        ctx.setLineDash([4, 3]);
-        ctx.beginPath();
-        ctx.moveTo(410, 130);
-        ctx.lineTo(180, 130);
-        ctx.stroke();
-        ctx.setLineDash([]);
+        ctx.fillStyle = 'rgba(239, 68, 68, 0.35)';
+        ctx.fillRect(bx + 8, by - 26, 18, 52); // Outside edge for runner
 
-        const stretchX = 248 - t * 42;
-        const stretchY = 88 - t * 32;
-        ctx.fillStyle = '#3b82f6';
-        ctx.fillRect(244, 88, 16, 10);
-        ctx.strokeStyle = '#60a5fa';
-        ctx.lineWidth = 6;
-        ctx.beginPath();
-        ctx.moveTo(252, 93);
-        ctx.lineTo(stretchX, stretchY);
-        ctx.stroke();
+        // 1st Baseman Stretches to the left (toward infield throw)
+        const stretchDist = t * 65;
+        const heelX = bx - 22;
+        const heelY = by - 5;
+        const mittX = heelX - stretchDist - 25;
+        const mittY = heelY - 15;
 
-        ctx.fillStyle = '#f59e0b';
+        // Fielder Body
+        drawPlayerLimb(ctx, heelX, heelY, heelX - stretchDist * 0.5, heelY - 20, 12, '#f8fafc', '#1d4ed8');
+        drawPlayerLimb(ctx, heelX - stretchDist * 0.5, heelY - 20, mittX + 10, mittY, 10, '#1d4ed8', null);
+
+        // Mitt
+        ctx.fillStyle = '#b45309';
         ctx.beginPath();
-        ctx.arc(stretchX - 8, stretchY - 6, 11, 0, Math.PI * 2);
+        ctx.arc(mittX, mittY, 15, 0, Math.PI * 2);
         ctx.fill();
 
-        const bx = 60 + (stretchX - 8 - 60) * Math.min(1, t * 1.15);
-        const by = 20 + (stretchY - 6 - 20) * Math.min(1, t * 1.15);
-        ctx.fillStyle = '#ffffff';
-        ctx.beginPath();
-        ctx.arc(bx, by, 7, 0, Math.PI * 2);
-        ctx.fill();
+        // Incoming throw
+        const ballX = 40 + (mittX - 40) * Math.min(1, t * 1.2);
+        const ballY = 40 + (mittY - 40) * Math.min(1, t * 1.2);
+        drawSpinningBaseball(ctx, ballX, ballY, 8, t * 10, '#ef4444');
 
-        ctx.fillStyle = '#fde047';
+        // Runner charging down outside lane
+        const rx = 520 - t * 240;
+        const ry = 175;
+        drawRunnerIcon(ctx, rx, ry, '#ef4444', '跑者全力衝刺');
+
+        // Footstep marker on outside edge
+        ctx.fillStyle = '#4ade80';
         ctx.font = 'bold 12px sans-serif';
         ctx.textAlign = 'left';
-        ctx.fillText('✅ 一壘手腳踩「壘包內側邊」向內野跨步接球', 18, 200);
-        ctx.fillText('🏃 跑者踩「壘包外側」衝刺，兩人完全不會相撞！', 18, 216);
+        ctx.fillText('✅ 一壘手踩「壘包內側邊」大跨步延伸接球', 18, 235);
+        ctx.fillStyle = '#facc15';
+        ctx.fillText('🏃 跑者踩「壘包外側邊」穿過，兩人完全不相撞！', 18, 255);
+
       } else {
-        const rx = 395 - t * 112;
+        // Tag Play at 2nd Base
+        // Infielder straddling the base
+        ctx.fillStyle = '#1d4ed8';
+        ctx.fillRect(bx - 32, by - 45, 14, 22); // Left foot
+        ctx.fillRect(bx + 18, by - 45, 14, 22); // Right foot
+
+        // Glove placed firmly on ground in front of base
+        const gx = bx;
+        const gy = by + 28;
+        ctx.fillStyle = '#b45309';
+        ctx.beginPath();
+        ctx.roundRect(gx - 22, gy - 14, 44, 28, 8);
+        ctx.fill();
+        ctx.strokeStyle = '#f59e0b';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        ctx.fillStyle = '#ffffff';
+        ctx.font = 'bold 10px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('手套放地上等滑壘', gx, gy + 4);
+
+        // Runner sliding in from right
+        const rx = 500 - t * 175;
+        const ry = by + 24;
+
+        // Slide dust spray
+        ctx.fillStyle = 'rgba(217, 119, 6, 0.4)';
+        ctx.beginPath();
+        ctx.ellipse(rx + 25, ry + 10, 35, 12, 0, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Runner sliding body
         ctx.fillStyle = '#ef4444';
         ctx.beginPath();
-        ctx.roundRect(rx, 106, 36, 22, 8);
+        ctx.roundRect(rx, ry - 8, 48, 20, 8);
         ctx.fill();
+
         ctx.fillStyle = '#ffffff';
         ctx.font = 'bold 11px sans-serif';
-        ctx.textAlign = 'center';
-        ctx.fillText('滑壘', rx + 18, 121);
-
-        ctx.fillStyle = '#3b82f6';
-        ctx.fillRect(245, 78, 16, 12);
-        ctx.fillRect(245, 144, 16, 12);
-
-        const gx = 262 + t * 16;
-        ctx.fillStyle = '#f59e0b';
-        ctx.beginPath();
-        ctx.arc(gx, 117, 12, 0, Math.PI * 2);
-        ctx.fill();
-
-        const bt = Math.min(1, t * 1.3);
-        const bx = 90 + (gx - 90) * bt;
-        const by = 35 + (117 - 35) * bt;
-        ctx.fillStyle = '#ffffff';
-        ctx.beginPath();
-        ctx.arc(bx, by, 7, 0, Math.PI * 2);
-        ctx.fill();
+        ctx.fillText('滑壘觸殺', rx + 24, ry + 6);
 
         ctx.fillStyle = '#fde047';
         ctx.font = 'bold 12px sans-serif';
-        ctx.textAlign = 'left';
-        ctx.fillText('✅ 雙腳跨在壘包兩側（不擋跑道），手套放在壘包前等跑者滑進來觸殺！', 14, 205);
+        ctx.textAlign = 'center';
+        ctx.fillText('✅ 雙腳跨在壘包兩側不擋跑道，手套放壘包前讓跑者自己滑進來！', W / 2, 250);
       }
+    }
+
+    function drawRunnerIcon(ctx, x, y, color, label) {
+      ctx.save();
+      ctx.fillStyle = color;
+      ctx.beginPath();
+      ctx.arc(x, y, 12, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.strokeStyle = '#ffffff';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+
+      ctx.fillStyle = '#f8fafc';
+      ctx.font = 'bold 11px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText(label, x, y - 16);
+      ctx.restore();
     }
 
     // ==================== 3. BATTING & REAL BOUNCE/ROLL PHYSICS ====================
     let batViewMode = 'knuckles';
     function selectBatView(mode) {
       batViewMode = mode;
-      document.getElementById('batview-knuckles').classList.toggle('active', mode === 'knuckles');
-      document.getElementById('batview-run1b').classList.toggle('active', mode === 'run1b');
+      const b1 = document.getElementById('batview-knuckles');
+      const b2 = document.getElementById('batview-run1b');
+      if (b1) b1.classList.toggle('active', mode === 'knuckles');
+      if (b2) b2.classList.toggle('active', mode === 'run1b');
       const desc = document.getElementById('bat-grip-desc');
-      if (mode === 'knuckles') {
-        desc.innerHTML = `
-          <div class="font-bold text-amber-400">👊 握棒黃金法則：「敲門關節排成一直線」</div>
-          <p>1. <strong>哪隻手在上面？</strong>右打者「左手在下、右手在上」（左打者相反），雙手緊靠在一起不留縫隙。</p>
-          <p>2. <strong>敲門關節對齊：</strong>比出「敲門」動作的第二指關節，上下兩手要對齊成一直線！手腕才轉得快、打得遠！</p>
-        `;
-      } else {
-        desc.innerHTML = `
-          <div class="font-bold text-emerald-400">🏃 擊球後跑一壘的兩種跑法：</div>
-          <p>1. <strong>內野滾地球（直線全力衝過一壘）：</strong>全速直線衝刺，踩一壘壘包前緣穿過去（不要減速、千萬別撲壘），過壘後往右邊界外區轉彎才不會被觸殺！</p>
-          <p>2. <strong>外野安打（香蕉彎繞壘法）：</strong>跑到一壘前幾步先往界外區畫一個小彎（像香蕉形狀），踩壘包「內側角」直接轉向二壘！</p>
-        `;
+      if (desc) {
+        if (mode === 'knuckles') {
+          desc.innerHTML = `
+            <div class="font-bold text-amber-400">👊 握棒黃金法則：「敲門關節排成一直線」</div>
+            <p>1. <strong>哪隻手在上面？</strong>右打者「左手在下、右手在上」（左打者相反），雙手緊靠在一起不留縫隙。</p>
+            <p>2. <strong>敲門關節對齊：</strong>比出「敲門」動作的第二指關節，上下兩手要對齊成一直線！手腕才能順暢翻轉，揮棒如揮鞭！</p>
+          `;
+        } else {
+          desc.innerHTML = `
+            <div class="font-bold text-emerald-400">🏃 擊球後跑一壘的兩種正確跑法：</div>
+            <p>1. <strong>內野滾地球（直線全力衝刺）：</strong>直線全速衝過一壘，腳踩壘包「前緣邊角」穿過去（千萬不要減速或撲壘），過壘後往右側界外區減速才不會被觸殺！</p>
+            <p>2. <strong>外野安打（香蕉彎繞壘法）：</strong>到一壘前 3～4 步先往右邊界外區畫一個小弧度（像香蕉彎），用左腳踩壘包「內側角」順勢加速衝向二壘！</p>
+          `;
+        }
       }
       drawBatGrip();
     }
@@ -2003,88 +2769,153 @@
       const ctx = canvas.getContext('2d');
       const W = canvas.width, H = canvas.height;
       ctx.clearRect(0, 0, W, H);
-      ctx.fillStyle = '#0f172a';
+
+      // Dark card background
+      const bgGrad = ctx.createLinearGradient(0, 0, 0, H);
+      bgGrad.addColorStop(0, '#090d16');
+      bgGrad.addColorStop(1, '#0f172a');
+      ctx.fillStyle = bgGrad;
       ctx.fillRect(0, 0, W, H);
 
       if (batViewMode === 'knuckles') {
-        ctx.fillStyle = '#d97706';
-        ctx.fillRect(166, 15, 28, 180);
+        // --- MODE 1: DOOR KNOCKING KNUCKLES ---
+        const bx = W * 0.45;
+
+        // Wood Grain Baseball Bat Handle
+        const batGrad = ctx.createLinearGradient(bx - 16, 0, bx + 16, 0);
+        batGrad.addColorStop(0, '#78350f');
+        batGrad.addColorStop(0.5, '#d97706');
+        batGrad.addColorStop(1, '#92400e');
+        ctx.fillStyle = batGrad;
+        ctx.fillRect(bx - 14, 20, 28, 220);
+
+        // Bat Knob at bottom
         ctx.beginPath();
-        ctx.roundRect(156, 182, 48, 16, 8);
+        ctx.roundRect(bx - 24, 228, 48, 16, 6);
         ctx.fill();
 
-        ctx.fillStyle = '#fcd34d';
-        ctx.beginPath();
-        ctx.roundRect(142, 48, 76, 56, 12);
-        ctx.fill();
+        // Grip Tape wrapped on lower section
+        ctx.fillStyle = '#1e293b';
+        ctx.fillRect(bx - 14, 155, 28, 70);
 
-        ctx.fillStyle = '#fde68a';
+        // Top Hand (Right Hand for righty)
+        const tY = 70;
+        ctx.fillStyle = '#fde047';
         ctx.beginPath();
-        ctx.roundRect(142, 108, 76, 56, 12);
+        ctx.roundRect(bx - 36, tY, 72, 42, 10);
         ctx.fill();
+        ctx.strokeStyle = '#ca8a04';
+        ctx.lineWidth = 2;
+        ctx.stroke();
 
+        // Bottom Hand (Left Hand for righty)
+        const bY = 118;
+        ctx.fillStyle = '#fef08a';
+        ctx.beginPath();
+        ctx.roundRect(bx - 36, bY, 72, 42, 10);
+        ctx.fill();
+        ctx.strokeStyle = '#ca8a04';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        // Knuckle Crease Segments
+        [tY + 12, tY + 22, tY + 32, bY + 12, bY + 22, bY + 32].forEach(ky => {
+          ctx.strokeStyle = '#c2410c';
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.moveTo(bx - 18, ky);
+          ctx.lineTo(bx + 18, ky);
+          ctx.stroke();
+        });
+
+        // Laser alignment line through second knuckles
         ctx.strokeStyle = '#ef4444';
         ctx.lineWidth = 3;
         ctx.setLineDash([5, 3]);
         ctx.beginPath();
-        ctx.moveTo(180, 32);
-        ctx.lineTo(180, 178);
+        ctx.moveTo(bx, 35);
+        ctx.lineTo(bx, 215);
         ctx.stroke();
         ctx.setLineDash([]);
 
-        [58, 72, 86, 118, 132, 146].forEach(y => {
+        // Knuckle Highlight Dots
+        [tY + 12, tY + 22, tY + 32, bY + 12, bY + 22, bY + 32].forEach(ky => {
           ctx.fillStyle = '#ef4444';
           ctx.beginPath();
-          ctx.arc(180, y, 5, 0, Math.PI * 2);
+          ctx.arc(bx, ky, 4.5, 0, Math.PI * 2);
           ctx.fill();
         });
 
+        // Labels
         ctx.fillStyle = '#f8fafc';
         ctx.font = 'bold 12px sans-serif';
         ctx.textAlign = 'left';
-        ctx.fillText('👈 上手（右打為右手）', 226, 78);
-        ctx.fillText('👈 下手（右打為左手）', 226, 138);
+        ctx.fillText('👈 上手（右打為右手）', bx + 48, tY + 25);
+        ctx.fillText('👈 下手（右打為左手）', bx + 48, bY + 25);
+
         ctx.fillStyle = '#f87171';
         ctx.textAlign = 'right';
-        ctx.fillText('紅線對齊「敲門關節」➔', 135, 105);
+        ctx.fillText('紅虛線對齊「敲門關節」➔', bx - 48, 115);
+        ctx.fillStyle = '#fde047';
+        ctx.font = 'bold 11px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('💡 握棒要像抓一隻小鳥一樣放鬆，擊球瞬間手腕才甩得快！', W / 2, H - 15);
+
       } else {
-        ctx.fillStyle = '#14532d';
+        // --- MODE 2: RUNNING 1ST BASE ROUTES ---
+        ctx.fillStyle = '#14532d'; // Turf
         ctx.fillRect(0, 0, W, H);
 
+        // Diamond Foul Line
         ctx.strokeStyle = '#ffffff';
-        ctx.lineWidth = 2;
+        ctx.lineWidth = 3;
         ctx.beginPath();
-        ctx.moveTo(60, 180);
-        ctx.lineTo(320, 93);
+        ctx.moveTo(60, 220); // Home
+        ctx.lineTo(440, 100); // 1st base line
         ctx.stroke();
 
+        // Home Plate
         ctx.fillStyle = '#ffffff';
-        ctx.fillRect(54, 174, 12, 12);
-        ctx.fillRect(262, 104, 16, 16);
-        ctx.fillRect(150, 22, 14, 14);
+        ctx.fillRect(52, 212, 16, 16);
+        ctx.fillStyle = '#f8fafc';
+        ctx.font = 'bold 10px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('本壘', 60, 242);
 
+        // 1st Base Bag
+        ctx.fillRect(360, 112, 22, 22);
+        ctx.fillText('一壘', 371, 150);
+
+        // 2nd Base Bag in distance
+        ctx.fillRect(230, 30, 18, 18);
+        ctx.fillText('二壘', 239, 24);
+
+        // Path A: Infield Grounder (Yellow Line: Straight sprint through 1B and turn right)
         ctx.strokeStyle = '#facc15';
-        ctx.lineWidth = 3;
+        ctx.lineWidth = 3.5;
         ctx.beginPath();
-        ctx.moveTo(66, 180);
-        ctx.lineTo(270, 112);
-        ctx.quadraticCurveTo(315, 98, 330, 125);
+        ctx.moveTo(68, 220);
+        ctx.lineTo(375, 120);
+        ctx.quadraticCurveTo(430, 105, 460, 145);
         ctx.stroke();
 
+        // Path B: Outfield Hit (Cyan Line: Banana curve to 2B)
         ctx.strokeStyle = '#38bdf8';
-        ctx.lineWidth = 3;
+        ctx.lineWidth = 3.5;
         ctx.beginPath();
-        ctx.moveTo(66, 180);
-        ctx.quadraticCurveTo(245, 155, 265, 108);
-        ctx.quadraticCurveTo(245, 70, 164, 30);
+        ctx.moveTo(68, 220);
+        ctx.quadraticCurveTo(320, 175, 365, 126);
+        ctx.quadraticCurveTo(345, 75, 245, 40);
         ctx.stroke();
 
+        // Legend Cards
         ctx.fillStyle = '#facc15';
         ctx.font = 'bold 12px sans-serif';
         ctx.textAlign = 'left';
-        ctx.fillText('🟡 滾地球：直線衝過一壘再往右轉', 20, 42);
+        ctx.fillText('🟡 滾地球：全力直線衝刺踩前緣，過壘後往右外側轉彎', 25, 45);
+
         ctx.fillStyle = '#38bdf8';
-        ctx.fillText('🔵 外野安打：香蕉彎踩壘包內角衝二壘', 20, 62);
+        ctx.fillText('🔵 外野安打：提早外切香蕉彎，左腳踩壘包內角順暢轉二壘', 25, 68);
       }
     }
 
@@ -2097,28 +2928,28 @@
 
     const hitTypesData = {
       ground: {
-        desc: '<strong>📉 強勁滾地球 (-6° 仰角＋前旋)：</strong>打中球的上半部，球先在內野紅土高彈跳（紅土恢復係數較高 <code>e=0.52</code>），進入外野草皮後轉為貼地滾動並受草皮摩擦阻力逐漸減速停止！',
+        desc: '<strong>📉 強勁滾地球 (-6° 仰角＋前旋)：</strong>擊中球的上半部，球先在內野紅土高彈跳（紅土恢復係數 <code>e=0.52</code>），穿出內野進入草皮後轉為貼地滾動並受摩擦阻力逐漸減速停止！',
         color: '#f97316',
         launchDeg: -6,
-        exitVelo: 98, // km/h
-        backspin: -0.6 // topspin
+        exitVelo: 98,
+        backspin: -0.6
       },
       line: {
-        desc: '<strong>⚡ 平飛安打 (14° 仰角＋正中球心)：</strong>球棒水平微上揚正中球心！球在空中平飛約 42 公尺後落地，因水平動能強，在草皮上連續彈跳 3 次後繼續向前滾動約 22 公尺！',
+        desc: '<strong>⚡ 平飛安打 (14° 仰角＋正中球心)：</strong>球棒水平微揚正中球心！球在空中平飛約 42 公尺落地，因水平動能極大，在外野草皮上連續彈跳 3 次後繼續向前滾動約 23 公尺！',
         color: '#10b981',
         launchDeg: 14,
         exitVelo: 108,
         backspin: 0.7
       },
       homerun: {
-        desc: '<strong>🎆 深遠長打 / 全壘打 (28° 黃金仰角＋強烈後旋)：</strong>擊中球心微偏下方，後旋馬格努斯力讓球在空中滯留更久，直接飛越 75 公尺外的少棒全壘打牆！',
+        desc: '<strong>🎆 深遠長打 / 全壘打 (28° 黃金仰角＋強烈後旋)：</strong>擊中球心微偏下緣，強烈後旋馬格努斯力讓球在空中滯留久，直接飛越 75 公尺外的少棒全壘打牆！',
         color: '#facc15',
         launchDeg: 28,
         exitVelo: 115,
         backspin: 1.2
       },
       popup: {
-        desc: '<strong>🎈 內野沖天炮 (55° 仰角)：</strong>打到球太底部，球飛得極高但不遠；落地時因垂直速度大、水平速度小，彈跳一下後幾乎在原地滾動幾公尺就停住。',
+        desc: '<strong>🎈 內野沖天炮 (55° 仰角)：</strong>打到球太底部，垂直速度大但水平推進力極小；球飛得很高但不遠，落地後彈跳一次幾乎在原地滾動幾公尺就停住。',
         color: '#a855f7',
         launchDeg: 55,
         exitVelo: 86,
@@ -2140,7 +2971,7 @@
       const dt = 0.025;
       const pts = [];
       const bounces = [];
-      let state = 'air'; // 'air', 'bouncing', 'rolling'
+      let state = 'air';
       let carryDist = 0;
 
       for (let step = 0; step < 360; step++) {
@@ -2165,7 +2996,6 @@
             const dNow = Math.sqrt(x * x + y * y);
             if (carryDist === 0) carryDist = dNow;
 
-            // Dirt (< 26m) vs Outfield Grass (>= 26m)
             const isDirt = dNow < 26;
             const restitution = isDirt ? 0.50 : 0.36;
             const bounceFriction = isDirt ? 0.80 : 0.70;
@@ -2173,7 +3003,6 @@
             if (Math.abs(vz) > 1.35 && bounces.length < 4) {
               state = 'bouncing';
               vz = -vz * restitution;
-              // Topspin (negative backspin) accelerates first bounce slightly relative to backspin
               const spinBoost = (bounces.length === 0 && backspinFactor < 0) ? 1.08 : 1.0;
               vx *= bounceFriction * spinBoost;
               vy *= bounceFriction * spinBoost;
@@ -2185,10 +3014,9 @@
             }
           }
         } else if (state === 'rolling') {
-          // Ground rolling deceleration (a = -mu * g)
           const dNow = Math.sqrt(x * x + y * y);
           const isDirt = dNow < 26;
-          const decel = isDirt ? 2.4 : 3.8; // m/s^2 rolling deceleration on dirt vs thick grass
+          const decel = isDirt ? 2.4 : 3.8;
           const hSpeed = Math.sqrt(vx * vx + vy * vy);
           if (hSpeed <= 0.25) break;
           const newSpeed = Math.max(0, hSpeed - decel * dt);
@@ -2213,17 +3041,22 @@
       hitLabPoints = res.pts;
       hitLabBounces = res.bounces;
       const rollDist = Math.max(0, res.totalDist - res.carryDist);
-      document.getElementById('hit-stat-carry').textContent = `空中飛行落點：${res.carryDist} m`;
-      document.getElementById('hit-stat-roll').textContent = `彈跳＋草地滾動：+${rollDist} m (總距離 ${res.totalDist} m)`;
-      document.getElementById('hit-stat-bounces').textContent = `落地彈跳：${res.bounces.length} 次後轉貼地滾動`;
+      const cEl = document.getElementById('hit-stat-carry');
+      const rEl = document.getElementById('hit-stat-roll');
+      const bEl = document.getElementById('hit-stat-bounces');
+      if (cEl) cEl.textContent = `空中飛行落點：${res.carryDist} m`;
+      if (rEl) rEl.textContent = `彈跳＋草皮滾動：+${rollDist} m (總距離 ${res.totalDist} m)`;
+      if (bEl) bEl.textContent = `落地彈跳：${res.bounces.length} 次後轉貼地滾動`;
     }
 
     function setHitType(type) {
       currentHitType = type;
       ['ground', 'line', 'homerun', 'popup'].forEach(k => {
-        document.getElementById('hit-btn-' + k).classList.toggle('active', k === type);
+        const btn = document.getElementById('hit-btn-' + k);
+        if (btn) btn.classList.toggle('active', k === type);
       });
-      document.getElementById('hit-result-desc').innerHTML = hitTypesData[type].desc;
+      const descEl = document.getElementById('hit-result-desc');
+      if (descEl) descEl.innerHTML = hitTypesData[type].desc;
       swingBatSim();
     }
 
@@ -2252,23 +3085,32 @@
       ctx.clearRect(0, 0, W, H);
 
       if (hitLabPoints.length === 0) simulateLabHitPhysics();
-
       const info = hitTypesData[currentHitType];
 
-      // Sky
-      ctx.fillStyle = '#0f172a';
+      // Sky Background
+      const skyGrad = ctx.createLinearGradient(0, 0, 0, 240);
+      skyGrad.addColorStop(0, '#020617');
+      skyGrad.addColorStop(0.7, '#0f172a');
+      skyGrad.addColorStop(1, '#1e293b');
+      ctx.fillStyle = skyGrad;
       ctx.fillRect(0, 0, W, H);
 
-      // Map distance (0..90m) -> x (55..575), height (0..28m) -> y (232..25)
-      const mapX = d => 55 + (d / 90) * 520;
-      const mapY = z => 232 - (z / 26) * 195;
+      // Distance mapping: (0..90m) -> x (55..610), height (0..28m) -> y (245..30)
+      const mapX = d => 55 + (d / 90) * 550;
+      const mapY = z => 245 - (z / 26) * 200;
 
       // Infield Dirt (0..26m) & Outfield Grass (26..90m)
       const dirtEndPx = mapX(26);
-      ctx.fillStyle = '#78350f';
-      ctx.fillRect(0, 232, dirtEndPx, 48);
+      ctx.fillStyle = '#78350f'; // Clay
+      ctx.fillRect(0, 245, dirtEndPx, H - 245);
+
+      // Mowed Grass Stripes in outfield
       ctx.fillStyle = '#14532d';
-      ctx.fillRect(dirtEndPx, 232, W - dirtEndPx, 48);
+      ctx.fillRect(dirtEndPx, 245, W - dirtEndPx, H - 245);
+      for (let gx = dirtEndPx; gx < W; gx += 40) {
+        ctx.fillStyle = 'rgba(21, 128, 61, 0.45)';
+        ctx.fillRect(gx, 245, 20, H - 245);
+      }
 
       // Distance markers on ground
       ctx.fillStyle = '#94a3b8';
@@ -2276,21 +3118,25 @@
       ctx.textAlign = 'center';
       [20, 40, 60, 75].forEach(m => {
         const mx = mapX(m);
-        ctx.fillText(m + 'm', mx, 246);
+        ctx.fillText(m + 'm', mx, 260);
       });
       ctx.fillStyle = '#fde047';
-      ctx.fillText('紅土區', (55 + dirtEndPx) / 2, 262);
+      ctx.fillText('內野紅土區', (55 + dirtEndPx) / 2, 276);
       ctx.fillStyle = '#4ade80';
-      ctx.fillText('外野草皮區 (滾動阻力較大)', (dirtEndPx + 520) / 2, 262);
+      ctx.fillText('外野草皮區（草皮阻力減速）', (dirtEndPx + 580) / 2, 276);
 
       // Outfield Home Run Fence at 75m
       const fenceX = mapX(75);
-      ctx.fillStyle = '#2563eb';
-      ctx.fillRect(fenceX, 198, 6, 34);
-      ctx.fillStyle = '#93c5fd';
-      ctx.fillText('全壘打牆(75m)', fenceX, 192);
+      ctx.fillStyle = '#1d4ed8'; // Blue wall
+      ctx.fillRect(fenceX, 205, 8, 40);
+      ctx.fillStyle = '#facc15'; // Yellow top pad
+      ctx.fillRect(fenceX - 1, 203, 10, 4);
 
-      // Draw trajectory segments up to hitLabAnimIdx
+      ctx.fillStyle = '#93c5fd';
+      ctx.font = 'bold 10px sans-serif';
+      ctx.fillText('全壘打牆 (75m)', fenceX + 4, 196);
+
+      // Draw Trajectory up to hitLabAnimIdx
       for (let i = 1; i <= hitLabAnimIdx; i++) {
         const p0 = hitLabPoints[i - 1];
         const p1 = hitLabPoints[i];
@@ -2306,9 +3152,8 @@
           ctx.lineWidth = 3;
           ctx.setLineDash([]);
         } else {
-          // Rolling on turf!
           ctx.strokeStyle = '#38bdf8';
-          ctx.lineWidth = 3;
+          ctx.lineWidth = 2.5;
           ctx.setLineDash([3, 3]);
         }
         ctx.beginPath();
@@ -2318,56 +3163,56 @@
       }
       ctx.setLineDash([]);
 
-      // Draw bounce markers reached so far
+      // Bounce ripples
       const curP = hitLabPoints[hitLabAnimIdx] || hitLabPoints[0];
-      hitLabBounces.forEach((b, idx) => {
+      hitLabBounces.forEach((b) => {
         if (curP.dist >= b.dist) {
           const bx = mapX(b.dist);
           ctx.fillStyle = '#facc15';
           ctx.beginPath();
-          ctx.arc(bx, 232, 4, 0, Math.PI * 2);
+          ctx.arc(bx, 245, 4.5, 0, Math.PI * 2);
           ctx.fill();
         }
       });
 
-      // Draw spinning baseball at current position
+      // Spinning Ball
       const curX = mapX(curP.dist);
       const curY = mapY(curP.z);
-      drawSpinningBaseball(ctx, curX, curY, 6.5, hitLabAnimIdx * 0.5, info.color);
+      drawSpinningBaseball(ctx, curX, curY, 7.5, hitLabAnimIdx * 0.5, info.color);
 
       if (curP.state === 'rolling') {
         ctx.fillStyle = '#38bdf8';
         ctx.font = 'bold 11px sans-serif';
         ctx.textAlign = 'center';
-        ctx.fillText('草地摩擦減速滾動中...', curX, curY - 12);
+        ctx.fillText('草地滾動減速中...', curX, curY - 14);
       }
 
-      // Inset Close-up of Bat hitting Ball (Top-Left box)
+      // Inset Close-Up of Bat hitting Ball
       ctx.fillStyle = '#1e293b';
       ctx.strokeStyle = '#475569';
       ctx.lineWidth = 1.5;
-      ctx.fillRect(14, 14, 175, 74);
-      ctx.strokeRect(14, 14, 175, 74);
+      ctx.roundRect(14, 14, 185, 78, 8);
+      ctx.fill();
+      ctx.stroke();
 
       ctx.fillStyle = '#cbd5e1';
       ctx.font = 'bold 11px sans-serif';
       ctx.textAlign = 'left';
-      ctx.fillText('🔍 擊球點與球旋轉方向：', 22, 31);
+      ctx.fillText('🔍 擊球點與球旋轉剖析：', 22, 32);
 
-      ctx.fillStyle = '#ffffff';
+      // Inset Ball
+      drawSpinningBaseball(ctx, 145, 56, 14, 0, info.color);
+
+      // Inset Bat relative position
+      let batY = 56;
+      if (currentHitType === 'ground') batY = 45;
+      if (currentHitType === 'line') batY = 56;
+      if (currentHitType === 'homerun') batY = 62;
+      if (currentHitType === 'popup') batY = 70;
+
+      ctx.fillStyle = '#d97706';
       ctx.beginPath();
-      ctx.arc(135, 55, 13, 0, Math.PI * 2);
-      ctx.fill();
-
-      let batY = 55;
-      if (currentHitType === 'ground') batY = 44;
-      if (currentHitType === 'line') batY = 55;
-      if (currentHitType === 'homerun') batY = 60;
-      if (currentHitType === 'popup') batY = 68;
-
-      ctx.fillStyle = '#f59e0b';
-      ctx.beginPath();
-      ctx.roundRect(52, batY - 7, 65, 14, 7);
+      ctx.roundRect(50, batY - 7, 72, 14, 6);
       ctx.fill();
     }
 
@@ -2378,30 +3223,33 @@
 
     const scenarioDetails = {
       force: {
-        title: '情境 1：一壘有人，隊友打出內野滾地球（強迫進壘）',
-        body: '因為打者要跑一壘，一壘跑者<strong>「被強迫一定要往二壘跑 (Force Play)」</strong>！所以一看到球往地上彈，不用猶豫，<strong>低頭全力衝向二壘</strong>！'
+        title: '情境 1：一壘有人，隊友打出內野滾地球（強迫進壘 Force Play）',
+        body: '因為打者必須全力跑一壘，一壘跑者<strong>「被強迫一定要向二壘推進 (Force Play)」</strong>！所以一看到球被打在地上，不用猶豫，<strong>低頭全力衝刺二壘</strong>！滑壘進壘還能破壞雙殺！'
       },
       tagup: {
-        title: '情境 2：無人或一人出局，三壘有人，隊友打出外野高飛球（Tag Up）',
-        body: '外野高飛球很高機率被接殺！三壘跑者要<strong>先回到三壘壘包踩著（Tag Up）</strong>，眼睛盯著外野手手套，<strong>球碰到野手手套的那一瞬間立刻全力衝本壘得分</strong>！'
+        title: '情境 2：少於兩出局，三壘有人，隊友打出外野高飛球（Tag Up 再進壘）',
+        body: '外野高飛球隨時可能被接殺！三壘跑者必須<strong>先回到三壘壘包踩穩（Tag Up）</strong>，眼睛盯著外野手手套，<strong>球碰到手套的那一瞬間立刻起跑衝向本壘得分</strong>！'
       },
       twoouts: {
         title: '情境 3：兩出局 (2 Outs)，壘上有人，隊友擊出任何球',
-        body: '<strong>兩出局黃金法則：</strong>不管是滾地球、平飛球還是高飛球，因為接殺也是第三出局，所以<strong>球一被打出去的瞬間，壘上所有跑者立刻全力起跑</strong>，能多進一壘是一壘！'
+        body: '<strong>兩出局黃金狂奔法則：</strong>因為就算高飛球被接殺也是第三出局換局，所以<strong>球一被打出去的瞬間，壘上所有跑者不用管球，立刻全速狂奔</strong>，能多搶一壘是一壘！'
       },
       lead: {
         title: '情境 4：離壘與第二離壘（側滑步 Shuffle Step）',
-        body: '離壘時身體面向本壘與內野，雙腳用<strong>「側滑步（不交叉腳）」</strong>移動約 2～3 步。投手球投出通過本壘時再做「第二離壘」，隨時準備往前衝或回壘！'
+        body: '離壘時面向本壘，雙腳用<strong>「側滑步（雙腳不交叉）」</strong>移動約 2～3 步保持平衡。投手球投出通過本壘時再做小跳步「第二離壘」，隨時準備往前推進或撲回壘包！'
       }
     };
 
     function selectBaseScenario(sc) {
       baseScenario = sc;
       ['force', 'tagup', 'twoouts', 'lead'].forEach(k => {
-        document.getElementById('bscene-' + k).classList.toggle('active', k === sc);
+        const btn = document.getElementById('bscene-' + k);
+        if (btn) btn.classList.toggle('active', k === sc);
       });
-      document.getElementById('bscene-title').textContent = scenarioDetails[sc].title;
-      document.getElementById('bscene-body').innerHTML = scenarioDetails[sc].body;
+      const tEl = document.getElementById('bscene-title');
+      const bEl = document.getElementById('bscene-body');
+      if (tEl) tEl.textContent = scenarioDetails[sc].title;
+      if (bEl) bEl.innerHTML = scenarioDetails[sc].body;
       playBaserunningScenario();
     }
 
@@ -2409,7 +3257,7 @@
       if (baseSimAnimId) cancelAnimationFrame(baseSimAnimId);
       baseSimProgress = 0;
       function loop() {
-        baseSimProgress += 0.022;
+        baseSimProgress += 0.02;
         if (baseSimProgress > 1) baseSimProgress = 1;
         drawDiamond();
         if (baseSimProgress < 1) baseSimAnimId = requestAnimationFrame(loop);
@@ -2424,34 +3272,47 @@
       const W = canvas.width, H = canvas.height;
       ctx.clearRect(0, 0, W, H);
 
+      // Lush Infield Grass
       ctx.fillStyle = '#14532d';
       ctx.fillRect(0, 0, W, H);
 
-      const home = { x: 260, y: 270 };
-      const b1 = { x: 380, y: 165 };
-      const b2 = { x: 260, y: 65 };
-      const b3 = { x: 140, y: 165 };
+      // Mowed Grass Angled Patterns
+      for (let x = -W; x < W * 2; x += 55) {
+        ctx.fillStyle = 'rgba(21, 128, 61, 0.35)';
+        ctx.beginPath();
+        ctx.moveTo(x, 0); ctx.lineTo(x + 28, 0); ctx.lineTo(x + 28 + H * 0.7, H); ctx.lineTo(x + H * 0.7, H);
+        ctx.fill();
+      }
 
+      // Diamond Coordinates
+      const home = { x: W * 0.5, y: 310 };
+      const b1 = { x: W * 0.75, y: 190 };
+      const b2 = { x: W * 0.5, y: 75 };
+      const b3 = { x: W * 0.25, y: 190 };
+
+      // Clay Infield Track
       ctx.fillStyle = '#78350f';
       ctx.beginPath();
-      ctx.moveTo(home.x, home.y + 15);
-      ctx.lineTo(b1.x + 20, b1.y);
-      ctx.lineTo(b2.x, b2.y - 20);
-      ctx.lineTo(b3.x - 20, b3.y);
+      ctx.moveTo(home.x, home.y + 18);
+      ctx.lineTo(b1.x + 24, b1.y);
+      ctx.lineTo(b2.x, b2.y - 24);
+      ctx.lineTo(b3.x - 24, b3.y);
       ctx.closePath();
       ctx.fill();
 
+      // Grass Infield Circle
       ctx.fillStyle = '#15803d';
       ctx.beginPath();
-      ctx.moveTo(home.x, home.y - 22);
-      ctx.lineTo(b1.x - 22, b1.y);
-      ctx.lineTo(b2.x, b2.y + 22);
-      ctx.lineTo(b3.x + 22, b3.y);
+      ctx.moveTo(home.x, home.y - 25);
+      ctx.lineTo(b1.x - 24, b1.y);
+      ctx.lineTo(b2.x, b2.y + 24);
+      ctx.lineTo(b3.x + 24, b3.y);
       ctx.closePath();
       ctx.fill();
 
+      // Chalk Baseline
       ctx.strokeStyle = '#ffffff';
-      ctx.lineWidth = 2;
+      ctx.lineWidth = 2.5;
       ctx.beginPath();
       ctx.moveTo(home.x, home.y);
       ctx.lineTo(b1.x, b1.y);
@@ -2460,46 +3321,82 @@
       ctx.closePath();
       ctx.stroke();
 
-      [home, b1, b2, b3].forEach(b => {
+      // Pitcher Mound Circle & Rubber
+      const moundX = (home.x + b2.x) / 2;
+      const moundY = (home.y + b2.y) / 2 + 15;
+      ctx.fillStyle = '#92400e';
+      ctx.beginPath();
+      ctx.arc(moundX, moundY, 22, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(moundX - 8, moundY - 2, 16, 4);
+
+      // Base Bags
+      [b1, b2, b3].forEach(b => {
         ctx.fillStyle = '#ffffff';
-        ctx.fillRect(b.x - 8, b.y - 8, 16, 16);
+        ctx.strokeStyle = '#cbd5e1';
+        ctx.lineWidth = 2;
+        ctx.fillRect(b.x - 9, b.y - 9, 18, 18);
+        ctx.strokeRect(b.x - 9, b.y - 9, 18, 18);
       });
+
+      // Home Plate
+      ctx.fillStyle = '#ffffff';
+      ctx.beginPath();
+      ctx.moveTo(home.x - 10, home.y - 6);
+      ctx.lineTo(home.x + 10, home.y - 6);
+      ctx.lineTo(home.x + 10, home.y + 4);
+      ctx.lineTo(home.x, home.y + 12);
+      ctx.lineTo(home.x - 10, home.y + 4);
+      ctx.closePath();
+      ctx.fill();
 
       const t = baseSimProgress;
 
+      // Scenario Animations
       if (baseScenario === 'force') {
-        const bx = home.x + (210 - home.x) * Math.min(1, t * 1.6);
-        const by = home.y + (115 - home.y) * Math.min(1, t * 1.6);
-        drawBall(ctx, bx, by);
+        // Ground ball towards shortstop
+        const bx = home.x + (b3.x + 35 - home.x) * Math.min(1, t * 1.6);
+        const by = home.y + (b3.y - 25 - home.y) * Math.min(1, t * 1.6);
+        drawSpinningBaseball(ctx, bx, by, 6.5, t * 10, '#ef4444');
 
+        // Runner from 1B forced to 2B
         const r1x = b1.x + (b2.x - b1.x) * t;
         const r1y = b1.y + (b2.y - b1.y) * t;
-        drawRunner(ctx, r1x, r1y, '一壘跑者衝二壘');
+        drawRunner(ctx, r1x, r1y, '一壘跑者全力衝二壘！');
 
+        // Batter runner to 1B
         const brx = home.x + (b1.x - home.x) * t;
         const bry = home.y + (b1.y - home.y) * t;
         drawRunner(ctx, brx, bry, '打者衝一壘');
-      } else if (baseScenario === 'tagup') {
-        const catchT = Math.min(1, t / 0.45);
-        const bx = home.x + (185 - home.x) * catchT;
-        const by = home.y + (28 - home.y) * catchT - Math.sin(catchT * Math.PI) * 45;
-        drawBall(ctx, bx, by);
 
+      } else if (baseScenario === 'tagup') {
+        // Fly ball to deep left field
+        const catchT = Math.min(1, t / 0.45);
+        const bx = home.x + (b3.x - 20 - home.x) * catchT;
+        const by = home.y + (b2.y - 25 - home.y) * catchT - Math.sin(catchT * Math.PI) * 55;
+        drawSpinningBaseball(ctx, bx, by, 7, t * 12, '#ef4444');
+
+        // Fielder catching
         ctx.fillStyle = '#60a5fa';
         ctx.beginPath();
-        ctx.arc(185, 28, 9, 0, Math.PI * 2);
+        ctx.arc(b3.x - 20, b2.y - 25, 10, 0, Math.PI * 2);
         ctx.fill();
 
+        // Runner at 3B tag up
         const runT = t < 0.45 ? 0 : (t - 0.45) / 0.55;
         const r3x = b3.x + (home.x - b3.x) * runT;
         const r3y = b3.y + (home.y - b3.y) * runT;
-        const label = t < 0.45 ? '踩三壘等待接球...' : '接球瞬間！全力衝本壘！';
+        const label = t < 0.45 ? '踩在三壘等待接球...' : '接殺瞬間！全力衝本壘得分！';
         drawRunner(ctx, r3x, r3y, label);
-      } else if (baseScenario === 'twoouts') {
-        const bx = home.x + (330 - home.x) * t;
-        const by = home.y + (45 - home.y) * t - Math.sin(t * Math.PI) * 40;
-        drawBall(ctx, bx, by);
 
+      } else if (baseScenario === 'twoouts') {
+        // Any hit
+        const bx = home.x + (b1.x + 40 - home.x) * t;
+        const by = home.y + (b2.y - 15 - home.y) * t - Math.sin(t * Math.PI) * 45;
+        drawSpinningBaseball(ctx, bx, by, 7, t * 10, '#ef4444');
+
+        // Runner from 2B to Home directly
         let rx, ry;
         if (t < 0.5) {
           const s = t * 2;
@@ -2510,39 +3407,43 @@
           rx = b3.x + (home.x - b3.x) * s;
           ry = b3.y + (home.y - b3.y) * s;
         }
-        drawRunner(ctx, rx, ry, '2出局！不用等接球直接衝！');
+        drawRunner(ctx, rx, ry, '2出局！球一打出全力衝回本壘！');
+
       } else {
-        const leadDist = 28 + Math.sin(t * Math.PI) * 24;
+        // Lead-off with shuffle steps
+        const leadDist = 32 + Math.sin(t * Math.PI) * 26;
         const angle = Math.atan2(b2.y - b1.y, b2.x - b1.x);
         const rx = b1.x + Math.cos(angle) * leadDist;
         const ry = b1.y + Math.sin(angle) * leadDist;
-        drawRunner(ctx, rx, ry, '側滑步離壘（眼睛看本壘）');
+        drawRunner(ctx, rx, ry, '側滑步離壘（雙眼盯住投手）');
+
+        // Tether line to 1st base
+        ctx.strokeStyle = '#22c55e';
+        ctx.lineWidth = 2;
+        ctx.setLineDash([4, 3]);
+        ctx.beginPath();
+        ctx.moveTo(b1.x, b1.y);
+        ctx.lineTo(rx, ry);
+        ctx.stroke();
+        ctx.setLineDash([]);
       }
     }
 
     function drawRunner(ctx, x, y, text) {
+      ctx.save();
       ctx.fillStyle = '#facc15';
       ctx.beginPath();
-      ctx.arc(x, y, 10, 0, Math.PI * 2);
+      ctx.arc(x, y, 11, 0, Math.PI * 2);
       ctx.fill();
       ctx.strokeStyle = '#000000';
       ctx.lineWidth = 2;
       ctx.stroke();
 
       ctx.fillStyle = '#fef08a';
-      ctx.font = 'bold 12px sans-serif';
+      ctx.font = 'bold 11px sans-serif';
       ctx.textAlign = 'center';
-      ctx.fillText(text, x, y - 15);
-    }
-
-    function drawBall(ctx, x, y) {
-      ctx.fillStyle = '#ffffff';
-      ctx.beginPath();
-      ctx.arc(x, y, 6, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.strokeStyle = '#ef4444';
-      ctx.lineWidth = 2;
-      ctx.stroke();
+      ctx.fillText(text, x, y - 16);
+      ctx.restore();
     }
 
     // ==================== 5. MINI QUIZ ====================
@@ -2551,10 +3452,10 @@
         q: '1. 初學者練習傳接球與投直球時，最標準、因正後旋馬格努斯力讓球飛得最直的是哪一種握法？',
         options: ['A. 整個手掌把球包死死', 'B. 四縫線直球（食指與中指橫跨馬蹄形縫線）', 'C. 只用大拇指跟小拇指夾球'],
         ans: 1,
-        exp: '答對了！四縫線直球能產生正後旋，讓球抵抗地心引力飛得最直最穩！'
+        exp: '答對了！四縫線直球能產生最強的正後旋，抵抗地心引力讓球飛得最直最穩！'
       },
       {
-        q: '2. 守備接滾地球時，為什麼教練常說要用「鱷魚嘴巴」接球？',
+        q: '2. 守備接滾地球時，為什麼教練常說要用「鱷魚嘴巴」雙手接球？',
         options: ['A. 因為看起來很帥', 'B. 手套在下貼地、空手在上方準備蓋住球，球才不會彈出來且能快速傳球', 'C. 可以用嘴巴咬住球'],
         ans: 1,
         exp: '太棒了！雙手接球（鱷魚嘴）既安全又能立刻把球拿出來傳向一壘！'
@@ -2569,13 +3470,13 @@
         q: '4. 雙手握球棒時，把兩手的哪個部位排成一直線，手腕最靈活、揮棒最快？',
         options: ['A. 敲門關節（第二指關節）排成一直線', 'B. 手肘對齊手腕', 'C. 兩手分開距離十公分'],
         ans: 0,
-        exp: '好厲害！敲門關節對齊能讓手腕在擊球瞬間順暢轉動，打出強勁平飛球！'
+        exp: '好厲害！敲門關節對齊能讓手腕在擊球瞬間順暢翻轉，打出強勁平飛球！'
       },
       {
         q: '5. 當場上是「兩出局 (2 Outs)」，你在二壘上，隊友打出一顆高飛球，你應該怎麼做？',
         options: ['A. 站在二壘等看看野手有沒有接到', 'B. 球一打出去的瞬間就全力往三壘、本壘衝刺！', 'C. 慢慢走回一壘'],
         ans: 1,
-        exp: '滿分觀念！兩出局時就算被接殺也是換局，所以球一打出去馬上全力起跑就對了！'
+        exp: '滿分觀念！兩出局時就算被接殺也是第三出局換局，所以球一打出去馬上全力起跑就對了！'
       }
     ];
 
@@ -2583,12 +3484,13 @@
 
     function renderQuiz() {
       const container = document.getElementById('quiz-container');
+      if (!container) return;
       container.innerHTML = '';
       quizQuestions.forEach((item, qIdx) => {
         const card = document.createElement('div');
         card.className = 'p-4 rounded-xl bg-[var(--background)] border border-[var(--border)] space-y-2.5';
         const title = document.createElement('div');
-        title.className = 'font-bold text-sm';
+        title.className = 'font-bold text-sm text-sky-400';
         title.textContent = item.q;
         card.appendChild(title);
 
@@ -2633,12 +3535,15 @@
       quizQuestions.forEach((q, idx) => {
         if (userAnswers[idx] === q.ans) score++;
       });
-      document.getElementById('quiz-score-badge').textContent = `得分：${score} / 5`;
+      const badge = document.getElementById('quiz-score-badge');
+      if (badge) badge.textContent = `得分：${score} / 5`;
       const msg = document.getElementById('quiz-final-msg');
-      if (score === 5) {
-        msg.textContent = '🎉 恭喜你全部答對！獲得「五星全能棒球小國手」榮譽認證！';
-      } else {
-        msg.textContent = '';
+      if (msg) {
+        if (score === 5) {
+          msg.textContent = '🎉 恭喜你全部答對！獲得「五星全能棒球小國手」榮譽認證！';
+        } else {
+          msg.textContent = '';
+        }
       }
     }
 
@@ -2648,7 +3553,7 @@
       updateQuizScore();
     }
 
-    window.addEventListener('DOMContentLoaded', () => {
+        window.addEventListener('DOMContentLoaded', () => {
       updateStars();
       drawGrip();
       simulateLabPitchPhysics();
