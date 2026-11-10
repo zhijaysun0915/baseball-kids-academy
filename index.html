@@ -3,6 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
   <title>小小職棒王：四年級棒球互動教學樂園 ＆《MLB 勁旅對決 3D》大谷翔平旗艦版 v2.7.0</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
@@ -51,14 +54,19 @@
           具備真實空氣動力馬格努斯效應、3D 彈跳與草地滾動摩擦物理！可邊學技術邊打實戰對決比賽！
         </p>
       </div>
-      <div class="flex items-center gap-3 bg-[var(--background)] border border-[var(--border)] px-4 py-2.5 rounded-xl self-stretch md:self-auto justify-between">
+      <div class="flex flex-wrap items-center gap-2.5 bg-[var(--background)] border border-[var(--border)] px-4 py-2.5 rounded-xl self-stretch md:self-auto justify-between">
         <div class="text-xs text-[var(--muted-foreground)]">
           <div>特訓進度星星</div>
           <div id="star-display" class="text-base font-bold text-amber-400 tracking-wider">★☆☆☆☆☆ (1/6)</div>
         </div>
-        <button onclick="switchMainTab('game')" class="px-3.5 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs shadow transition cursor-pointer animate-pulse">
-          🎮 立即打實戰比賽！
-        </button>
+        <div class="flex items-center gap-2">
+          <button onclick="switchMainTab('pitching')" class="px-3.5 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs shadow transition cursor-pointer">
+            ⚾ 觀看 3D 棒球教學
+          </button>
+          <button onclick="switchMainTab('game')" class="px-3.5 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs shadow transition cursor-pointer">
+            🎮 實戰比賽
+          </button>
+        </div>
       </div>
     </header>
 
@@ -3562,6 +3570,6 @@
       renderQuiz();
     });
   </script>
-  <script src="rivals-game.js"></script>
+  <script src="rivals-game.js?v=2.7.2"></script>
 </body>
 </html>
