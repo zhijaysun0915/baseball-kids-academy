@@ -486,508 +486,571 @@
       </div>
     </section>
 
-            <!-- ==================== SECTION 1: PITCHING (真實物理投球實驗室) ==================== -->
-    <section id="sec-pitching" class="hidden space-y-6">
-      <!-- Section Broadcast Banner -->
-      <div class="bg-gradient-to-r from-blue-900/60 via-slate-900/80 to-blue-900/60 border border-blue-500/50 rounded-2xl p-4 shadow-[0_0_20px_rgba(59,130,246,0.15)] flex flex-wrap items-center justify-between gap-3">
-        <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-xl bg-blue-600/30 border border-blue-400/50 flex items-center justify-center text-xl shadow">
-            ⚾
-          </div>
-          <div>
-            <div class="text-[10px] uppercase tracking-wider text-sky-400 font-extrabold flex items-center gap-2">
-              <span>STATCAST PITCHING LAB</span>
-              <span class="px-2 py-0.5 rounded-full bg-sky-500/25 border border-sky-400/50 text-sky-200 text-[10px] font-mono font-black">3D 轉播級教具</span>
-            </div>
-            <h2 class="text-lg md:text-xl font-black text-white tracking-tight">1. 投球物理與五分解投球機制特訓營</h2>
-          </div>
-        </div>
-        <div class="flex items-center gap-2 text-xs">
-          <span class="px-3 py-1.5 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 font-bold">
-            🛡️ 90° 安全 L 型手肘防傷指南
-          </span>
-          <span class="px-3 py-1.5 rounded-xl bg-blue-500/15 border border-blue-500/30 text-blue-300 font-bold">
-            🌪️ 馬格努斯空力上浮實測
-          </span>
-        </div>
-      </div>
-
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
-        <!-- Left: Ball Grip Visualizer (5 cols) -->
-        <div class="lg:col-span-5 bg-[var(--card)] border border-blue-500/30 rounded-2xl p-5 shadow-lg flex flex-col justify-between">
-          <div>
-            <div class="flex items-center justify-between mb-3">
-              <h3 class="text-base font-bold flex items-center gap-2 text-white">
-                <span>🔍 球種握法 ＆ 旋轉軸剖析</span>
-              </h3>
-              <span class="text-xs px-2.5 py-1 rounded-full bg-blue-500/20 text-blue-300 font-bold border border-blue-500/40">點擊切換球種</span>
-            </div>
-
-            <div class="grid grid-cols-2 gap-2 mb-3">
-              <button onclick="selectPitch('4seam')" id="pitch-btn-4seam" class="sub-btn active p-2.5 rounded-xl border border-[var(--border)] text-left transition cursor-pointer hover:border-blue-500">
-                <div class="font-bold text-sm text-sky-300">🔥 四縫線直球</div>
-                <div class="text-[11px] text-[var(--muted-foreground)]">強烈正後旋・抗重力上浮</div>
-              </button>
-              <button onclick="selectPitch('2seam')" id="pitch-btn-2seam" class="sub-btn p-2.5 rounded-xl border border-[var(--border)] text-left transition cursor-pointer hover:border-blue-500">
-                <div class="font-bold text-sm text-amber-300">⚡ 二縫線伸卡</div>
-                <div class="text-[11px] text-[var(--muted-foreground)]">側傾斜旋轉・內角下沉</div>
-              </button>
-              <button onclick="selectPitch('changeup')" id="pitch-btn-changeup" class="sub-btn p-2.5 rounded-xl border border-[var(--border)] text-left transition cursor-pointer hover:border-blue-500">
-                <div class="font-bold text-sm text-emerald-300">🐢 掌心變速球</div>
-                <div class="text-[11px] text-[var(--muted-foreground)]">低轉速減速・進壘下墜</div>
-              </button>
-              <button onclick="selectPitch('curve')" id="pitch-btn-curve" class="sub-btn p-2.5 rounded-xl border border-[var(--border)] text-left transition cursor-pointer hover:border-blue-500">
-                <div class="font-bold text-sm text-purple-300">🌈 曲球 (原理)</div>
-                <div class="text-[11px] text-[var(--muted-foreground)]">高速前旋・彩虹暴墜</div>
-              </button>
-            </div>
-
-            <!-- Canvas Container with TV Bezel -->
-            <div class="flex flex-col items-center bg-[#090d16] border border-slate-700/80 rounded-xl p-2.5 mb-3 shadow-inner">
-              <canvas id="gripCanvas" width="480" height="260" class="w-full max-w-[480px] h-auto rounded-lg"></canvas>
-              <div class="text-xs text-slate-400 mt-2 flex flex-wrap items-center justify-center gap-3 font-semibold">
-                <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-blue-500 border border-white/50 inline-block"></span> 食指 (Index)</span>
-                <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-emerald-500 border border-white/50 inline-block"></span> 中指 (Middle)</span>
-                <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-amber-500 border border-white/50 inline-block"></span> 大拇指 (下托支撐)</span>
+    <!-- ==================== SECTION 1: PITCHING (真實物理投球實驗室) ==================== -->
+    <section id="sec-pitching" class="hidden space-y-3.5">
+      <!-- Top MLB Rivals Command & Telemetry Bar -->
+      <div class="bg-[var(--card)] border border-[var(--border)] rounded-2xl p-3 md:p-4 shadow-sm space-y-3">
+        <div class="flex flex-wrap items-center justify-between gap-2.5">
+          <div class="flex flex-wrap items-center gap-2.5">
+            <div class="bg-[var(--background)] border border-blue-500/40 rounded-xl px-3.5 py-1.5 flex items-center gap-3 shadow-inner">
+              <div>
+                <div class="text-[10px] uppercase tracking-wider text-amber-400 font-extrabold flex items-center gap-1.5">
+                  <span>STATCAST PITCH LAB</span>
+                  <span class="px-1.5 py-0.2 rounded bg-sky-500/25 border border-sky-400/50 text-sky-200 text-[9px] font-mono font-black">3D 轉播</span>
+                </div>
+                <div class="text-sm md:text-base font-black text-white">1. 投球物理與五分解特訓</div>
+              </div>
+              <div class="h-7 w-px bg-[var(--border)]"></div>
+              <div class="text-center min-w-[64px]">
+                <div class="text-[10px] text-sky-400 font-extrabold">球速</div>
+                <div id="tele-pitch-spd" class="text-sm md:text-base font-black text-white font-mono">88 km/h</div>
+              </div>
+              <div class="text-center min-w-[64px]">
+                <div class="text-[10px] text-amber-400 font-extrabold">轉速</div>
+                <div id="tele-pitch-rpm" class="text-sm md:text-base font-black text-white font-mono">1900 RPM</div>
+              </div>
+              <div class="text-center min-w-[58px]">
+                <div class="text-[10px] text-emerald-400 font-extrabold">上浮變化</div>
+                <div id="tele-pitch-lift" class="text-sm md:text-base font-black text-emerald-300 font-mono">+18 cm</div>
               </div>
             </div>
           </div>
+          <div class="flex flex-wrap items-center gap-1.5">
+            <a href="#pitch-stage-sim" class="px-2.5 py-1.5 rounded-xl border border-blue-500/50 bg-blue-500/15 hover:bg-blue-500/25 text-sky-300 text-xs font-extrabold">📡 雙鏡頭軌跡</a>
+            <a href="#pitch-stage-grip" class="px-2.5 py-1.5 rounded-xl border border-emerald-500/50 bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-300 text-xs font-extrabold">🔍 3D 握法透視</a>
+            <a href="#pitch-stage-mech" class="px-2.5 py-1.5 rounded-xl border border-amber-500/50 bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 text-xs font-extrabold">🛡️ 90° L型五分解</a>
+            <button onclick="throwPitch()" class="px-3 py-1.5 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 text-xs font-black cursor-pointer shadow">⚾ 立即試投</button>
+          </div>
+        </div>
+      </div>
 
-          <div id="grip-info-box" class="bg-slate-900/90 border border-slate-700 rounded-xl p-3.5 text-sm space-y-1.5">
-            <div class="font-bold text-sky-400" id="grip-title">🔥 四縫線直球 (4-Seam Fastball)</div>
-            <p id="grip-desc" class="text-xs leading-relaxed text-slate-200">
+      <!-- STAGE 1B: Dual-Camera Pitch Trajectory Broadcast Viewport + Control Deck -->
+      <div id="pitch-stage-sim" class="grid grid-cols-1 lg:grid-cols-12 gap-3.5">
+        <div class="lg:col-span-8 bg-[var(--card)] border border-[var(--border)] rounded-2xl p-2 sm:p-3 shadow-sm flex flex-col justify-between">
+          <div class="relative bg-[#050811] border border-slate-700/80 rounded-xl overflow-hidden select-none">
+            <canvas id="pitchSimCanvas" width="960" height="540" class="w-full h-auto block cursor-crosshair touch-none" title="點擊右側九宮格或挖地瓜區域可直接瞄準投球"></canvas>
+            <div class="absolute bottom-2.5 right-2.5 z-10">
+              <button onclick="throwPitch()" class="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-gradient-to-br from-amber-400 via-orange-500 to-rose-600 hover:from-amber-300 hover:to-rose-500 active:scale-95 text-slate-950 font-black text-xs shadow-[0_0_22px_rgba(245,158,11,0.65)] border-4 border-white/90 flex flex-col items-center justify-center leading-tight cursor-pointer select-none transition">
+                <span class="text-lg sm:text-xl">⚾</span>
+                <span>投出這球</span>
+              </button>
+            </div>
+          </div>
+          <div id="pitch-flight-desc" class="mt-2 px-3 py-2 rounded-xl bg-[var(--background)] border border-[var(--border)] text-xs text-slate-200 leading-relaxed">
+            <strong>🌪️ Statcast 馬格努斯空力實測：</strong>在 <strong>88 km/h、1900 RPM</strong> 下，四縫線正後旋讓球抵抗地心引力，進壘時比灰色無旋轉拋物線上浮約 18 公分！
+          </div>
+        </div>
+
+        <!-- Right Signature Pitch Control Deck (4 cols) -->
+        <div class="lg:col-span-4 bg-[var(--card)] border border-[var(--border)] rounded-2xl p-4 shadow-sm flex flex-col justify-between space-y-3">
+          <div class="p-3 rounded-xl bg-gradient-to-br from-blue-950/90 via-slate-900 to-slate-950 border border-blue-500/40 flex items-center justify-between gap-2">
+            <div>
+              <div class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-amber-500/20 border border-amber-400/50 text-amber-300 text-[10px] font-black">
+                <span>★ STATCAST 控球實驗台</span>
+                <span>•</span>
+                <span>LAD #17</span>
+              </div>
+              <div class="text-sm font-black text-white mt-1">點選球種 ＆ 九宮格瞄準進壘</div>
+            </div>
+            <div class="text-2xl font-black text-sky-400 italic">#17</div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-1.5">
+            <button onclick="selectPitch('4seam')" id="pitch-btn-4seam" class="sub-btn active p-2 rounded-xl border border-[var(--border)] text-left transition cursor-pointer hover:border-blue-500">
+              <div class="font-bold text-xs text-sky-300">🔥 四縫線直球</div>
+              <div class="text-[10px] text-[var(--muted-foreground)]">強烈正後旋・上浮</div>
+            </button>
+            <button onclick="selectPitch('2seam')" id="pitch-btn-2seam" class="sub-btn p-2 rounded-xl border border-[var(--border)] text-left transition cursor-pointer hover:border-blue-500">
+              <div class="font-bold text-xs text-amber-300">⚡ 二縫線伸卡</div>
+              <div class="text-[10px] text-[var(--muted-foreground)]">側斜旋轉・下沉</div>
+            </button>
+            <button onclick="selectPitch('changeup')" id="pitch-btn-changeup" class="sub-btn p-2 rounded-xl border border-[var(--border)] text-left transition cursor-pointer hover:border-blue-500">
+              <div class="font-bold text-xs text-emerald-300">🐢 掌心變速球</div>
+              <div class="text-[10px] text-[var(--muted-foreground)]">低轉減速・急墜</div>
+            </button>
+            <button onclick="selectPitch('curve')" id="pitch-btn-curve" class="sub-btn p-2 rounded-xl border border-[var(--border)] text-left transition cursor-pointer hover:border-blue-500">
+              <div class="font-bold text-xs text-purple-300">🌈 曲球 (原理)</div>
+              <div class="text-[10px] text-[var(--muted-foreground)]">高速前旋・暴墜</div>
+            </button>
+          </div>
+
+          <!-- 3x3 Strike Zone + Dirt Target -->
+          <div class="p-3 rounded-xl bg-[var(--background)] border border-slate-700/80 space-y-2">
+            <div class="text-xs font-extrabold text-amber-300 flex items-center justify-between">
+              <span>🎯 進壘點九宮格（亦可直接點畫面）</span>
+            </div>
+            <div class="grid grid-cols-3 gap-1 w-full" id="strike-zone-grid">
+              <button onclick="setAim(0,0)" class="aim-cell py-1.5 rounded border border-slate-700 text-xs font-bold hover:border-blue-400 cursor-pointer text-slate-200">1 高內</button>
+              <button onclick="setAim(1,0)" class="aim-cell py-1.5 rounded border border-slate-700 text-xs font-bold hover:border-blue-400 cursor-pointer text-slate-200">2 高中</button>
+              <button onclick="setAim(2,0)" class="aim-cell py-1.5 rounded border border-slate-700 text-xs font-bold hover:border-blue-400 cursor-pointer text-slate-200">3 高外</button>
+              <button onclick="setAim(0,1)" class="aim-cell py-1.5 rounded border border-slate-700 text-xs font-bold hover:border-blue-400 cursor-pointer text-slate-200">4 中內</button>
+              <button onclick="setAim(1,1)" class="aim-cell py-1.5 rounded border border-blue-500 bg-blue-500/25 text-xs font-bold cursor-pointer text-white">5 紅中</button>
+              <button onclick="setAim(2,1)" class="aim-cell py-1.5 rounded border border-slate-700 text-xs font-bold hover:border-blue-400 cursor-pointer text-slate-200">6 中外</button>
+              <button onclick="setAim(0,2)" class="aim-cell py-1.5 rounded border border-slate-700 text-xs font-bold hover:border-blue-400 cursor-pointer text-slate-200">7 低內</button>
+              <button onclick="setAim(1,2)" class="aim-cell py-1.5 rounded border border-slate-700 text-xs font-bold hover:border-blue-400 cursor-pointer text-slate-200">8 低中</button>
+              <button onclick="setAim(2,2)" class="aim-cell py-1.5 rounded border border-slate-700 text-xs font-bold hover:border-blue-400 cursor-pointer text-slate-200">9 低外</button>
+              <button onclick="setAim(1,3)" class="aim-cell col-span-3 py-1.5 rounded border border-amber-500/50 text-amber-300 text-xs font-bold hover:bg-amber-500/20 cursor-pointer">💥 投挖地瓜球 (紅土彈跳滾動)</button>
+            </div>
+          </div>
+
+          <!-- Speed & RPM Sliders -->
+          <div class="grid grid-cols-2 gap-2 p-2.5 rounded-xl bg-[var(--background)] border border-slate-700/80 text-xs">
+            <div>
+              <div class="flex justify-between font-bold mb-1 text-slate-300">
+                <span>出手球速</span>
+                <span id="lbl-pitch-speed" class="text-emerald-400 font-mono">88 km/h</span>
+              </div>
+              <input id="slider-pitch-speed" type="range" min="60" max="105" value="88" oninput="onPitchSliderChange()" class="w-full accent-emerald-500 cursor-pointer">
+            </div>
+            <div>
+              <div class="flex justify-between font-bold mb-1 text-slate-300">
+                <span>扣球轉速</span>
+                <span id="lbl-pitch-rpm" class="text-sky-400 font-mono">1900 RPM</span>
+              </div>
+              <input id="slider-pitch-rpm" type="range" min="600" max="2400" step="100" value="1900" oninput="onPitchSliderChange()" class="w-full accent-blue-500 cursor-pointer">
+            </div>
+          </div>
+
+          <button onclick="throwPitch()" class="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-amber-500 via-orange-500 to-rose-500 hover:from-amber-400 hover:to-rose-400 text-slate-950 font-black text-sm shadow-lg transition cursor-pointer">
+            ⚾ 投出這一球！觀察物理軌跡
+          </button>
+        </div>
+      </div>
+
+      <!-- STAGE 1A: 3D Ball Grip & Ping-Pong Palm Gap X-Ray -->
+      <div id="pitch-stage-grip" class="grid grid-cols-1 lg:grid-cols-12 gap-3.5">
+        <div class="lg:col-span-8 bg-[var(--card)] border border-[var(--border)] rounded-2xl p-2 sm:p-3 shadow-sm flex flex-col justify-between">
+          <div class="relative bg-[#050811] border border-slate-700/80 rounded-xl overflow-hidden select-none">
+            <canvas id="gripCanvas" width="960" height="540" class="w-full h-auto block"></canvas>
+          </div>
+          <div class="mt-2 px-3 py-2 rounded-xl bg-[var(--background)] border border-[var(--border)] text-xs text-slate-300 flex flex-wrap items-center justify-between gap-2">
+            <div class="flex flex-wrap items-center gap-3 font-semibold">
+              <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-blue-500 border border-white/50 inline-block"></span> 食指 (Index)</span>
+              <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-emerald-500 border border-white/50 inline-block"></span> 中指 (Middle)</span>
+              <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-amber-500 border border-white/50 inline-block"></span> 大拇指 (下托支撐)</span>
+            </div>
+            <span class="text-sky-300 font-bold">🏓 掌心保留一指寬空隙・手指才能有力扣縫線</span>
+          </div>
+        </div>
+
+        <div class="lg:col-span-4 bg-[var(--card)] border border-[var(--border)] rounded-2xl p-4 shadow-sm flex flex-col justify-between space-y-3">
+          <div class="p-3 rounded-xl bg-gradient-to-br from-emerald-950/80 via-slate-900 to-slate-950 border border-emerald-500/40 flex items-center justify-between">
+            <div>
+              <div class="text-[10px] font-black text-emerald-300">★ 3D 球種握法 ＆ 掌心透視圖</div>
+              <div id="grip-title" class="text-sm font-black text-white mt-0.5">🔥 四縫線直球 (4-Seam Fastball)</div>
+            </div>
+            <span class="text-2xl">⚾</span>
+          </div>
+
+          <div id="grip-info-box" class="bg-[var(--background)] border border-slate-700 rounded-xl p-3.5 text-xs space-y-2 flex-1">
+            <p id="grip-desc" class="leading-relaxed text-slate-200">
               <strong>握法秘訣：</strong>先把棒球轉到像「馬蹄鐵（C字型）」的方向，將<strong>食指與中指分開約一指寬</strong>，橫跨在馬蹄形縫線上；<strong>大拇指</strong>托在球的正下方，掌心和球之間要留約一指寬空隙（像含著一顆乒乓球）！
             </p>
-            <p id="grip-tip" class="text-xs text-amber-400 font-medium">
-              💡 小四練習重點：傳接球跟投球都用四縫線！正後旋產生的上浮馬格努斯力最大，球飛得最直最穩！
-            </p>
-          </div>
-        </div>
-
-        <!-- Right: 3D Physics Pitch Trajectory Simulator (7 cols) -->
-        <div class="lg:col-span-7 bg-[var(--card)] border border-blue-500/30 rounded-2xl p-5 shadow-lg flex flex-col justify-between">
-          <div>
-            <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
-              <div>
-                <h3 class="text-base font-bold flex items-center gap-2 text-white">
-                  <span>🚀 3D 真實物理投球軌跡模擬器</span>
-                  <span class="text-xs px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-mono font-bold">Statcast 雙鏡頭</span>
-                </h3>
-                <p class="text-xs text-slate-400">
-                  左側：側向飛行與挖地瓜彈跳 ｜ 右側：捕手／主審 3D 進壘好球帶與打者站姿
-                </p>
-              </div>
-              <div class="flex items-center gap-2">
-                <button onclick="throwPitch()" class="px-4 py-2 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-black text-xs md:text-sm shadow-lg transition cursor-pointer">
-                  ⚾ 投出這一球！
-                </button>
-              </div>
-            </div>
-
-            <div class="bg-[#090d16] border border-slate-700/80 rounded-xl p-2 mb-3 shadow-inner">
-              <canvas id="pitchSimCanvas" width="640" height="320" class="w-full h-auto rounded-lg cursor-pointer" title="點擊九宮格或挖地瓜區域可直接瞄準投球"></canvas>
+            <div id="grip-tip" class="text-amber-300 font-semibold leading-relaxed pt-2 border-t border-slate-800">
+              💡 小四練習重點：傳接球就練習這顆四縫線！正後旋產生的上浮馬格努斯力最大，球飛得最直最穩！
             </div>
           </div>
 
-          <!-- Physics Sliders & Aiming Grid -->
-          <div class="grid grid-cols-1 sm:grid-cols-12 gap-3 bg-slate-900/90 border border-slate-700 rounded-xl p-3.5 items-center">
-            <div class="sm:col-span-5">
-              <div class="text-xs font-bold text-slate-300 mb-1.5 flex items-center justify-between">
-                <span>🎯 瞄準九宮格進壘點：</span>
-              </div>
-              <div class="grid grid-cols-3 gap-1 w-44" id="strike-zone-grid">
-                <button onclick="setAim(0,0)" class="aim-cell py-1 rounded border border-[var(--border)] text-xs font-bold hover:bg-blue-500/20 cursor-pointer">1 高內</button>
-                <button onclick="setAim(1,0)" class="aim-cell py-1 rounded border border-[var(--border)] text-xs font-bold hover:bg-blue-500/20 cursor-pointer">2 高中</button>
-                <button onclick="setAim(2,0)" class="aim-cell py-1 rounded border border-[var(--border)] text-xs font-bold hover:bg-blue-500/20 cursor-pointer">3 高外</button>
-                <button onclick="setAim(0,1)" class="aim-cell py-1 rounded border border-[var(--border)] text-xs font-bold hover:bg-blue-500/20 cursor-pointer">4 中內</button>
-                <button onclick="setAim(1,1)" class="aim-cell py-1 rounded border border-blue-500 bg-blue-500/25 text-xs font-bold cursor-pointer">5 紅中</button>
-                <button onclick="setAim(2,1)" class="aim-cell py-1 rounded border border-[var(--border)] text-xs font-bold hover:bg-blue-500/20 cursor-pointer">6 中外</button>
-                <button onclick="setAim(0,2)" class="aim-cell py-1 rounded border border-[var(--border)] text-xs font-bold hover:bg-blue-500/20 cursor-pointer">7 低內</button>
-                <button onclick="setAim(1,2)" class="aim-cell py-1 rounded border border-[var(--border)] text-xs font-bold hover:bg-blue-500/20 cursor-pointer">8 低中</button>
-                <button onclick="setAim(2,2)" class="aim-cell py-1 rounded border border-[var(--border)] text-xs font-bold hover:bg-blue-500/20 cursor-pointer">9 低外</button>
-                <button onclick="setAim(1,3)" class="aim-cell col-span-3 py-1 rounded border border-amber-500/50 text-amber-300 text-xs font-bold hover:bg-amber-500/20 cursor-pointer">💥 投挖地瓜球 (紅土彈跳滾動)</button>
-              </div>
-            </div>
-
-            <div class="sm:col-span-7 flex flex-col justify-between text-xs space-y-2">
-              <div class="grid grid-cols-2 gap-2">
-                <div>
-                  <label class="flex justify-between text-xs text-slate-300">
-                    <span>出手球速:</span>
-                    <strong id="lbl-pitch-speed" class="text-emerald-400 font-mono">88 km/h</strong>
-                  </label>
-                  <input id="slider-pitch-speed" type="range" min="60" max="105" value="88" oninput="onPitchSliderChange()" class="w-full accent-emerald-500 cursor-pointer">
-                </div>
-                <div>
-                  <label class="flex justify-between text-xs text-slate-300">
-                    <span>扣球轉速:</span>
-                    <strong id="lbl-pitch-rpm" class="text-sky-400 font-mono">1900 RPM</strong>
-                  </label>
-                  <input id="slider-pitch-rpm" type="range" min="600" max="2400" step="100" value="1900" oninput="onPitchSliderChange()" class="w-full accent-blue-500 cursor-pointer">
-                </div>
-              </div>
-              <div id="pitch-flight-desc" class="p-2.5 rounded-lg bg-slate-800/80 border border-slate-700 leading-relaxed text-slate-200">
-                <strong>🌪️ Statcast 馬格努斯空力實測：</strong>在 <strong>88 km/h、1900 RPM</strong> 下，四縫線正後旋讓球抵抗地心引力，進壘時比灰色無旋轉拋物線上浮約 18 公分！
-              </div>
-            </div>
+          <div class="grid grid-cols-2 gap-1.5">
+            <button onclick="selectPitch('4seam')" class="py-2 px-2.5 rounded-xl bg-blue-600/20 hover:bg-blue-600/35 border border-blue-500/40 text-sky-300 text-xs font-bold cursor-pointer">🔥 看四縫線</button>
+            <button onclick="selectPitch('2seam')" class="py-2 px-2.5 rounded-xl bg-amber-600/20 hover:bg-amber-600/35 border border-amber-500/40 text-amber-300 text-xs font-bold cursor-pointer">⚡ 看二縫線</button>
+            <button onclick="selectPitch('changeup')" class="py-2 px-2.5 rounded-xl bg-emerald-600/20 hover:bg-emerald-600/35 border border-emerald-500/40 text-emerald-300 text-xs font-bold cursor-pointer">🐢 看變速球</button>
+            <button onclick="selectPitch('curve')" class="py-2 px-2.5 rounded-xl bg-purple-600/20 hover:bg-purple-600/35 border border-purple-500/40 text-purple-300 text-xs font-bold cursor-pointer">🌈 看曲球原理</button>
           </div>
         </div>
       </div>
 
-      <!-- Bottom Row: 5-Step Pitching Body Mechanics -->
-      <div class="bg-[var(--card)] border border-blue-500/30 rounded-2xl p-5 shadow-lg">
-        <div class="flex flex-col md:flex-row md:items-center justify-between gap-2 mb-4">
-          <div>
-            <h3 class="text-base md:text-lg font-black text-white flex items-center gap-2">
-              <span>🕺 投手全身協調五分解動作</span>
-              <span class="text-xs px-2.5 py-0.5 rounded-full bg-blue-500/25 text-blue-300 border border-blue-500/40 font-bold">3D 小球員真人示範</span>
-            </h3>
-            <p class="text-xs text-slate-400">投球不是只靠手臂死甩！要用「蹬地 ➔ 轉腰 ➔ 帶動手肘 ➔ 高點扣指」才投得遠又保護手臂不痛！</p>
+      <!-- STAGE 1C: 5-Step Pitching Mechanics Breakdown -->
+      <div id="pitch-stage-mech" class="grid grid-cols-1 lg:grid-cols-12 gap-3.5">
+        <div class="lg:col-span-8 bg-[var(--card)] border border-[var(--border)] rounded-2xl p-2 sm:p-3 shadow-sm flex flex-col justify-between">
+          <div class="relative bg-[#050811] border border-slate-700/80 rounded-xl overflow-hidden select-none">
+            <canvas id="mechanicsCanvas" width="960" height="540" class="w-full h-auto block cursor-pointer"></canvas>
+            <div class="absolute bottom-2.5 right-2.5 z-10">
+              <button onclick="playAllPitchSteps()" class="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-gradient-to-br from-sky-400 via-blue-500 to-indigo-600 hover:from-sky-300 hover:to-indigo-500 active:scale-95 text-white font-black text-xs shadow-[0_0_22px_rgba(59,130,246,0.65)] border-4 border-white/90 flex flex-col items-center justify-center leading-tight cursor-pointer select-none transition">
+                <span class="text-lg sm:text-xl">▶</span>
+                <span>連續分解</span>
+              </button>
+            </div>
           </div>
-          <div class="flex items-center gap-2">
-            <button onclick="prevPitchStep()" class="px-3 py-1.5 rounded-lg border border-[var(--border)] text-xs font-bold hover:bg-[var(--background)] cursor-pointer">◀ 上一步</button>
-            <button onclick="playAllPitchSteps()" class="px-3.5 py-1.5 rounded-lg bg-blue-600 text-white text-xs font-bold hover:bg-blue-500 cursor-pointer">▶ 連續播放動作</button>
-            <button onclick="nextPitchStep()" class="px-3 py-1.5 rounded-lg border border-[var(--border)] text-xs font-bold hover:bg-[var(--background)] cursor-pointer">下一步 ▶</button>
+          <div id="mechanics-caption" class="mt-2 px-3 py-2 rounded-xl bg-[var(--background)] border border-[var(--border)] text-xs font-bold text-amber-300">
+            👀 動作五大口訣：「一抬腿、二展翅、三轉腰、四扣腕、五收尾！」
           </div>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
-          <div class="md:col-span-5 space-y-2">
-            <button onclick="setPitchStep(0)" id="pstep-0" class="w-full text-left p-3 rounded-xl border border-blue-500 bg-blue-500/15 transition cursor-pointer">
-              <div class="font-bold text-sm text-sky-400">步驟 1：站穩抬腿 (Balance 核心平衡)</div>
-              <div class="text-xs text-[var(--muted-foreground)]">側身對捕手，重心穩在後腳投手板，前腳像白鷺鷥金雞獨立抬至水平。</div>
+        <div class="lg:col-span-4 bg-[var(--card)] border border-[var(--border)] rounded-2xl p-4 shadow-sm flex flex-col justify-between space-y-2.5">
+          <div class="flex items-center justify-between gap-2">
+            <div>
+              <div class="text-[10px] font-black text-sky-400 uppercase">★ 3D 小球員護手投球力學</div>
+              <h3 class="text-sm font-black text-white">🕺 投手協調五分解動作</h3>
+            </div>
+            <div class="flex items-center gap-1">
+              <button onclick="prevPitchStep()" class="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-600 text-xs font-bold text-white cursor-pointer">◀</button>
+              <button onclick="nextPitchStep()" class="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-600 text-xs font-bold text-white cursor-pointer">▶</button>
+            </div>
+          </div>
+
+          <div class="space-y-1.5">
+            <button onclick="setPitchStep(0)" id="pstep-0" class="w-full text-left p-2.5 rounded-xl border border-blue-500 bg-blue-500/15 transition cursor-pointer">
+              <div class="font-bold text-xs text-sky-400">步驟 1：站穩抬腿 (Balance 核心平衡)</div>
+              <div class="text-[11px] text-[var(--muted-foreground)]">側身對捕手，重心穩在後腳，前腳抬至大腿水平。</div>
             </button>
-            <button onclick="setPitchStep(1)" id="pstep-1" class="w-full text-left p-3 rounded-xl border border-[var(--border)] transition cursor-pointer">
-              <div class="font-bold text-sm text-amber-400">步驟 2：跨步展翅成「L型」(Power Position)</div>
-              <div class="text-xs text-[var(--muted-foreground)]">前腳往本壘大步跨出，手套瞄準目標，投球手肘舉高成 90 度「L型」！</div>
+            <button onclick="setPitchStep(1)" id="pstep-1" class="w-full text-left p-2.5 rounded-xl border border-[var(--border)] transition cursor-pointer">
+              <div class="font-bold text-xs text-emerald-400">步驟 2：跨步展翅成「90° 安全 L 型」</div>
+              <div class="text-[11px] text-[var(--muted-foreground)]">前腳跨步手套瞄準，投球手肘舉高成 90°「L型」防傷！</div>
             </button>
-            <button onclick="setPitchStep(2)" id="pstep-2" class="w-full text-left p-3 rounded-xl border border-[var(--border)] transition cursor-pointer">
-              <div class="font-bold text-sm text-emerald-400">步驟 3：轉腰帶動手肘 (Hip Rotation 核心旋轉)</div>
-              <div class="text-xs text-[var(--muted-foreground)]">肚臍用力轉向捕手！手套手拉回胸口，手肘領先往前帶出甩動。</div>
+            <button onclick="setPitchStep(2)" id="pstep-2" class="w-full text-left p-2.5 rounded-xl border border-[var(--border)] transition cursor-pointer">
+              <div class="font-bold text-xs text-amber-400">步驟 3：轉腰帶動手肘 (核心旋轉)</div>
+              <div class="text-[11px] text-[var(--muted-foreground)]">肚臍先轉向捕手！手套拉回胸口，手肘領先鞭甩。</div>
             </button>
-            <button onclick="setPitchStep(3)" id="pstep-3" class="w-full text-left p-3 rounded-xl border border-[var(--border)] transition cursor-pointer">
-              <div class="font-bold text-sm text-rose-400">步驟 4：高點放球與扣腕 (Release Point 扣指壓縫線)</div>
-              <div class="text-xs text-[var(--muted-foreground)]">在頭頂前上方最高點放球，食指與中指全力由上往下扣壓縫線！</div>
+            <button onclick="setPitchStep(3)" id="pstep-3" class="w-full text-left p-2.5 rounded-xl border border-[var(--border)] transition cursor-pointer">
+              <div class="font-bold text-xs text-rose-400">步驟 4：最高點放球扣腕 (扣指壓縫線)</div>
+              <div class="text-[11px] text-[var(--muted-foreground)]">眼睛前上方最高點放球，食指中指全力向下扣縫線！</div>
             </button>
-            <button onclick="setPitchStep(4)" id="pstep-4" class="w-full text-left p-3 rounded-xl border border-[var(--border)] transition cursor-pointer">
-              <div class="font-bold text-sm text-purple-400">步驟 5：收尾與準備防守 (Follow Through)</div>
-              <div class="text-xs text-[var(--muted-foreground)]">手臂自然揮至前腳外側減速，後腳順勢往前踏平變成防守準備姿勢。</div>
+            <button onclick="setPitchStep(4)" id="pstep-4" class="w-full text-left p-2.5 rounded-xl border border-[var(--border)] transition cursor-pointer">
+              <div class="font-bold text-xs text-purple-400">步驟 5：收尾減速變防守</div>
+              <div class="text-[11px] text-[var(--muted-foreground)]">手臂順勢揮至前膝外側減速，後腳踏平準備守備！</div>
             </button>
           </div>
 
-          <div class="md:col-span-7 bg-[#090d16] border border-slate-700/80 rounded-xl p-3 flex flex-col items-center shadow-inner">
-            <canvas id="mechanicsCanvas" width="600" height="300" class="w-full h-auto rounded-lg"></canvas>
-            <div id="mechanics-caption" class="mt-2 text-xs font-medium text-center px-3 py-2 rounded-lg bg-slate-900 border border-slate-700 w-full text-amber-300">
-              👀 動作五大口訣：「一抬腿、二展翅、三轉腰、四扣腕、五收尾！」
-            </div>
-          </div>
+          <button onclick="playAllPitchSteps()" class="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-black text-xs shadow-lg cursor-pointer">
+            ▶ 連續播放五分解護手投球動作
+          </button>
         </div>
       </div>
     </section>
 
     <!-- ==================== SECTION 2: FIELDING ==================== -->
-    <section id="sec-fielding" class="hidden space-y-6">
-      <!-- Section Broadcast Banner -->
-      <div class="bg-gradient-to-r from-emerald-950/60 via-slate-900/80 to-emerald-950/60 border border-emerald-500/50 rounded-2xl p-4 shadow-[0_0_20px_rgba(16,185,129,0.15)] flex flex-wrap items-center justify-between gap-3">
-        <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-xl bg-emerald-600/30 border border-emerald-400/50 flex items-center justify-center text-xl shadow">
-            🧤
-          </div>
+    <section id="sec-fielding" class="hidden space-y-3.5">
+      <!-- Top Broadcast Command Bar -->
+      <div class="bg-[var(--card)] border border-[var(--border)] rounded-2xl p-3 md:p-4 shadow-sm flex flex-wrap items-center justify-between gap-2.5">
+        <div class="bg-[var(--background)] border border-emerald-500/40 rounded-xl px-3.5 py-1.5 flex items-center gap-3 shadow-inner">
           <div>
-            <div class="text-[10px] uppercase tracking-wider text-emerald-400 font-extrabold flex items-center gap-2">
-              <span>GOLD GLOVE DEFENSE ACADEMY</span>
-              <span class="px-2 py-0.5 rounded-full bg-emerald-500/25 border border-emerald-400/50 text-emerald-200 text-[10px] font-mono font-black">金手套特訓</span>
+            <div class="text-[10px] uppercase tracking-wider text-emerald-400 font-extrabold flex items-center gap-1.5">
+              <span>GOLD GLOVE DEFENSE</span>
+              <span class="px-1.5 py-0.2 rounded bg-emerald-500/25 border border-emerald-400/50 text-emerald-200 text-[9px] font-mono font-black">金手套特訓</span>
             </div>
-            <h2 class="text-lg md:text-xl font-black text-white tracking-tight">2. 守備黃金基本功 ＆ 壘包守備技巧</h2>
+            <div class="text-sm md:text-base font-black text-white">2. 守備黃金基本功 ＆ 壘包守備技巧</div>
           </div>
         </div>
-        <div class="flex items-center gap-2 text-xs">
-          <span class="px-3 py-1.5 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 font-bold">
-            🐊 鱷魚嘴雙手接球
-          </span>
-          <span class="px-3 py-1.5 rounded-xl bg-amber-500/15 border border-amber-500/30 text-amber-300 font-bold">
-            🦶 踩一壘內側防碰撞
-          </span>
+        <div class="flex flex-wrap items-center gap-2 text-xs">
+          <span class="px-3 py-1.5 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 font-bold">🐊 正三角形低重心 ＋ 鱷魚嘴接球</span>
+          <span class="px-3 py-1.5 rounded-xl bg-amber-500/15 border border-amber-500/30 text-amber-300 font-bold">🦶 踩一壘內側防碰撞</span>
         </div>
       </div>
 
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
-        <div class="lg:col-span-6 bg-[var(--card)] border border-emerald-500/30 rounded-2xl p-5 shadow-lg flex flex-col justify-between">
-          <div>
-            <div class="flex items-center justify-between mb-1">
-              <h3 class="text-base font-bold text-white">🧤 傳接球與守備黃金基本功</h3>
-              <span class="text-xs px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-300 font-bold border border-emerald-500/40">三種防守情境</span>
-            </div>
-            <p class="text-xs text-slate-400 mb-4">掌握手套方向、身體正三角形站姿與墊步，球接得穩又傳得快！</p>
+      <!-- Stage 2A: Fielding Basic Skills -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-3.5">
+        <div class="lg:col-span-8 bg-[var(--card)] border border-[var(--border)] rounded-2xl p-2 sm:p-3 shadow-sm flex flex-col justify-between">
+          <div class="relative bg-[#050811] border border-slate-700/80 rounded-xl overflow-hidden select-none">
+            <canvas id="fieldingSkillCanvas" width="960" height="540" class="w-full h-auto block"></canvas>
+          </div>
+          <div class="mt-2 px-3 py-2 rounded-xl bg-[var(--background)] border border-[var(--border)] text-xs text-slate-300 flex items-center justify-between">
+            <span>🛡️ <strong>金手套秘訣：</strong>眼睛永遠盯住球進手套，再用另一隻手像鱷魚上顎立刻蓋住！</span>
+            <span class="text-emerald-400 font-mono font-bold">LAD GOLD GLOVE</span>
+          </div>
+        </div>
 
-            <div class="grid grid-cols-3 gap-2 mb-4">
-              <button onclick="selectFieldingMode('alligator')" id="fmode-alligator" class="sub-btn active p-2.5 rounded-xl border border-[var(--border)] text-center cursor-pointer hover:border-emerald-500">
-                <div class="text-base">🐊</div>
-                <div class="font-bold text-xs mt-0.5 text-emerald-300">鱷魚嘴雙手接球</div>
-              </button>
-              <button onclick="selectFieldingMode('clock')" id="fmode-clock" class="sub-btn p-2.5 rounded-xl border border-[var(--border)] text-center cursor-pointer hover:border-emerald-500">
-                <div class="text-base">👐</div>
-                <div class="font-bold text-xs mt-0.5 text-sky-300">高低球肚臍分界</div>
-              </button>
-              <button onclick="selectFieldingMode('crowhop')" id="fmode-crowhop" class="sub-btn p-2.5 rounded-xl border border-[var(--border)] text-center cursor-pointer hover:border-emerald-500">
-                <div class="text-base">👟</div>
-                <div class="font-bold text-xs mt-0.5 text-amber-300">墊步助跑強傳</div>
-              </button>
+        <div class="lg:col-span-4 bg-[var(--card)] border border-[var(--border)] rounded-2xl p-4 shadow-sm flex flex-col justify-between space-y-3">
+          <div class="p-3 rounded-xl bg-gradient-to-br from-emerald-950/90 via-slate-900 to-slate-950 border border-emerald-500/40 flex items-center justify-between">
+            <div>
+              <div class="text-[10px] font-black text-emerald-300">★ GOLD GLOVE 基本功</div>
+              <div class="text-sm font-black text-white mt-0.5">🧤 接球站姿、手勢與墊步</div>
             </div>
-
-            <div class="bg-[#090d16] border border-slate-700/80 rounded-xl p-2.5 mb-3 flex flex-col items-center shadow-inner">
-              <canvas id="fieldingSkillCanvas" width="560" height="280" class="w-full h-auto rounded-lg"></canvas>
-            </div>
+            <span class="text-2xl">🐊</span>
           </div>
 
-          <div id="fielding-skill-desc" class="bg-slate-900/90 border border-slate-700 rounded-xl p-4 text-xs leading-relaxed space-y-1.5">
+          <div class="grid grid-cols-3 gap-1.5">
+            <button onclick="selectFieldingMode('alligator')" id="fmode-alligator" class="sub-btn active p-2.5 rounded-xl border border-[var(--border)] text-center cursor-pointer hover:border-emerald-500">
+              <div class="text-base">🐊</div>
+              <div class="font-bold text-[11px] mt-0.5 text-emerald-300">鱷魚嘴接球</div>
+            </button>
+            <button onclick="selectFieldingMode('clock')" id="fmode-clock" class="sub-btn p-2.5 rounded-xl border border-[var(--border)] text-center cursor-pointer hover:border-emerald-500">
+              <div class="text-base">👐</div>
+              <div class="font-bold text-[11px] mt-0.5 text-sky-300">肚臍分界線</div>
+            </button>
+            <button onclick="selectFieldingMode('crowhop')" id="fmode-crowhop" class="sub-btn p-2.5 rounded-xl border border-[var(--border)] text-center cursor-pointer hover:border-emerald-500">
+              <div class="text-base">👟</div>
+              <div class="font-bold text-[11px] mt-0.5 text-amber-300">墊步助跑傳</div>
+            </button>
+          </div>
+
+          <div id="fielding-skill-desc" class="bg-[var(--background)] border border-slate-700 rounded-xl p-3.5 text-xs leading-relaxed space-y-2 flex-1">
             <div class="font-bold text-sm text-emerald-400">🐊 滾地球正三角形站姿 ＋「鱷魚嘴巴」雙手接球</div>
             <p>1. <strong>正三角形站法：</strong>雙腳張開比肩膀寬（當底邊），手套放在雙腳正前方地面（當頂點），屁股坐低，眼睛盯著球進手套。</p>
             <p>2. <strong>鱷魚嘴巴 (Alligator Hands)：</strong>手套在下面貼地張開，另一隻空手在上方像鱷魚上顎。球一進手套立刻蓋上，球絕不漏彈且能最快傳球！</p>
           </div>
         </div>
+      </div>
 
-        <div class="lg:col-span-6 bg-[var(--card)] border border-emerald-500/30 rounded-2xl p-5 shadow-lg flex flex-col justify-between">
-          <div>
-            <div class="flex items-center justify-between mb-1">
-              <h3 class="text-base font-bold text-white">🛡️ 壘包防守技巧（一壘封殺 vs 二壘觸殺）</h3>
-              <button onclick="animateBasePlay()" class="px-3.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs cursor-pointer shadow">
-                ▶ 播放傳球進壘動畫
+      <!-- Stage 2B: Base Covering (1B Force vs 2B Tag) -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-3.5">
+        <div class="lg:col-span-8 bg-[var(--card)] border border-[var(--border)] rounded-2xl p-2 sm:p-3 shadow-sm flex flex-col justify-between">
+          <div class="relative bg-[#050811] border border-slate-700/80 rounded-xl overflow-hidden select-none">
+            <canvas id="baseCoverCanvas" width="960" height="540" class="w-full h-auto block"></canvas>
+            <div class="absolute bottom-2.5 right-2.5 z-10">
+              <button onclick="animateBasePlay()" class="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-gradient-to-br from-emerald-400 via-teal-500 to-cyan-600 hover:from-emerald-300 hover:to-cyan-500 active:scale-95 text-slate-950 font-black text-xs shadow-[0_0_22px_rgba(16,185,129,0.6)] border-4 border-white/90 flex flex-col items-center justify-center leading-tight cursor-pointer select-none transition">
+                <span class="text-lg sm:text-xl">▶</span>
+                <span>播傳球</span>
               </button>
-            </div>
-            <p class="text-xs text-slate-400 mb-4">學會正確踩壘包位置，保護自己不被跑者踩傷，還能抓到出局！</p>
-
-            <div class="grid grid-cols-2 gap-2 mb-4">
-              <button onclick="selectBasePlay('force1b')" id="bplay-force1b" class="sub-btn active p-3 rounded-xl border border-[var(--border)] text-left cursor-pointer hover:border-emerald-500">
-                <div class="font-bold text-xs text-sky-300">🦶 一壘封殺 (Force Out)</div>
-                <div class="text-[11px] text-[var(--muted-foreground)] mt-0.5">腳踩內側邊緣＋大跨步延伸接球</div>
-              </button>
-              <button onclick="selectBasePlay('tag2b')" id="bplay-tag2b" class="sub-btn p-3 rounded-xl border border-[var(--border)] text-left cursor-pointer hover:border-emerald-500">
-                <div class="font-bold text-xs text-amber-300">🧤 二/三壘觸殺 (Tag Play)</div>
-                <div class="text-[11px] text-[var(--muted-foreground)] mt-0.5">雙腳跨站壘包旁＋手套放地上等滑壘</div>
-              </button>
-            </div>
-
-            <div class="bg-[#090d16] border border-slate-700/80 rounded-xl p-2.5 mb-3 flex flex-col items-center shadow-inner">
-              <canvas id="baseCoverCanvas" width="560" height="280" class="w-full h-auto rounded-lg"></canvas>
             </div>
           </div>
+          <div class="mt-2 px-3 py-2 rounded-xl bg-[var(--background)] border border-[var(--border)] text-xs text-slate-300 flex items-center justify-between">
+            <span>🚨 <strong>防撞安全守則：</strong>一壘絕對不能踩壘包正中間或外側跑壘線！</span>
+            <span class="text-sky-400 font-mono font-bold">BASE DEFENSE</span>
+          </div>
+        </div>
 
-          <div id="base-cover-desc" class="bg-slate-900/90 border border-slate-700 rounded-xl p-4 text-xs leading-relaxed space-y-1.5">
+        <div class="lg:col-span-4 bg-[var(--card)] border border-[var(--border)] rounded-2xl p-4 shadow-sm flex flex-col justify-between space-y-3">
+          <div class="p-3 rounded-xl bg-gradient-to-br from-sky-950/90 via-slate-900 to-slate-950 border border-sky-500/40 flex items-center justify-between">
+            <div>
+              <div class="text-[10px] font-black text-sky-300">★ 壘包安全防守技巧</div>
+              <div class="text-sm font-black text-white mt-0.5">🛡️ 一壘封殺 vs 二壘觸殺</div>
+            </div>
+            <span class="text-2xl">🦶</span>
+          </div>
+
+          <div class="grid grid-cols-2 gap-2">
+            <button onclick="selectBasePlay('force1b')" id="bplay-force1b" class="sub-btn active p-2.5 rounded-xl border border-[var(--border)] text-left cursor-pointer hover:border-emerald-500">
+              <div class="font-bold text-xs text-sky-300">🦶 一壘封殺 (Force)</div>
+              <div class="text-[10px] text-[var(--muted-foreground)] mt-0.5">踩內側緣＋大跨步延伸</div>
+            </button>
+            <button onclick="selectBasePlay('tag2b')" id="bplay-tag2b" class="sub-btn p-2.5 rounded-xl border border-[var(--border)] text-left cursor-pointer hover:border-emerald-500">
+              <div class="font-bold text-xs text-amber-300">🧤 二三壘觸殺 (Tag)</div>
+              <div class="text-[10px] text-[var(--muted-foreground)] mt-0.5">跨站壘包旁＋手套貼地</div>
+            </button>
+          </div>
+
+          <div id="base-cover-desc" class="bg-[var(--background)] border border-slate-700 rounded-xl p-3.5 text-xs leading-relaxed space-y-2 flex-1">
             <div class="font-bold text-sm text-sky-400">🦶 一壘手守壘秘訣：踩「朝向場內的壘包內側邊緣」</div>
             <p>• <strong>絕不踩壘包正中間或外側：</strong>因為跑者會全力踩外側邊緣衝刺，踩中間極容易被跑者釘鞋踩斷腳或發生嚴重相撞！</p>
             <p>• <strong>先看球再跨步 (Stretch)：</strong>看清楚隊友傳球方向後，接球腳朝球的方向大步延伸拉長身體，能讓球提早半秒進手套抓出局！</p>
           </div>
+
+          <button onclick="animateBasePlay()" class="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-black text-xs shadow-lg cursor-pointer">
+            ▶ 播放傳球進壘與延伸守壘動畫
+          </button>
         </div>
       </div>
     </section>
 
     <!-- ==================== SECTION 3: BATTING & ROLLING PHYSICS ==================== -->
-    <section id="sec-batting" class="hidden space-y-6">
-      <!-- Section Broadcast Banner -->
-      <div class="bg-gradient-to-r from-amber-950/60 via-slate-900/80 to-amber-950/60 border border-amber-500/50 rounded-2xl p-4 shadow-[0_0_20px_rgba(245,158,11,0.15)] flex flex-wrap items-center justify-between gap-3">
-        <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-xl bg-amber-600/30 border border-amber-400/50 flex items-center justify-center text-xl shadow">
-            🏏
-          </div>
+    <section id="sec-batting" class="hidden space-y-3.5">
+      <!-- Top Broadcast Command Bar -->
+      <div class="bg-[var(--card)] border border-[var(--border)] rounded-2xl p-3 md:p-4 shadow-sm flex flex-wrap items-center justify-between gap-2.5">
+        <div class="bg-[var(--background)] border border-amber-500/40 rounded-xl px-3.5 py-1.5 flex items-center gap-3 shadow-inner">
           <div>
-            <div class="text-[10px] uppercase tracking-wider text-amber-400 font-extrabold flex items-center gap-2">
-              <span>STATCAST SLUGGER LAB</span>
-              <span class="px-2 py-0.5 rounded-full bg-amber-500/25 border border-amber-400/50 text-amber-200 text-[10px] font-mono font-black">仰角與滾動物理</span>
+            <div class="text-[10px] uppercase tracking-wider text-amber-400 font-extrabold flex items-center gap-1.5">
+              <span>STATCAST SLUGGER 75M</span>
+              <span class="px-1.5 py-0.2 rounded bg-amber-500/25 border border-amber-400/50 text-amber-200 text-[9px] font-mono font-black">仰角物理</span>
             </div>
-            <h2 class="text-lg md:text-xl font-black text-white tracking-tight">3. 打擊握棒、跑一壘路線 ＆ 擊球彈跳滾動</h2>
+            <div class="text-sm md:text-base font-black text-white">3. 敲門關節握棒、香蕉彎 ＆ 75m 滾動模擬</div>
+          </div>
+          <div class="h-7 w-px bg-[var(--border)]"></div>
+          <div class="text-center min-w-[50px]">
+            <div class="text-[10px] text-amber-400 font-extrabold">仰角</div>
+            <div id="tele-hit-angle" class="text-sm font-black text-white font-mono">14°</div>
+          </div>
+          <div class="text-center min-w-[66px]">
+            <div class="text-[10px] text-sky-400 font-extrabold">初速</div>
+            <div id="tele-hit-velo" class="text-sm font-black text-white font-mono">108 km/h</div>
+          </div>
+          <div class="text-center min-w-[54px]">
+            <div class="text-[10px] text-emerald-400 font-extrabold">總距離</div>
+            <div id="tele-hit-dist" class="text-sm font-black text-emerald-300 font-mono">65 m</div>
           </div>
         </div>
-        <div class="flex items-center gap-2 text-xs">
-          <span class="px-3 py-1.5 rounded-xl bg-amber-500/15 border border-amber-500/30 text-amber-300 font-bold">
-            👊 敲門關節一直線
-          </span>
-          <span class="px-3 py-1.5 rounded-xl bg-sky-500/15 border border-sky-500/30 text-sky-300 font-bold">
-            🍌 香蕉彎繞壘進二壘
-          </span>
+        <button onclick="swingBatSim()" class="px-3.5 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-black text-xs shadow cursor-pointer">🏏 揮棒實測！</button>
+      </div>
+
+      <!-- Stage 3B: 75m Stadium Hit Trajectory -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-3.5">
+        <div class="lg:col-span-8 bg-[var(--card)] border border-[var(--border)] rounded-2xl p-2 sm:p-3 shadow-sm flex flex-col justify-between">
+          <div class="relative bg-[#050811] border border-slate-700/80 rounded-xl overflow-hidden select-none">
+            <canvas id="hitSimCanvas" width="960" height="540" class="w-full h-auto block"></canvas>
+            <div class="absolute bottom-2.5 right-2.5 z-10">
+              <button onclick="swingBatSim()" class="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-gradient-to-br from-amber-400 via-orange-500 to-rose-600 hover:from-amber-300 hover:to-rose-500 active:scale-95 text-slate-950 font-black text-xs shadow-[0_0_22px_rgba(245,158,11,0.65)] border-4 border-white/90 flex flex-col items-center justify-center leading-tight cursor-pointer select-none transition">
+                <span class="text-lg sm:text-xl">🏏</span>
+                <span>揮棒擊球</span>
+              </button>
+            </div>
+          </div>
+          <div class="mt-2 px-3 py-2 rounded-xl bg-[var(--background)] border border-[var(--border)] text-xs flex flex-wrap items-center justify-between gap-2 font-mono">
+            <span id="hit-stat-carry" class="font-bold text-emerald-400">空中飛行：42 m</span>
+            <span id="hit-stat-roll" class="font-bold text-sky-400">地面滾動：+23 m</span>
+            <span id="hit-stat-bounces" class="font-bold text-amber-400">彈跳次數：3 次後轉為貼地滾動</span>
+          </div>
+        </div>
+
+        <div class="lg:col-span-4 bg-[var(--card)] border border-[var(--border)] rounded-2xl p-4 shadow-sm flex flex-col justify-between space-y-3">
+          <div class="p-3 rounded-xl bg-gradient-to-br from-amber-950/90 via-slate-900 to-slate-950 border border-amber-500/40 flex items-center justify-between">
+            <div>
+              <div class="text-[10px] font-black text-amber-300">★ STATCAST 擊球物理實驗台</div>
+              <div class="text-sm font-black text-white mt-0.5">💥 仰角、彈跳與 75m 大牆</div>
+            </div>
+            <span class="text-2xl">💥</span>
+          </div>
+
+          <div class="grid grid-cols-2 gap-2">
+            <button onclick="setHitType('ground')" id="hit-btn-ground" class="sub-btn p-2.5 rounded-xl border border-[var(--border)] text-left cursor-pointer hover:border-amber-500">
+              <div class="font-bold text-xs text-orange-400">📉 強勁滾地 (-6°)</div>
+              <div class="text-[10px] text-[var(--muted-foreground)]">打球心上方・前旋長滾</div>
+            </button>
+            <button onclick="setHitType('line')" id="hit-btn-line" class="sub-btn active p-2.5 rounded-xl border border-[var(--border)] text-left cursor-pointer hover:border-amber-500">
+              <div class="font-bold text-xs text-emerald-400">⚡ 平飛安打 (14°)</div>
+              <div class="text-[10px] text-[var(--muted-foreground)]">正中球心・彈跳穿外野</div>
+            </button>
+            <button onclick="setHitType('homerun')" id="hit-btn-homerun" class="sub-btn p-2.5 rounded-xl border border-[var(--border)] text-left cursor-pointer hover:border-amber-500">
+              <div class="font-bold text-xs text-amber-300">🎆 深遠長打 (28°)</div>
+              <div class="text-[10px] text-[var(--muted-foreground)]">黃金仰角・後旋飛出牆</div>
+            </button>
+            <button onclick="setHitType('popup')" id="hit-btn-popup" class="sub-btn p-2.5 rounded-xl border border-[var(--border)] text-left cursor-pointer hover:border-amber-500">
+              <div class="font-bold text-xs text-purple-400">🎈 內野高飛 (55°)</div>
+              <div class="text-[10px] text-[var(--muted-foreground)]">切到球下緣・原地落難</div>
+            </button>
+          </div>
+
+          <div id="hit-result-desc" class="bg-[var(--background)] border border-slate-700 rounded-xl p-3.5 text-xs leading-relaxed text-slate-200 flex-1">
+            <strong>⚡ 平飛球物理 (Line Drive)：</strong>球棒正中球心（仰角 14°），飛行平直速度快，在外野草地第一次落地後因水平動能大，會連續彈跳 2～3 次再貼著草皮滾動到全壘打牆前！
+          </div>
+
+          <button onclick="swingBatSim()" class="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-amber-500 via-orange-500 to-rose-500 hover:from-amber-400 hover:to-rose-400 text-slate-950 font-black text-sm shadow-lg transition cursor-pointer">
+            🏏 揮棒擊球！觀看 75m 彈跳軌跡
+          </button>
         </div>
       </div>
 
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
-        <div class="lg:col-span-5 bg-[var(--card)] border border-amber-500/30 rounded-2xl p-5 shadow-lg flex flex-col justify-between">
-          <div>
-            <div class="flex items-center justify-between mb-1">
-              <h3 class="text-base font-bold text-white">✊ 握棒技巧 ＆ 擊球後跑一壘路線</h3>
-              <span class="text-xs px-2.5 py-1 rounded-full bg-amber-500/20 text-amber-300 font-bold border border-amber-500/40">打擊核心</span>
-            </div>
-            <p class="text-xs text-slate-400 mb-3">打得遠的秘密就在雙手的「敲門關節」！跑一壘路線更有學問！</p>
-
-            <div class="grid grid-cols-2 gap-2 mb-3">
-              <button onclick="selectBatView('knuckles')" id="batview-knuckles" class="sub-btn active p-2.5 rounded-xl border border-[var(--border)] text-left cursor-pointer hover:border-amber-500">
-                <div class="font-bold text-xs text-amber-300">👊 敲門關節對齊法</div>
-                <div class="text-[11px] text-[var(--muted-foreground)]">手腕靈活・揮棒如揮鞭</div>
-              </button>
-              <button onclick="selectBatView('run1b')" id="batview-run1b" class="sub-btn p-2.5 rounded-xl border border-[var(--border)] text-left cursor-pointer hover:border-amber-500">
-                <div class="font-bold text-xs text-sky-300">🏃 擊球後跑一壘路線</div>
-                <div class="text-[11px] text-[var(--muted-foreground)]">直線衝刺 vs 香蕉彎繞壘</div>
-              </button>
-            </div>
-
-            <div class="bg-[#090d16] border border-slate-700/80 rounded-xl p-2.5 mb-3 flex flex-col items-center shadow-inner">
-              <canvas id="batGripCanvas" width="520" height="280" class="w-full h-auto rounded-lg"></canvas>
-            </div>
+      <!-- Stage 3A: Wood Bat Knuckles Laser & 1B Banana Curve -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-3.5">
+        <div class="lg:col-span-8 bg-[var(--card)] border border-[var(--border)] rounded-2xl p-2 sm:p-3 shadow-sm flex flex-col justify-between">
+          <div class="relative bg-[#050811] border border-slate-700/80 rounded-xl overflow-hidden select-none">
+            <canvas id="batGripCanvas" width="960" height="540" class="w-full h-auto block"></canvas>
           </div>
-
-          <div id="bat-grip-desc" class="bg-slate-900/90 border border-slate-700 rounded-xl p-3.5 text-xs leading-relaxed space-y-1.5">
-            <div class="font-bold text-amber-400">👊 握棒黃金法則：「敲門關節排成一直線」</div>
-            <p>1. <strong>哪隻手在上面？</strong>右打者「左手在下、右手在上」（左打者相反），雙手緊靠在一起不留縫隙。</p>
-            <p>2. <strong>敲門關節對齊：</strong>比出「敲門」動作的第二指關節，上下兩手要對齊成一直線！不要握在掌心深處，用手指根部扣住，手腕才能順暢翻轉！</p>
+          <div class="mt-2 px-3 py-2 rounded-xl bg-[var(--background)] border border-[var(--border)] text-xs text-slate-300 flex items-center justify-between">
+            <span>👊 <strong>握棒雷射檢驗：</strong>雙手「敲門關節」排成紅線，揮棒才能順暢翻轉手腕！</span>
+            <span class="text-amber-400 font-mono font-bold">SLUGGER LAB</span>
           </div>
         </div>
 
-        <!-- Right: Hit Trajectory & Bounce/Roll Physics Simulator (7 cols) -->
-        <div class="lg:col-span-7 bg-[var(--card)] border border-amber-500/30 rounded-2xl p-5 shadow-lg flex flex-col justify-between">
-          <div>
-            <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
-              <div>
-                <h3 class="text-base font-bold flex items-center gap-2 text-white">
-                  <span>💥 擊球仰角、落地彈跳 ＆ 草地滾動物理</span>
-                  <span class="text-xs px-2.5 py-0.5 rounded-full bg-amber-500/25 text-amber-300 border border-amber-500/40 font-mono font-bold">75m 少棒球場</span>
-                </h3>
-                <p class="text-xs text-slate-400">
-                  空中飛行 ➔ 紅土高彈跳 / 外野草皮低彈跳 ➔ 草地摩擦力減速停止
-                </p>
-              </div>
-              <button onclick="swingBatSim()" class="px-4 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-black text-xs md:text-sm shadow-lg cursor-pointer">
-                🏏 揮棒擊球！
-              </button>
+        <div class="lg:col-span-4 bg-[var(--card)] border border-[var(--border)] rounded-2xl p-4 shadow-sm flex flex-col justify-between space-y-3">
+          <div class="p-3 rounded-xl bg-gradient-to-br from-slate-900 via-[#162038] to-slate-950 border border-amber-500/40 flex items-center justify-between">
+            <div>
+              <div class="text-[10px] font-black text-amber-300">★ 握棒 ＆ 跑一壘雙攻略</div>
+              <div class="text-sm font-black text-white mt-0.5">✊ 敲門關節 vs 香蕉彎繞壘</div>
             </div>
-
-            <div class="bg-[#090d16] border border-slate-700/80 rounded-xl p-2 mb-3 shadow-inner">
-              <canvas id="hitSimCanvas" width="640" height="300" class="w-full h-auto rounded-lg"></canvas>
-            </div>
+            <span class="text-2xl">🍌</span>
           </div>
 
-          <div class="bg-slate-900/90 border border-slate-700 rounded-xl p-3.5 space-y-3">
-            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
-              <button onclick="setHitType('ground')" id="hit-btn-ground" class="sub-btn p-2 rounded-lg border border-[var(--border)] text-center cursor-pointer hover:border-amber-500">
-                <div class="font-bold text-xs text-orange-400">📉 強勁滾地 (-6°)</div>
-                <div class="text-[10px] text-[var(--muted-foreground)]">打球心上方・前旋長滾</div>
-              </button>
-              <button onclick="setHitType('line')" id="hit-btn-line" class="sub-btn active p-2 rounded-lg border border-[var(--border)] text-center cursor-pointer hover:border-amber-500">
-                <div class="font-bold text-xs text-emerald-400">⚡ 平飛安打 (14°)</div>
-                <div class="text-[10px] text-[var(--muted-foreground)]">正中球心・彈跳穿外野</div>
-              </button>
-              <button onclick="setHitType('homerun')" id="hit-btn-homerun" class="sub-btn p-2 rounded-lg border border-[var(--border)] text-center cursor-pointer hover:border-amber-500">
-                <div class="font-bold text-xs text-amber-300">🎆 深遠長打 (28°)</div>
-                <div class="text-[10px] text-[var(--muted-foreground)]">黃金仰角・後旋飛出牆</div>
-              </button>
-              <button onclick="setHitType('popup')" id="hit-btn-popup" class="sub-btn p-2 rounded-lg border border-[var(--border)] text-center cursor-pointer hover:border-amber-500">
-                <div class="font-bold text-xs text-purple-400">🎈 內野高飛 (55°)</div>
-                <div class="text-[10px] text-[var(--muted-foreground)]">切到球下緣・原地落難</div>
-              </button>
-            </div>
-            <div class="flex flex-wrap items-center justify-between gap-2 text-xs px-1 font-mono">
-              <span id="hit-stat-carry" class="font-bold text-emerald-400">空中飛行：42 m</span>
-              <span id="hit-stat-roll" class="font-bold text-sky-400">地面滾動：+23 m</span>
-              <span id="hit-stat-bounces" class="font-bold text-amber-400">彈跳次數：3 次後轉為貼地滾動</span>
-            </div>
-            <div id="hit-result-desc" class="text-xs p-2.5 rounded-lg bg-slate-800 border border-slate-700 text-slate-200">
-              <strong>⚡ 平飛球物理 (Line Drive)：</strong>球棒正中球心（仰角 14°），飛行平直速度快，在外野草地第一次落地後因水平動能大，會連續彈跳 2～3 次再貼著草皮滾動到全壘打牆前！
-            </div>
+          <div class="grid grid-cols-2 gap-2">
+            <button onclick="selectBatView('knuckles')" id="batview-knuckles" class="sub-btn active p-2.5 rounded-xl border border-[var(--border)] text-left cursor-pointer hover:border-amber-500">
+              <div class="font-bold text-xs text-amber-300">👊 敲門關節對齊</div>
+              <div class="text-[10px] text-[var(--muted-foreground)]">木紋球棒雷射線</div>
+            </button>
+            <button onclick="selectBatView('run1b')" id="batview-run1b" class="sub-btn p-2.5 rounded-xl border border-[var(--border)] text-left cursor-pointer hover:border-amber-500">
+              <div class="font-bold text-xs text-sky-300">🏃 跑一壘香蕉彎</div>
+              <div class="text-[10px] text-[var(--muted-foreground)]">直線衝 vs 繞二壘</div>
+            </button>
+          </div>
+
+          <div id="bat-grip-desc" class="bg-[var(--background)] border border-slate-700 rounded-xl p-3.5 text-xs leading-relaxed space-y-2 flex-1">
+            <div class="font-bold text-amber-400">👊 握棒黃金法則：「敲門關節排成一直線」</div>
+            <p>1. <strong>哪隻手在上面？</strong>右打者「左手在下、右手在上」（左打者相反），雙手緊靠在一起不留縫隙。</p>
+            <p>2. <strong>敲門關節對齊：</strong>比出「敲門」動作的第二指關節，上下兩手要對齊成一直線！不要握在掌心深處，用手指根部扣住，手腕才能順暢翻轉！</p>
           </div>
         </div>
       </div>
     </section>
 
     <!-- ==================== SECTION 4: BASERUNNING ==================== -->
-    <section id="sec-baserunning" class="hidden space-y-6">
-      <!-- Section Broadcast Banner -->
-      <div class="bg-gradient-to-r from-blue-950/60 via-slate-900/80 to-blue-950/60 border border-blue-500/50 rounded-2xl p-4 shadow-[0_0_20px_rgba(59,130,246,0.15)] flex flex-wrap items-center justify-between gap-3">
-        <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-xl bg-blue-600/30 border border-blue-400/50 flex items-center justify-center text-xl shadow">
-            🏃‍♂️
-          </div>
+    <section id="sec-baserunning" class="hidden space-y-3.5">
+      <!-- Top Broadcast Command Bar -->
+      <div class="bg-[var(--card)] border border-[var(--border)] rounded-2xl p-3 md:p-4 shadow-sm flex flex-wrap items-center justify-between gap-2.5">
+        <div class="bg-[var(--background)] border border-blue-500/40 rounded-xl px-3.5 py-1.5 flex items-center gap-3 shadow-inner">
           <div>
-            <div class="text-[10px] uppercase tracking-wider text-sky-400 font-extrabold flex items-center gap-2">
-              <span>TACTICAL BASERUNNING DIAMOND</span>
-              <span class="px-2 py-0.5 rounded-full bg-blue-500/25 border border-blue-400/50 text-blue-200 text-[10px] font-mono font-black">3D 球場視角</span>
+            <div class="text-[10px] uppercase tracking-wider text-sky-400 font-extrabold flex items-center gap-1.5">
+              <span>TACTICAL DIAMOND</span>
+              <span class="px-1.5 py-0.2 rounded bg-blue-500/25 border border-blue-400/50 text-blue-200 text-[9px] font-mono font-black">3D 全景模擬</span>
             </div>
-            <h2 class="text-lg md:text-xl font-black text-white tracking-tight">4. 壘上跑壘情境戰術模擬器</h2>
+            <div class="text-sm md:text-base font-black text-white">4. 壘上跑壘情境戰術模擬器</div>
           </div>
         </div>
-        <div class="flex items-center gap-2 text-xs">
-          <span class="px-3 py-1.5 rounded-xl bg-rose-500/15 border border-rose-500/30 text-rose-300 font-bold">
-            ⚡ 兩出局球打出就狂奔
-          </span>
-          <span class="px-3 py-1.5 rounded-xl bg-purple-500/15 border border-purple-500/30 text-purple-300 font-bold">
-            🛡️ 安全滑壘 4 字型
-          </span>
+        <div class="flex flex-wrap items-center gap-2 text-xs">
+          <span class="px-3 py-1.5 rounded-xl bg-rose-500/15 border border-rose-500/30 text-rose-300 font-bold">⚡ 兩出局球打出就狂奔</span>
+          <span class="px-3 py-1.5 rounded-xl bg-purple-500/15 border border-purple-500/30 text-purple-300 font-bold">🛡️ 安全滑壘 4 字型</span>
+          <button onclick="playBaserunningScenario()" class="px-3.5 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-black text-xs shadow cursor-pointer">▶ 重播戰術</button>
         </div>
       </div>
 
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
-        <div class="lg:col-span-7 bg-[var(--card)] border border-blue-500/30 rounded-2xl p-5 shadow-lg">
-          <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
-            <div>
-              <h3 class="text-base font-bold text-white">🏟️ 壘上跑壘情境戰術模擬器</h3>
-              <p class="text-xs text-slate-400">身為壘上跑者，隊友打出不同球路該怎麼跑？點選情境看球路與跑者互動！</p>
+      <!-- Main 12-Col Broadcast Stage -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-3.5">
+        <div class="lg:col-span-8 bg-[var(--card)] border border-[var(--border)] rounded-2xl p-2 sm:p-3 shadow-sm flex flex-col justify-between">
+          <div class="relative bg-[#050811] border border-slate-700/80 rounded-xl overflow-hidden select-none">
+            <canvas id="diamondCanvas" width="960" height="540" class="w-full h-auto block"></canvas>
+            <div class="absolute bottom-2.5 right-2.5 z-10">
+              <button onclick="playBaserunningScenario()" class="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-gradient-to-br from-sky-400 via-blue-500 to-indigo-600 hover:from-sky-300 hover:to-indigo-500 active:scale-95 text-white font-black text-xs shadow-[0_0_22px_rgba(59,130,246,0.65)] border-4 border-white/90 flex flex-col items-center justify-center leading-tight cursor-pointer select-none transition">
+                <span class="text-lg sm:text-xl">🏃</span>
+                <span>播跑壘</span>
+              </button>
             </div>
-            <button onclick="playBaserunningScenario()" class="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs shadow-lg cursor-pointer">
-              ▶ 播放跑壘動畫
-            </button>
           </div>
 
-          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-3">
+          <div class="mt-2 grid grid-cols-2 sm:grid-cols-4 gap-2">
             <button onclick="selectBaseScenario('force')" id="bscene-force" class="sub-btn active p-2.5 rounded-xl border border-[var(--border)] text-left cursor-pointer hover:border-blue-500">
               <div class="font-bold text-xs text-sky-300">1️⃣ 一壘有人＋滾地</div>
-              <div class="text-[11px] text-[var(--muted-foreground)]">強迫進壘全力衝二壘</div>
+              <div class="text-[10px] text-[var(--muted-foreground)]">強迫進壘全力衝二壘</div>
             </button>
             <button onclick="selectBaseScenario('tagup')" id="bscene-tagup" class="sub-btn p-2.5 rounded-xl border border-[var(--border)] text-left cursor-pointer hover:border-blue-500">
               <div class="font-bold text-xs text-emerald-300">2️⃣ 三壘有人＋高飛</div>
-              <div class="text-[11px] text-[var(--muted-foreground)]">踩壘等待 (Tag Up)</div>
+              <div class="text-[10px] text-[var(--muted-foreground)]">踩壘等待 (Tag Up)</div>
             </button>
             <button onclick="selectBaseScenario('twoouts')" id="bscene-twoouts" class="sub-btn p-2.5 rounded-xl border border-[var(--border)] text-left cursor-pointer hover:border-blue-500">
               <div class="font-bold text-xs text-rose-300">3️⃣ 兩出局任何打擊</div>
-              <div class="text-[11px] text-[var(--muted-foreground)]">球一打出馬上全力狂奔</div>
+              <div class="text-[10px] text-[var(--muted-foreground)]">球出立刻狂奔</div>
             </button>
             <button onclick="selectBaseScenario('lead')" id="bscene-lead" class="sub-btn p-2.5 rounded-xl border border-[var(--border)] text-left cursor-pointer hover:border-blue-500">
               <div class="font-bold text-xs text-amber-300">4️⃣ 離壘與第二離壘</div>
-              <div class="text-[11px] text-[var(--muted-foreground)]">側滑步隨時安全回壘</div>
+              <div class="text-[10px] text-[var(--muted-foreground)]">側滑步安全回壘</div>
             </button>
-          </div>
-
-          <div class="bg-[#090d16] border border-slate-700/80 rounded-xl p-2.5 flex flex-col items-center shadow-inner">
-            <canvas id="diamondCanvas" width="600" height="360" class="w-full h-auto rounded-lg"></canvas>
           </div>
         </div>
 
-        <div class="lg:col-span-5 bg-[var(--card)] border border-blue-500/30 rounded-2xl p-5 shadow-lg flex flex-col justify-between space-y-4">
-          <div>
-            <h3 class="text-base font-bold mb-3 text-white flex items-center gap-2">
-              <span>📘 壘上跑者四大聰明口訣</span>
-            </h3>
-            <div id="baserunning-detail-card" class="bg-slate-900/90 border border-blue-500/40 rounded-xl p-4 text-xs leading-relaxed space-y-2 mb-4">
-              <div class="text-sm font-bold text-blue-400" id="bscene-title">情境 1：一壘有人，隊友打出內野滾地球</div>
-              <p id="bscene-body" class="text-slate-200">
-                因為打者要跑一壘，一壘跑者<strong>「被強迫一定要往二壘跑 (Force Play)」</strong>！所以一看到球往地上彈，不用猶豫，<strong>低頭全力衝向二壘</strong>！滑壘進二壘還可以避免被雙殺！
-              </p>
+        <div class="lg:col-span-4 bg-[var(--card)] border border-[var(--border)] rounded-2xl p-4 shadow-sm flex flex-col justify-between space-y-3">
+          <div class="p-3 rounded-xl bg-gradient-to-br from-blue-950/90 via-slate-900 to-slate-950 border border-blue-500/40 flex items-center justify-between">
+            <div>
+              <div class="text-[10px] font-black text-sky-300">★ BASEBALL IQ 跑壘智商</div>
+              <div class="text-sm font-black text-white mt-0.5">📘 壘上跑者四大聰明口訣</div>
             </div>
+            <span class="text-2xl">🏃</span>
+          </div>
 
-            <div class="space-y-2.5 text-xs">
-              <div class="p-3 rounded-xl bg-slate-900/80 border border-slate-700">
-                <div class="font-bold text-amber-400 mb-1">👀 口訣一：踏上壘包先看「幾出局」與「野手站位」</div>
-                <p class="text-slate-300">上壘第一件事：伸手向三壘指導教練比出現在幾人出局，並觀察外野手站得深還是淺。</p>
-              </div>
-              <div class="p-3 rounded-xl bg-slate-900/80 border border-slate-700">
-                <div class="font-bold text-emerald-400 mb-1">✈️ 口訣二：少於兩出局，高飛球不能傻傻一直衝！</div>
-                <p class="text-slate-300">野手如果接殺高飛球，跑者必須回原壘踩一下（Tag Up）才能起跑！外野深遠高飛球先踩好三壘壘包，球一進野手手套瞬間立刻全力衝本壘！</p>
-              </div>
-              <div class="p-3 rounded-xl bg-slate-900/80 border border-slate-700">
-                <div class="font-bold text-rose-400 mb-1">⚡ 口訣三：兩出局 (2 Outs) 球打出去就全力狂奔！</div>
-                <p class="text-slate-300">兩出局時就算高飛球被接殺也是第三出局換局，所以球棒碰到球的瞬間，全壘上所有跑者不用看球，全力衝刺能衝幾壘是幾壘！</p>
-              </div>
-              <div class="p-3 rounded-xl bg-slate-900/80 border border-slate-700">
-                <div class="font-bold text-purple-400 mb-1">🛡️ 口訣四：安全滑壘「4字型」，雙手高舉別撐地！</div>
-                <p class="text-slate-300">滑壘時一腳伸直、一腳向內收彎成「4字型」，臀部外側著地滑行，雙手握拳高舉，千萬不能用手掌去撐地以防扭傷！</p>
-              </div>
+          <div id="baserunning-detail-card" class="bg-[var(--background)] border border-blue-500/40 rounded-xl p-3.5 text-xs leading-relaxed space-y-1.5">
+            <div class="text-sm font-bold text-sky-400" id="bscene-title">情境 1：一壘有人，隊友打出內野滾地球</div>
+            <p id="bscene-body" class="text-slate-200">
+              因為打者要跑一壘，一壘跑者<strong>「被強迫一定要往二壘跑 (Force Play)」</strong>！所以一看到球往地上彈，不用猶豫，<strong>低頭全力衝向二壘</strong>！滑壘進二壘還可以避免被雙殺！
+            </p>
+          </div>
+
+          <div class="space-y-2 text-xs flex-1">
+            <div class="p-2.5 rounded-xl bg-[var(--background)] border border-slate-700">
+              <div class="font-bold text-amber-400 mb-0.5">👀 一：上壘先看「幾出局」與「野手站位」</div>
+              <p class="text-slate-300 text-[11px]">伸手向三壘教練比幾人出局，觀察外野手站深還是淺。</p>
+            </div>
+            <div class="p-2.5 rounded-xl bg-[var(--background)] border border-slate-700">
+              <div class="font-bold text-emerald-400 mb-0.5">✈️ 二：少於兩出局，高飛球要回原壘踩穩！</div>
+              <p class="text-slate-300 text-[11px]">Tag Up 踩穩三壘包，球一進野手手套瞬間立刻衝本壘！</p>
+            </div>
+            <div class="p-2.5 rounded-xl bg-[var(--background)] border border-slate-700">
+              <div class="font-bold text-rose-400 mb-0.5">⚡ 三：兩出局 (2 Outs) 球打出去就狂奔！</div>
+              <p class="text-slate-300 text-[11px]">球棒碰到球瞬間所有跑者不用看球，全力衝能多搶幾壘是幾壘！</p>
+            </div>
+            <div class="p-2.5 rounded-xl bg-[var(--background)] border border-slate-700">
+              <div class="font-bold text-purple-400 mb-0.5">🛡️ 四：安全滑壘「4字型」雙手高舉別撐地！</div>
+              <p class="text-slate-300 text-[11px]">一腳伸直一腳收彎成 4 字型，臀側著地、握拳高舉防扭傷。</p>
             </div>
           </div>
+
+          <button onclick="playBaserunningScenario()" class="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-black text-xs shadow-lg cursor-pointer">
+            ▶ 播放 3D 全景跑壘戰術模擬
+          </button>
         </div>
       </div>
     </section>
@@ -3485,5 +3548,6 @@
     });
   </script>
   <script src="rivals-game.js?v=2.7.3"></script>
+  <script src="academy-broadcast.js?v=2.8.0"></script>
 </body>
 </html>
