@@ -655,7 +655,7 @@ function handleRivalsPrimaryButton() {
 
 function setRivalsMatchFormat(fmt) {
   RG.matchFormat = fmt || 'clutch';
-  ['clutch', '3inn', '9inn'].forEach(k => {
+  ['clutch', '3inn', '9inn', 'derby', 'ace'].forEach(k => {
     const btn = document.getElementById('rivals-fmt-' + k);
     if (btn) btn.classList.toggle('active', k === RG.matchFormat);
   });
@@ -958,6 +958,10 @@ function updateRivalsHUD() {
   document.getElementById('rivals-inning').textContent = `${RG.inning}局${RG.isTop ? '上' : '下'}${extraTag}`;
   document.getElementById('rivals-score-user').textContent = RG.scoreUser;
   document.getElementById('rivals-score-cpu').textContent = RG.scoreCpu;
+  if (RG.challenge && (RG.matchFormat === 'derby' || RG.matchFormat === 'ace')) {
+    document.getElementById('rivals-inning').textContent = `剩${RG.challenge.left}球`;
+    document.getElementById('rivals-score-cpu').textContent = '目標' + RG.challenge.target;
+  }
 
   document.getElementById('rivals-b').textContent = '●'.repeat(RG.balls) + '○'.repeat(Math.max(0, 4 - RG.balls));
   document.getElementById('rivals-s').textContent = '●'.repeat(RG.strikes) + '○'.repeat(Math.max(0, 3 - RG.strikes));
@@ -1171,6 +1175,56 @@ function checkWalkOffCondition(playDesc, isHR = false) {
   return false;
 }
 
+// ==================== CHALLENGE MODES (DERBY / ACE) ====================
+function challengeActive() {
+  return !!RG.challenge && (RG.matchFormat === 'derby' || RG.matchFormat === 'ace');
+}
+
+function challengePitchDone(pts, msg, delayMs) {
+  const c = RG.challenge;
+  if (!c) return;
+  delayMs = delayMs || 0;
+  c.left--;
+  c.points = Math.max(0, c.points + pts);
+  c.pendingBonus = 0;
+  RG.scoreUser = c.points;
+  RG.scoreCpu = c.target - 1;
+  RG.phase = 'pre_pitch';
+  RG.strikes = 0;
+  RG.balls = 0;
+  setRivalsLog(`${msg}　｜　${pts >= 0 ? '+' : ''}${pts} 分・累計 ${c.points}/${c.target}・剩 ${c.left} 球`);
+  if (c.left <= 0) {
+    RG.isGameOver = true;
+    updateRivalsHUD();
+    setTimeout(() => {
+      const win = c.points >= c.target;
+      const name = RG.matchFormat === 'derby' ? '全壘打大賽' : '精準投球挑戰';
+      openRivalsPostGameModal(win ? `🏆 ${name}達標！` : `💪 ${name}差一點！`, `最終 ${c.points} 分（目標 ${c.target} 分）`);
+    }, delayMs + 900);
+  } else {
+    setTimeout(() => {
+      if (RG.isGameOver) return;
+      RG.cameraMode = 'duel';
+      updateRivalsHUD();
+      renderRivalsCanvas();
+      checkAutoLoop(3000);
+    }, delayMs);
+  }
+  updateRivalsHUD();
+}
+
+function challengeHomeRun(carryDist) {
+  const c = RG.challenge;
+  c.streak = (c.streak || 0) + 1;
+  const bonus = c.streak >= 3 ? 1 : 0;
+  if (RG.matchStats) RG.matchStats.maxHrDistFt = Math.max(RG.matchStats.maxHrDistFt || 0, Math.round(carryDist || 0));
+  try { RivalsSFX.playHomeRunHorn(); RivalsSFX.playCheer(); } catch (e) {}
+  showRivalsCallStamp('HOME RUN!', `${Math.round(carryDist || 0)} ft${bonus ? '・連轟加成+1' : ''}`, '#ef4444', 1600);
+  showRivalsBanner(`💥 全壘打！連續 ${c.streak} 發`, 1800);
+  if (RG.matchFormat === 'ace') { challengePitchDone(-2, '💥 被轟出全壘打', 1800); return; }
+  challengePitchDone(1 + bonus, `💥 全壘打 ${Math.round(carryDist || 0)} ft`, 1800);
+}
+
 function resetRivalsMatch() {
   if (RG.animId) cancelAnimationFrame(RG.animId);
   clearTimeout(RG.autoNextTimer);
@@ -1181,7 +1235,24 @@ function resetRivalsMatch() {
   RG.isGameOver = false;
   RG.isWalkOff = false;
 
-  if (RG.matchFormat === '3inn') {
+  const isChal = RG.matchFormat === 'derby' || RG.matchFormat === 'ace';
+  if (isChal) {
+    if (!RG.challenge) RG.roleBeforeChallenge = RG.roleMode;
+    RG.roleMode = RG.matchFormat === 'derby' ? 'batter' : 'pitcher';
+    ['twoway', 'bat', 'pitch'].forEach(k => {
+      const b = document.getElementById('rivals-role-' + k);
+      if (b) b.classList.toggle('active', (k === 'bat' && RG.roleMode === 'batter') || (k === 'pitch' && RG.roleMode === 'pitcher'));
+    });
+    RG.challenge = { left: 10, points: 0, streak: 0, target: RG.matchFormat === 'derby' ? 6 : 11, pendingBonus: 0 };
+    RG.maxInnings = 99;
+    RG.inning = 1;
+    RG.isTop = RG.roleMode === 'pitcher';
+    RG.outs = 0;
+    RG.scoreUser = 0;
+    RG.scoreCpu = RG.challenge.target - 1;
+    RG.occupiedBases = [false, false, false];
+    RG.matchStats = { userHits: 0, cpuHits: 0, userHR: 0, cpuHR: 0, userSO: 0, cpuSO: 0, maxExitVelo: 165, maxHrDistFt: 0, lastScoringPlay: '特別挑戰賽開始！' };
+  } else if (RG.matchFormat === '3inn') {
     RG.maxInnings = 3;
     RG.inning = 1;
     RG.isTop = (RG.roleMode === 'pitcher' || RG.roleMode === 'twoway');
@@ -1211,6 +1282,19 @@ function resetRivalsMatch() {
     RG.matchStats = { userHits: 4, cpuHits: 6, userHR: 1, cpuHR: 1, userSO: 5, cpuSO: 3, maxExitVelo: 184, maxHrDistFt: 418, lastScoringPlay: '6局下 1出局一壘有人・再見逆轉關鍵局！' };
   }
 
+  if (!isChal && RG.challenge) {
+    RG.challenge = null;
+    if (RG.roleBeforeChallenge) RG.roleMode = RG.roleBeforeChallenge;
+    RG.roleBeforeChallenge = null;
+    const rm = RG.roleMode;
+    ['twoway', 'bat', 'pitch'].forEach(k => {
+      const b = document.getElementById('rivals-role-' + k);
+      if (b) b.classList.toggle('active', (k === 'twoway' && rm === 'twoway') || (k === 'bat' && rm === 'batter') || (k === 'pitch' && rm === 'pitcher'));
+    });
+    RG.isTop = (rm === 'pitcher' || (rm === 'twoway' && RG.matchFormat !== 'clutch'));
+    if (RG.matchFormat === 'clutch') RG.isTop = (rm === 'pitcher');
+  }
+
   RG.balls = 0;
   RG.strikes = 0;
   RG.activeRunners = [];
@@ -1230,7 +1314,7 @@ function resetRivalsMatch() {
   updateRivalsHUD();
   const uTeam = getActiveUserTeam();
   const oTeam = getActiveOppTeam();
-  const fmtName = RG.matchFormat === '3inn' ? '⚡3局快打賽' : (RG.matchFormat === '9inn' ? '🏟️9局正規賽' : '🔥6局下關鍵逆轉賽');
+  const fmtName = RG.matchFormat === 'derby' ? '💥全壘打大賽（10球・目標6分）' : RG.matchFormat === 'ace' ? '🎯精準投球挑戰（10球・目標11分）' : RG.matchFormat === '3inn' ? '⚡3局快打賽' : (RG.matchFormat === '9inn' ? '🏟️9局正規賽' : '🔥6局下關鍵逆轉賽');
   setRivalsLog(`🏟️ <strong>《MLB 勁旅對決 3D v2.9.0》${fmtName}開戰！</strong> ${oTeam.shortName} ${RG.scoreCpu} - ${RG.scoreUser} ${uTeam.shortName}（${RG.inning}局${RG.isTop ? '上' : '下'}）準備好後按空白鍵或點畫面開球！`);
   renderRivalsCanvas();
   checkAutoLoop(3800);
@@ -1297,6 +1381,11 @@ function startRivalsPitchAction() {
     RG.selectedPitch = keys[Math.floor(Math.random() * keys.length)];
     RG.aimX = (Math.random() * 0.44) - 0.22;
     RG.aimZ = 0.52 + Math.random() * 0.40;
+    if (RG.matchFormat === 'derby') {
+      RG.selectedPitch = '4seam';
+      RG.aimX = (Math.random() * 0.2) - 0.1;
+      RG.aimZ = 0.65 + Math.random() * 0.15;
+    }
     RG.releaseQuality = 'GOOD';
     RG.releaseMultiplier = 1.0;
 
@@ -1523,6 +1612,12 @@ function triggerRivalsSwing() {
     RG.swingAnimProgress = 1.0;
     RivalsSFX.playBatHit(false);
     RG.phase = 'pre_pitch';
+    if (challengeActive()) {
+      if (RG.challenge) RG.challenge.streak = 0;
+      showRivalsCallStamp('FOUL BALL!', '界外球', '#f59e0b', 1200);
+      challengePitchDone(RG.matchFormat === 'ace' ? 1 : 0, '🟨 界外球', 1300);
+      return;
+    }
     if (RG.strikes < 2) RG.strikes++;
     const dirLabel = yDiff < 0 ? '拉打擦棒界外 (EARLY FOUL)' : '推打擦棒界外 (LATE FOUL)';
     RG.swingTimingText = `🟨 ${dirLabel}`;
@@ -1622,6 +1717,21 @@ function resolveRivalsPitchTaken() {
   pulseCatcherMittPop();
   const plateP = RG.pitchPts.find(p => p.y >= 14.0) || RG.pitchPts[RG.pitchPts.length - 1];
   const inZone = !plateP.bounced && Math.abs(plateP.x) <= 0.34 && plateP.z >= 0.43 && plateP.z <= 1.03;
+
+  if (challengeActive()) {
+    let pts = 0, msg;
+    if (RG.swingTriggered) { pts = RG.matchFormat === 'ace' ? 3 : 0; msg = '🌀 揮棒落空'; RivalsSFX.playUmpireStrike(true); showRivalsCallStamp('SWING & MISS!', '揮空', '#f59e0b', 1100); }
+    else if (inZone) {
+      const corner = Math.abs(plateP.x) > 0.24 || plateP.z < 0.55 || plateP.z > 0.92;
+      pts = RG.matchFormat === 'ace' ? (corner ? 3 : 1) : 0;
+      msg = corner ? '🎯 邊角好球' : '🟡 好球';
+      RivalsSFX.playUmpireStrike(false);
+      showRivalsCallStamp('STRIKE!', corner ? '邊角精準！' : '好球進壘', '#f59e0b', 1100);
+    } else { msg = '🟢 壞球'; RivalsSFX.playUmpireBall(); showRivalsCallStamp('BALL', '壞球', '#22c55e', 1000); }
+    if (RG.challenge && RG.matchFormat === 'derby') RG.challenge.streak = 0;
+    challengePitchDone(pts, msg, 1200);
+    return;
+  }
 
   if (RG.swingTriggered || inZone) {
     RG.strikes++;
@@ -2006,6 +2116,7 @@ function triggerRivalsSlideQTE() {
 }
 
 function finishHomeRun(carryDist) {
+  if (challengeActive()) { challengeHomeRun(carryDist); return; }
   let runs = 1;
   RG.occupiedBases.forEach(occ => { if (occ) runs++; });
 
@@ -2081,6 +2192,16 @@ function finishHomeRun(carryDist) {
 }
 
 function concludeFieldPlay() {
+  if (challengeActive()) {
+    const c = RG.challenge;
+    let pts = 0;
+    if (RG.matchFormat === 'ace') pts = c.pendingBonus ? c.pendingBonus : -1;
+    else c.streak = 0;
+    RG.occupiedBases = [false, false, false];
+    RG.activeRunners = [];
+    challengePitchDone(pts, c.pendingBonus ? '🧤 守備成功刺殺' : '⚾ 球落地成安打', 1800);
+    return;
+  }
   const newBases = [false, false, false];
   let runsScored = 0;
   let batterReachedBase = false;
@@ -2157,6 +2278,11 @@ function advanceRivalsWalk() {
 }
 
 function recordRivalsOut(msg) {
+  if (challengeActive()) {
+    if (RG.matchFormat === 'ace') RG.challenge.pendingBonus = 2;
+    showRivalsBanner(msg || '出局！', 1400);
+    return;
+  }
   RG.outs++;
   showRivalsBanner(msg, 2200);
   setRivalsLog(`📣 <strong>裁判判決：</strong> ${msg}`);
